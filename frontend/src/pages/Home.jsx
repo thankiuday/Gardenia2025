@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsByCategory } from '../data/events';
+import GITHUB_ASSETS from '../config/github-assets';
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState('Department Flagship Events');
@@ -28,8 +29,9 @@ const Home = () => {
             muted
             loop
             playsInline
+            preload="metadata"
           >
-            <source src="/videos/gardenia-hero-video.mp4" type="video/mp4" />
+            <source src={GITHUB_ASSETS.video.hero} type="video/mp4" />
             {/* Fallback for browsers that don't support video */}
             Your browser does not support the video tag.
           </video>

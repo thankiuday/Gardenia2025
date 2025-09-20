@@ -1,3 +1,5 @@
+import GITHUB_ASSETS from '../config/github-assets';
+
 const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,7 +56,7 @@ const About = () => {
                 <div className="text-center">
                   <div className="w-full max-w-sm bg-white rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg p-6">
                     <img 
-                      src="/logo/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" 
+                      src={GITHUB_ASSETS.logos.university} 
                       alt="Garden City University Logo" 
                       className="w-full h-auto object-contain"
                     />
