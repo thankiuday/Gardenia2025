@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ElementalLogo from './ElementalLogo';
-import GITHUB_ASSETS from '../config/github-assets';
+import S3_ASSETS from '../config/s3-assets';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,7 +59,7 @@ const Navbar = () => {
             {/* Right: University Logo (Desktop) */}
             <div className="nav-desktop items-center">
               <img 
-                src={GITHUB_ASSETS.logos.university}
+                src={S3_ASSETS.logos.university}
                 alt="Garden City University Logo" 
                 className="w-10 h-10 lg:w-12 lg:h-12 object-contain"
               />
@@ -108,7 +108,7 @@ const Navbar = () => {
                 <div className="pt-3 border-t border-gray-200 mt-3">
                   <div className="flex items-center px-3 py-2">
                     <img 
-                      src={GITHUB_ASSETS.logos.university}
+                      src={S3_ASSETS.logos.university}
                       alt="Garden City University Logo" 
                       className="w-8 h-8 object-contain mr-3"
                     />

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import S3_ASSETS from '../config/s3-assets';
 
 const Brochure = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +10,7 @@ const Brochure = () => {
     setTimeout(() => {
       setIsLoading(false);
       // In a real implementation, this would trigger the actual download
-      window.open('/documents/gardenia-2025-brochure.pdf', '_blank');
+      window.open(S3_ASSETS.documents.brochure, '_blank');
     }, 1000);
   };
 

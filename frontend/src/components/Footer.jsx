@@ -1,5 +1,5 @@
 import ElementalLogo from './ElementalLogo';
-import GITHUB_ASSETS from '../config/github-assets';
+import S3_ASSETS from '../config/s3-assets';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <img 
-                src={GITHUB_ASSETS.logos.university}
+                src={S3_ASSETS.logos.university}
                 alt="Garden City University Logo" 
                 className="w-8 h-8 sm:w-10 sm:h-10 object-contain bg-white rounded p-1"
               />

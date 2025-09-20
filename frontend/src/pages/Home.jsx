@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { eventsByCategory } from '../data/events';
-import GITHUB_ASSETS from '../config/github-assets';
+import S3_ASSETS from '../config/s3-assets';
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState('Department Flagship Events');
@@ -31,7 +31,7 @@ const Home = () => {
             playsInline
             preload="metadata"
           >
-            <source src={GITHUB_ASSETS.video.hero} type="video/mp4" />
+            <source src={S3_ASSETS.video.hero} type="video/mp4" />
             {/* Fallback for browsers that don't support video */}
             Your browser does not support the video tag.
           </video>
