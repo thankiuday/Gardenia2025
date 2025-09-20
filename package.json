@@ -1,0 +1,20 @@
+{
+  "name": "gardenia-2025",
+  "version": "1.0.0",
+  "description": "Event Management Website for Gardenia 2025",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": ["event-management", "mern", "gardenia"],
+  "author": "Garden City University",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
