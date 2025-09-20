@@ -125,6 +125,13 @@ const Registration = () => {
     setLoading(true);
 
     try {
+      // Temporary: Show coming soon message for frontend-only deployment
+      alert('Registration will be available soon! Backend is being deployed. Please check back later.');
+      setLoading(false);
+      return;
+
+      // Original code (commented out for frontend-only deployment)
+      /*
       const payload = {
         eventId: event._id || eventId, // Use MongoDB ID if available
         isGardenCityStudent,
@@ -140,6 +147,7 @@ const Registration = () => {
       } else {
         alert('Registration failed: ' + response.data.message);
       }
+      */
     } catch (error) {
       console.error('Registration error:', error);
       alert('Registration failed. Please try again.');
