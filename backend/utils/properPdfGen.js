@@ -153,29 +153,87 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
         </div>
         
         <div class="content">
-            <h3>Participant Verified</h3>
-            <p>Registration details confirmed</p>
+            <div class="registration-details">
+                <div class="section-title">Registration Details</div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value">${registrationData.leader.name}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Register No:</span>
+                    <span class="detail-value">${registrationData.leader.registerNumber}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value">${registrationData.leader.email}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Phone:</span>
+                    <span class="detail-value">${registrationData.leader.phone}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">College:</span>
+                    <span class="detail-value">${registrationData.leader.collegeName || 'Garden City College'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Registration Date:</span>
+                    <span class="detail-value">${new Date().toLocaleDateString()}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Category:</span>
+                    <span class="detail-value">${eventData.category || 'General'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Type:</span>
+                    <span class="detail-value">${eventData.type || 'Competition'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="detail-value">${eventData.department || 'General'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Date:</span>
+                    <span class="detail-value">${eventData.date || 'TBA'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Time:</span>
+                    <span class="detail-value">${eventData.time || 'TBA'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Location:</span>
+                    <span class="detail-value">${eventData.location || 'Garden City University'}</span>
+                </div>
+                
+                ${registrationData.teamMembers && registrationData.teamMembers.length > 0 ? `
+                <div class="team-members">
+                    <div class="section-title">Team Members</div>
+                    ${registrationData.teamMembers.map(member => `
+                        <div class="team-member">
+                            <strong>${member.name}</strong><br>
+                            ${member.registerNumber} | ${member.email}
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+            </div>
             
-            <h3>Event Information</h3>
-            <p><strong>Event:</strong> ${eventData.title || 'N/A'}</p>
-            <p><strong>Category:</strong> ${eventData.category || 'N/A'}</p>
-            <p><strong>Date:</strong> ${eventData.date || '8th October 2025'}</p>
-            <p><strong>Registration ID:</strong> ${registrationData.registrationId || registrationData.regId}</p>
-            <p><strong>Event Type:</strong> ${eventData.type || 'N/A'}</p>
-            <p><strong>Department:</strong> ${eventData.department || 'N/A'}</p>
-            
-            <h3>Participant Details</h3>
-            <p><strong>Name:</strong> ${registrationData.leader.name}</p>
-            <p><strong>Email:</strong> ${registrationData.leader.email}</p>
-            <p><strong>Phone:</strong> ${registrationData.leader.phone}</p>
-            <p><strong>Institution:</strong> Garden City University (${registrationData.leader.registerNumber})</p>
-            
-            <h3>Entry Decision</h3>
-            <p><strong>Allow Entry</strong> | <strong>Deny Entry</strong></p>
-            
-            <h3>QR Code Verification</h3>
-            ${qrCodeDataURL ? `<img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 200px; height: auto;">` : '<p>QR Code not available</p>'}
-            <p>Scan this QR code for verification</p>
+            <div class="qr-section">
+                <div class="section-title">QR Code</div>
+                ${qrCodeDataURL ? `<img src="${qrCodeDataURL}" alt="QR Code" class="qr-code">` : '<div style="color: #6b7280;">QR Code not available</div>'}
+                <div class="qr-label">Scan this QR code for verification</div>
+            </div>
         </div>
         
         <div class="footer">
