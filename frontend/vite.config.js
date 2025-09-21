@@ -24,5 +24,7 @@ export default defineConfig({
     port: 10000,
     host: true
   },
-  publicDir: 'public'
+  publicDir: 'public',
+  // Ensure _redirects file is copied
+  copyPublicDir: true
 })

@@ -16,6 +16,7 @@ services:
       - type: rewrite
         source: /*
         destination: /index.html
+        statusCode: 200
     envVars:
       - key: VITE_API_URL
         value: https://gardenia2025-backend.onrender.com
