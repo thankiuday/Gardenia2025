@@ -106,6 +106,8 @@ router.post('/', [
           pdfBuffer = Buffer.from(properHTML.html, 'utf8');
           isHTMLFallback = true;
           console.log('HTML generated successfully with proper generator');
+          console.log('HTML content length:', properHTML.html.length);
+          console.log('Buffer size:', pdfBuffer.length);
         } catch (properPdfError) {
           console.log('Proper HTML generation failed, using basic HTML fallback:', properPdfError.message);
           try {

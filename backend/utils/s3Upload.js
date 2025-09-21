@@ -11,24 +11,28 @@ const s3Client = new S3Client({
 });
 
 /**
- * Upload a PDF ticket to S3
- * @param {Buffer} pdfBuffer - The PDF file buffer
- * @param {string} fileName - The file name (e.g., "GDN2025-1234.pdf")
+ * Upload a ticket to S3 (PDF or HTML)
+ * @param {Buffer} fileBuffer - The file buffer
+ * @param {string} fileName - The file name (e.g., "GDN2025-1234.pdf" or "GDN2025-1234.html")
  * @returns {Promise<string>} - The S3 URL of the uploaded file
  */
-const uploadTicketToS3 = async (pdfBuffer, fileName) => {
+const uploadTicketToS3 = async (fileBuffer, fileName) => {
   try {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
+    // Determine content type based on file extension
+    const contentType = fileName.endsWith('.html') ? 'text/html; charset=utf-8' : 'application/pdf';
+
     const uploadCommand = new PutObjectCommand({
       Bucket: bucketName,
       Key: key,
-      Body: pdfBuffer,
-      ContentType: 'application/pdf',
+      Body: fileBuffer,
+      ContentType: contentType,
       Metadata: {
         'uploaded-by': 'gardenia-backend',
-        'upload-date': new Date().toISOString()
+        'upload-date': new Date().toISOString(),
+        'file-type': fileName.endsWith('.html') ? 'html' : 'pdf'
       }
     });
 

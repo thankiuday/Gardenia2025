@@ -4,11 +4,12 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
     console.log('Generating proper PDF for registration:', registrationData.registrationId);
     
     // Create HTML content matching the custom design
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8">
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Ticket - ${registrationData.registrationId}</title>
         <style>
             @page {
                 margin: 15px;
@@ -455,8 +456,19 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
     </html>
     `;
     
+    // Validate HTML content
+    if (!htmlContent || htmlContent.length < 100) {
+      throw new Error('Generated HTML content is too short or empty');
+    }
+    
+    // Check for basic HTML structure
+    if (!htmlContent.includes('<!DOCTYPE html>') || !htmlContent.includes('</html>')) {
+      throw new Error('Generated HTML content is missing required structure');
+    }
+    
     // Return HTML content directly (no Puppeteer dependency)
     console.log('Proper HTML generated successfully for registration:', registrationData.registrationId);
+    console.log('HTML validation passed - length:', htmlContent.length);
     return {
       html: htmlContent,
       type: 'html'
