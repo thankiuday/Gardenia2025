@@ -423,6 +423,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 <div class="festival-title">GARDENIA 2025</div>
                 <div class="event-title">${eventData.title}</div>
                 <div class="event-category">${eventData.category}</div>
+                <div style="font-size: 14px; color: #059669; font-weight: 500;">Garden City University</div>
                 <div style="font-size: 12px; color: #666;">Registration Ticket</div>
             </div>
             <div class="university-logo">
@@ -459,8 +460,16 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                         <div class="info-value">${registrationData.regId}</div>
                     </div>
                     <div class="info-item">
+                        <div class="info-label">Event Name</div>
+                        <div class="info-value">${eventData.title}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Event Category</div>
+                        <div class="info-value">${eventData.category}</div>
+                    </div>
+                    <div class="info-item">
                         <div class="info-label">Event Date</div>
-                        <div class="info-value">${registrationData.finalEventDate}</div>
+                        <div class="info-value">${registrationData.finalEventDate || eventData.date}</div>
                     </div>
                     <div class="info-item">
                         <div class="info-label">Event Type</div>
@@ -477,6 +486,10 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                     <div class="info-item">
                         <div class="info-label">Team Size</div>
                         <div class="info-value">${eventData.teamSize.min}-${eventData.teamSize.max} members</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">${eventData.location || 'Garden City University'}</div>
                     </div>
                 </div>
             </div>

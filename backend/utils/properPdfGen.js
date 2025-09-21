@@ -146,8 +146,8 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
                 </div>
             </div>
             <div class="event-info">
-                <div class="event-title">${eventData.name || 'Event Registration'}</div>
-                <div class="event-subtitle">Garden City College of Science and Management Studies</div>
+                <div class="event-title">${eventData.title || eventData.name || 'Event Registration'}</div>
+                <div class="event-subtitle">Garden City University</div>
                 <div class="registration-id">Registration ID: ${registrationData.registrationId}</div>
             </div>
         </div>
@@ -187,8 +187,33 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">Payment Status:</span>
-                    <span class="detail-value">${registrationData.paymentStatus || 'PENDING'}</span>
+                    <span class="detail-label">Event Category:</span>
+                    <span class="detail-value">${eventData.category || 'General'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Type:</span>
+                    <span class="detail-value">${eventData.type || 'Competition'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="detail-value">${eventData.department || 'General'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Date:</span>
+                    <span class="detail-value">${eventData.date || 'TBA'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Time:</span>
+                    <span class="detail-value">${eventData.time || 'TBA'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Location:</span>
+                    <span class="detail-value">${eventData.location || 'Garden City University'}</span>
                 </div>
                 
                 ${registrationData.teamMembers && registrationData.teamMembers.length > 0 ? `
@@ -212,9 +237,9 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
         </div>
         
         <div class="footer">
-            <p><strong>Gardenia 2025</strong> - Garden City College of Science and Management Studies</p>
+            <p><strong>Gardenia 2025</strong> - Garden City University</p>
             <p>This is your official registration confirmation. Please keep this document safe.</p>
-            <p>For any queries, contact: gardenia2025@gardencitycollege.edu</p>
+            <p>For any queries, contact: gardenia2025@gardencityuniversity.edu</p>
         </div>
     </body>
     </html>
