@@ -469,7 +469,8 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     return pdfBuffer;
 
   } catch (error) {
-    throw new Error('Failed to generate PDF');
+    console.error('PDF generation error:', error);
+    throw new Error(`Failed to generate PDF: ${error.message}`);
   }
 };
 
