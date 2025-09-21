@@ -1,14 +1,25 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const RulesAndRegulations = () => {
   const [activeSection, setActiveSection] = useState('general');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const sections = [
-    { id: 'general', label: 'General Rules', icon: '📋' },
-    { id: 'performance', label: 'Performance Guidelines', icon: '🎭' },
-    { id: 'scoring', label: 'Scoring Criteria', icon: '⭐' },
-    { id: 'disqualification', label: 'Disqualification', icon: '⚠️' },
-    { id: 'sports', label: 'Sports Rules', icon: '🏆' }
+    { id: 'general', label: 'General Rules', icon: '📋', category: 'General' },
+    { id: 'performance', label: 'Performance Guidelines', icon: '🎭', category: 'Performance' },
+    { id: 'scoring', label: 'Scoring Criteria', icon: '⭐', category: 'Evaluation' },
+    { id: 'disqualification', label: 'Disqualification', icon: '⚠️', category: 'Penalties' },
+    { id: 'sports', label: 'Sports Rules', icon: '🏆', category: 'Sports' }
+  ];
+
+  const categories = [
+    { key: 'All', label: 'All Categories' },
+    { key: 'General', label: 'General' },
+    { key: 'Performance', label: 'Performance' },
+    { key: 'Evaluation', label: 'Evaluation' },
+    { key: 'Penalties', label: 'Penalties' },
+    { key: 'Sports', label: 'Sports' }
   ];
 
   const generalRules = [
@@ -94,101 +105,261 @@ const RulesAndRegulations = () => {
     "Matches will not be postponed except for valid natural causes (rain, bad light, etc.)."
   ];
 
+  // Filter sections based on search term and category
+  const filteredSections = useMemo(() => {
+    return sections.filter(section => {
+      const matchesCategory = selectedCategory === 'All' || section.category === selectedCategory;
+      const matchesSearch = searchTerm === '' || 
+        section.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        section.category.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [selectedCategory, searchTerm]);
+
+  // Get all content for search functionality
+  const getAllContent = () => {
+    const allContent = [];
+    
+    // Add general rules
+    generalRules.forEach((rule, index) => {
+      allContent.push({
+        section: 'general',
+        sectionLabel: 'General Rules',
+        title: rule.title,
+        content: rule.content,
+        subItems: rule.subItems,
+        type: 'rule'
+      });
+    });
+
+    // Add performance guidelines
+    performanceGuidelines.forEach((guideline, index) => {
+      allContent.push({
+        section: 'performance',
+        sectionLabel: 'Performance Guidelines',
+        title: `Guideline ${index + 1}`,
+        content: guideline,
+        type: 'guideline'
+      });
+    });
+
+    // Add scoring criteria
+    scoringCriteria.forEach((criterion, index) => {
+      allContent.push({
+        section: 'scoring',
+        sectionLabel: 'Scoring Criteria',
+        title: criterion,
+        content: '',
+        type: 'criterion'
+      });
+    });
+
+    // Add disqualification grounds
+    disqualificationGrounds.forEach((ground, index) => {
+      allContent.push({
+        section: 'disqualification',
+        sectionLabel: 'Disqualification',
+        title: `Ground ${index + 1}`,
+        content: ground,
+        type: 'ground'
+      });
+    });
+
+    // Add sports rules
+    sportsRules.forEach((rule, index) => {
+      allContent.push({
+        section: 'sports',
+        sectionLabel: 'Sports Rules',
+        title: `Rule ${index + 1}`,
+        content: rule,
+        type: 'sportsRule'
+      });
+    });
+
+    return allContent;
+  };
+
+  // Filter content based on search term
+  const filteredContent = useMemo(() => {
+    if (searchTerm === '') return [];
+    
+    const allContent = getAllContent();
+    return allContent.filter(item => 
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.sectionLabel.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
+
+  const renderSearchResults = () => {
+    if (filteredContent.length === 0) {
+      return (
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-600 mb-2">No results found</h3>
+          <p className="text-gray-500">Try adjusting your search terms or browse by category.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-gray-700 mb-2">
+            Search Results ({filteredContent.length} found)
+          </h3>
+          <div className="w-20 h-1 bg-primary-600 rounded-full"></div>
+        </div>
+        
+        {filteredContent.map((item, index) => (
+          <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                  {index + 1}
+                </span>
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-800">{item.title}</h4>
+                  <span className="text-sm text-primary-600 bg-primary-50 px-2 py-1 rounded-full">
+                    {item.sectionLabel}
+                  </span>
+                </div>
+              </div>
+            </div>
+            {item.content && (
+              <p className="text-gray-700 leading-relaxed ml-11">{item.content}</p>
+            )}
+            {item.subItems && (
+              <ul className="mt-4 space-y-2 ml-11">
+                {item.subItems.map((subItem, idx) => (
+                  <li key={idx} className="flex items-start">
+                    <span className="text-primary-500 mr-2">•</span>
+                    <span className="text-gray-700">{subItem}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const renderContent = () => {
-    switch (activeSection) {
-      case 'general':
-        return (
-          <div className="space-y-6">
-            {generalRules.map((rule, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                <h3 className="text-xl font-semibold text-primary-700 mb-3 flex items-center">
-                  <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
-                    {index + 1}
-                  </span>
-                  {rule.title}
-                </h3>
-                <p className="text-gray-700 leading-relaxed">{rule.content}</p>
-                {rule.subItems && (
-                  <ul className="mt-4 space-y-2">
-                    {rule.subItems.map((item, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <span className="text-primary-500 mr-2">•</span>
-                        <span className="text-gray-700">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+    // If searching, show search results
+    if (searchTerm !== '') {
+      return renderSearchResults();
+    }
+
+    // Show content based on selected category
+    const getContentForCategory = (category) => {
+      switch (category) {
+        case 'General':
+          return generalRules.map((rule, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <h3 className="text-xl font-semibold text-primary-700 mb-3 flex items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                  {index + 1}
+                </span>
+                {rule.title}
+              </h3>
+              <p className="text-gray-700 leading-relaxed">{rule.content}</p>
+              {rule.subItems && (
+                <ul className="mt-4 space-y-2">
+                  {rule.subItems.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="text-primary-500 mr-2">•</span>
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ));
+        
+        case 'Performance':
+          return performanceGuidelines.map((guideline, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-start">
+                <span className="bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                  {index + 1}
+                </span>
+                <p className="text-gray-700 leading-relaxed">{guideline}</p>
               </div>
-            ))}
-          </div>
-        );
-      
-      case 'performance':
-        return (
-          <div className="space-y-4">
-            {performanceGuidelines.map((guideline, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                <div className="flex items-start">
-                  <span className="bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
-                    {index + 1}
-                  </span>
-                  <p className="text-gray-700 leading-relaxed">{guideline}</p>
-                </div>
+            </div>
+          ));
+        
+        case 'Evaluation':
+          return scoringCriteria.map((criterion, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-center">
+                <span className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">
+                  {index + 1}
+                </span>
+                <h3 className="text-lg font-semibold text-gray-800">{criterion}</h3>
               </div>
-            ))}
-          </div>
-        );
-      
-      case 'scoring':
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {scoringCriteria.map((criterion, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                <div className="flex items-center">
-                  <span className="bg-yellow-100 text-yellow-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">
-                    {index + 1}
-                  </span>
-                  <h3 className="text-lg font-semibold text-gray-800">{criterion}</h3>
-                </div>
+            </div>
+          ));
+        
+        case 'Penalties':
+          return disqualificationGrounds.map((ground, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-red-100">
+              <div className="flex items-start">
+                <span className="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                  {index + 1}
+                </span>
+                <p className="text-gray-700 leading-relaxed">{ground}</p>
               </div>
-            ))}
-          </div>
-        );
-      
-      case 'disqualification':
-        return (
-          <div className="space-y-4">
-            {disqualificationGrounds.map((ground, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-red-100">
-                <div className="flex items-start">
-                  <span className="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
-                    {index + 1}
-                  </span>
-                  <p className="text-gray-700 leading-relaxed">{ground}</p>
-                </div>
+            </div>
+          ));
+        
+        case 'Sports':
+          return sportsRules.map((rule, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <div className="flex items-start">
+                <span className="bg-orange-100 text-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                  {index + 1}
+                </span>
+                <p className="text-gray-700 leading-relaxed">{rule}</p>
               </div>
-            ))}
-          </div>
-        );
-      
-      case 'sports':
-        return (
-          <div className="space-y-4">
-            {sportsRules.map((rule, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                <div className="flex items-start">
-                  <span className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
-                    {index + 1}
-                  </span>
-                  <p className="text-gray-700 leading-relaxed">{rule}</p>
-                </div>
+            </div>
+          ));
+        
+        default:
+          return null;
+      }
+    };
+
+    if (selectedCategory === 'All') {
+      // Show all content organized by category
+      return (
+        <div className="space-y-8">
+          {categories.filter(cat => cat.key !== 'All').map(category => (
+            <div key={category.key}>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                  {sections.find(s => s.category === category.key)?.icon || '📋'}
+                </span>
+                {category.label}
+              </h3>
+              <div className="space-y-4">
+                {getContentForCategory(category.key)}
               </div>
-            ))}
-          </div>
-        );
-      
-      default:
-        return null;
+            </div>
+          ))}
+        </div>
+      );
+    } else {
+      // Show content for selected category
+      return (
+        <div className="space-y-4">
+          {getContentForCategory(selectedCategory)}
+        </div>
+      );
     }
   };
 
@@ -205,33 +376,75 @@ const RulesAndRegulations = () => {
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="bg-white rounded-xl shadow-lg p-2 mb-8">
-          <div className="flex flex-wrap gap-2">
-            {sections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => setActiveSection(section.id)}
-                className={`flex items-center px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
-                  activeSection === section.id
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
+        {/* Search and Filter Controls */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {/* Search Bar */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="Search rules, guidelines, criteria..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+
+            {/* Category Filter */}
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors appearance-none bg-white"
               >
-                <span className="mr-2">{section.icon}</span>
-                {section.label}
-              </button>
-            ))}
+                {categories.map((category) => (
+                  <option key={category.key} value={category.key}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
           </div>
+
         </div>
 
         {/* Content */}
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              {sections.find(s => s.id === activeSection)?.label}
+              {searchTerm !== '' 
+                ? `Search Results for "${searchTerm}"`
+                : selectedCategory === 'All' 
+                  ? 'All Rules & Regulations'
+                  : `${selectedCategory} Rules & Guidelines`
+              }
             </h2>
             <div className="w-20 h-1 bg-primary-600 rounded-full"></div>
+            {searchTerm !== '' && (
+              <p className="text-gray-600 mt-2">
+                Found {filteredContent.length} result{filteredContent.length !== 1 ? 's' : ''} across all sections
+              </p>
+            )}
           </div>
           
           {renderContent()}

@@ -31,7 +31,7 @@ This event promotes teamwork, creativity, and critical thinking while making psy
       "The decision of the judges and moderators will be final."
     ],
     contacts: [
-      { name: "Prof. Meghana K S", phone: "", role: "SPOC" },
+      { name: "Prof. Meghana K S", phone: "9999999999", role: "SPOC" },
       { name: "Simran Paranjape", phone: "9945131195", role: "Student In-Charge" },
       { name: "Arshad Shaik", phone: "9392484722", role: "Student In-Charge" }
     ]
@@ -59,7 +59,7 @@ This event promotes teamwork, creativity, and critical thinking while making psy
       "Extra points for beauty, elegance, and smart use of paper. Judges' decision will be final."
     ],
     contacts: [
-      { name: "Prof. Neethi G S", phone: "", role: "SPOC" },
+      { name: "Prof. Neethi G S", phone: "9999999998", role: "SPOC" },
       { name: "Ms. Sunitha N", phone: "7483333629", role: "Student In-Charge" },
       { name: "Sneha Das", phone: "9734746639", role: "Student In-Charge" }
     ]

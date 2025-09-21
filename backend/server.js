@@ -10,6 +10,8 @@ const eventRoutes = require('./routes/events');
 const registrationRoutes = require('./routes/registrations');
 const contactRoutes = require('./routes/contacts');
 const adminRoutes = require('./routes/admin');
+const visitorRoutes = require('./routes/visitors');
+const ticketDownloadRoutes = require('./routes/ticketDownloads');
 
 const app = express();
 
@@ -27,7 +29,11 @@ app.use('/api/', limiter);
 // CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://gardenia2025.onrender.com'] 
+    ? [
+        'https://gardenia2025.onrender.com',
+        'https://gardenia2025-frontend.onrender.com',
+        process.env.FRONTEND_URL
+      ].filter(Boolean)
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true
 }));
@@ -54,6 +60,8 @@ app.use('/api/events', eventRoutes);
 app.use('/api/register', registrationRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/visitors', visitorRoutes);
+app.use('/api/ticket-downloads', ticketDownloadRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -66,12 +74,14 @@ app.get('/api/health', (req, res) => {
 
 // Error handling middleware
 app.use((error, req, res, next) => {
-  console.error('Error:', error);
+  if (config.NODE_ENV === 'development') {
+    console.error('Error:', error);
+  }
   
   if (error.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
-      message: 'Validation Error',
+      message: 'Please check your information and try again.',
       errors: Object.values(error.errors).map(e => e.message)
     });
   }
@@ -79,7 +89,7 @@ app.use((error, req, res, next) => {
   if (error.name === 'CastError') {
     return res.status(400).json({
       success: false,
-      message: 'Invalid ID format'
+      message: 'The requested information could not be found. Please check and try again.'
     });
   }
   

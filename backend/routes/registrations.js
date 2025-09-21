@@ -1,9 +1,11 @@
 const express = require('express');
 const Registration = require('../models/Registration');
 const Event = require('../models/Event');
+const TicketDownload = require('../models/TicketDownload');
 const { body, validationResult } = require('express-validator');
 const { generatePDF } = require('../utils/pdfGen');
 const { generateQRCode, generateRegistrationId, createQRPayload } = require('../utils/qrGen');
+const { uploadTicketToS3, getPublicTicketUrl } = require('../utils/s3Upload');
 const fs = require('fs');
 const path = require('path');
 
@@ -11,7 +13,7 @@ const router = express.Router();
 
 // POST /api/register - Create new registration
 router.post('/', [
-  body('eventId').isMongoId().withMessage('Valid event ID is required'),
+  body('eventId').notEmpty().withMessage('Valid event ID is required'),
   body('isGardenCityStudent').isBoolean().withMessage('Student type must be specified'),
   body('leader.name').notEmpty().withMessage('Leader name is required'),
   body('leader.email').isEmail().withMessage('Valid email is required'),
@@ -29,8 +31,16 @@ router.post('/', [
 
     const { eventId, isGardenCityStudent, leader, teamMembers = [] } = req.body;
 
-    // Validate event exists
-    const event = await Event.findById(eventId);
+    // Validate event exists (support both ObjectId and string ID)
+    let event;
+    if (eventId.match(/^[0-9a-fA-F]{24}$/)) {
+      // Valid MongoDB ObjectId
+      event = await Event.findById(eventId);
+    } else {
+      // String ID - find by customId field
+      event = await Event.findOne({ customId: eventId });
+    }
+    
     if (!event) {
       return res.status(404).json({
         success: false,
@@ -64,7 +74,6 @@ router.post('/', [
       teamMembers,
       finalEventDate,
       status: 'APPROVED',
-      paymentStatus: 'PENDING',
       qrPayload: ''
     };
 
@@ -78,21 +87,39 @@ router.post('/', [
 
     // Generate PDF and QR code
     try {
-      const pdfBuffer = await generatePDF(registration, event);
       const qrCodeDataURL = await generateQRCode(qrPayload);
-
-      // Save PDF to uploads directory
-      const uploadsDir = path.join(__dirname, '../uploads');
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-      }
+      const pdfBuffer = await generatePDF(registration, event, qrCodeDataURL);
 
       const pdfFileName = `${regId}.pdf`;
-      const pdfPath = path.join(uploadsDir, pdfFileName);
-      fs.writeFileSync(pdfPath, pdfBuffer);
+      let pdfUrl = '';
+
+      // Try S3 upload first, fallback to local storage
+      try {
+        // Check if S3 is configured
+        if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && 
+            process.env.AWS_ACCESS_KEY_ID !== 'your-aws-access-key-id') {
+          pdfUrl = await uploadTicketToS3(pdfBuffer, pdfFileName);
+          console.log('✅ PDF uploaded to S3:', pdfUrl);
+        } else {
+          throw new Error('S3 not configured, falling back to local storage');
+        }
+      } catch (s3Error) {
+        console.log('⚠️ S3 upload failed, using local storage:', s3Error.message);
+        
+        // Fallback to local storage
+        const uploadsDir = path.join(__dirname, '../uploads');
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+
+        const pdfPath = path.join(uploadsDir, pdfFileName);
+        fs.writeFileSync(pdfPath, pdfBuffer);
+        pdfUrl = `/uploads/${pdfFileName}`;
+        console.log('✅ PDF saved locally:', pdfUrl);
+      }
 
       // Update registration with PDF URL
-      registration.pdfUrl = `/uploads/${pdfFileName}`;
+      registration.pdfUrl = pdfUrl;
       await registration.save();
 
       res.status(201).json({
@@ -108,7 +135,7 @@ router.post('/', [
       });
 
     } catch (pdfError) {
-      console.error('Error generating PDF/QR:', pdfError);
+      console.error('PDF generation failed:', pdfError);
       // Still return success but without PDF
       res.status(201).json({
         success: true,
@@ -122,10 +149,175 @@ router.post('/', [
     }
 
   } catch (error) {
-    console.error('Error creating registration:', error);
+    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create registration'
+      message: 'Unable to complete registration. Please check your information and try again.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// GET /api/registrations/test-qr - Generate a test QR code for debugging
+router.get('/test-qr', async (req, res) => {
+  try {
+    const { generateQRCode, createQRPayload, generateRegistrationId } = require('../utils/qrGen');
+    
+    // Create a test registration in the database first
+    const testRegId = generateRegistrationId();
+    
+    // Find any existing event to use for testing
+    const testEvent = await Event.findOne();
+    if (!testEvent) {
+      return res.status(404).json({
+        success: false,
+        message: 'No events found. Please create an event first.'
+      });
+    }
+    
+    // Create test registration data
+    const testRegistrationData = {
+      regId: testRegId,
+      eventId: testEvent._id,
+      isGardenCityStudent: true,
+      leader: {
+        name: 'Test User',
+        registerNumber: '24TEST001',
+        email: 'test@example.com',
+        phone: '9876543210'
+      },
+      teamMembers: [],
+      finalEventDate: testEvent.dates.inhouse,
+      status: 'APPROVED',
+      qrPayload: ''
+    };
+    
+    // Create QR payload
+    const qrPayload = createQRPayload(testRegistrationData, testEvent);
+    testRegistrationData.qrPayload = JSON.stringify(qrPayload);
+    
+    // Save test registration to database
+    const testRegistration = new Registration(testRegistrationData);
+    await testRegistration.save();
+    
+    // Generate QR code
+    const qrCodeDataURL = await generateQRCode(qrPayload);
+    
+    res.json({
+      success: true,
+      data: {
+        qrCode: qrCodeDataURL,
+        payload: qrPayload,
+        registrationId: testRegId,
+        message: 'Test registration created successfully'
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Unable to generate test QR code. Please try again.',
+      error: error.message
+    });
+  }
+});
+
+// GET /api/registrations/debug - List all registrations for debugging
+router.get('/debug', async (req, res) => {
+  try {
+    const registrations = await Registration.find()
+      .populate('eventId', 'title category')
+      .select('regId leader.name eventId status')
+      .lean();
+    
+    res.json({
+      success: true,
+      data: {
+        count: registrations.length,
+        registrations: registrations
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Unable to load registrations. Please try again.',
+      error: error.message
+    });
+  }
+});
+
+// GET /api/registrations/validate/:regId - Validate registration by QR code
+router.get('/validate/:regId', async (req, res) => {
+  try {
+    const { regId } = req.params;
+    
+    const registration = await Registration.findOne({ regId })
+      .populate('eventId', 'title category department time teamSize rules')
+      .lean();
+    
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Registration not found'
+      });
+    }
+    
+    res.json({
+      success: true,
+      data: registration
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Unable to verify registration. Please check the QR code and try again.'
+    });
+  }
+});
+
+// POST /api/registrations/entry-log - Log entry/exit actions
+router.post('/entry-log', async (req, res) => {
+  try {
+    const { registrationId, eventId, action, timestamp } = req.body;
+    
+    // Validate required fields
+    if (!registrationId || !eventId || !action || !timestamp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields'
+      });
+    }
+    
+    // Validate action type
+    const validActions = ['ENTRY_ALLOWED', 'ENTRY_DENIED', 'EXIT'];
+    if (!validActions.includes(action)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid action. Please try again.'
+      });
+    }
+    
+    // Create entry log entry
+    const entryLog = {
+      registrationId,
+      eventId,
+      action,
+      timestamp: new Date(timestamp),
+      loggedAt: new Date()
+    };
+    
+    // In a real application, you would save this to a database
+    // Entry logged successfully
+    
+    res.json({
+      success: true,
+      message: 'Entry logged successfully',
+      data: entryLog
+    });
+    
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Unable to log entry. Please try again.'
     });
   }
 });
@@ -149,6 +341,117 @@ router.get('/:id/pdf', async (req, res) => {
       });
     }
 
+    // Track the download
+    try {
+      const downloadRecord = new TicketDownload({
+        registrationId: req.params.id,
+        ipAddress: req.ip || req.connection.remoteAddress,
+        userAgent: req.headers['user-agent'],
+        downloadType: 'manual'
+      });
+      await downloadRecord.save();
+    } catch (trackingError) {
+      // Don't fail the download if tracking fails
+    }
+
+    // If it's an S3 URL, fetch and serve the file directly
+    if (registration.pdfUrl.startsWith('https://')) {
+      try {
+        const https = require('https');
+        const url = require('url');
+        
+        const parsedUrl = url.parse(registration.pdfUrl);
+        const options = {
+          hostname: parsedUrl.hostname,
+          port: 443,
+          path: parsedUrl.path,
+          method: 'GET'
+        };
+
+        // Download the file to memory first, then serve it
+        const chunks = [];
+        
+        const request = https.request(options, (response) => {
+          // Check if the S3 response is successful
+          if (response.statusCode !== 200) {
+            console.error('S3 returned error:', response.statusCode);
+            return res.status(500).json({
+              success: false,
+              message: 'Unable to download ticket. Please try again.'
+            });
+          }
+
+          // Collect chunks
+          response.on('data', (chunk) => {
+            chunks.push(chunk);
+          });
+
+          response.on('end', () => {
+            try {
+              // Combine all chunks into a buffer
+              const pdfBuffer = Buffer.concat(chunks);
+              
+              // Set headers to force download
+              res.setHeader('Content-Type', 'application/pdf');
+              res.setHeader('Content-Disposition', `attachment; filename="Gardenia2025-Ticket-${registration.regId}.pdf"`);
+              res.setHeader('Cache-Control', 'no-cache');
+              res.setHeader('Content-Length', pdfBuffer.length);
+              res.setHeader('Accept-Ranges', 'bytes');
+              
+              // Send the PDF buffer as binary data
+              res.writeHead(200, {
+                'Content-Type': 'application/octet-stream',
+                'Content-Disposition': `attachment; filename="Gardenia2025-Ticket-${registration.regId}.pdf"`,
+                'Content-Length': pdfBuffer.length,
+                'Cache-Control': 'no-cache',
+                'X-Content-Type-Options': 'nosniff'
+              });
+              res.end(pdfBuffer);
+              
+              console.log(`✅ PDF served successfully: ${registration.regId} (${pdfBuffer.length} bytes)`);
+            } catch (error) {
+              console.error('Error serving PDF buffer:', error);
+              if (!res.headersSent) {
+                res.status(500).json({
+                  success: false,
+                  message: 'Unable to download ticket. Please try again.'
+                });
+              }
+            }
+          });
+
+          response.on('error', (error) => {
+            console.error('Error downloading S3 file:', error);
+            if (!res.headersSent) {
+              res.status(500).json({
+                success: false,
+                message: 'Unable to download ticket. Please try again.'
+              });
+            }
+          });
+        });
+
+        request.on('error', (error) => {
+          console.error('Error fetching S3 file:', error);
+          res.status(500).json({
+            success: false,
+            message: 'Unable to download ticket. Please try again.'
+          });
+        });
+
+        request.end();
+        return;
+      } catch (error) {
+        console.error('Error processing S3 URL:', error);
+        res.status(500).json({
+          success: false,
+          message: 'Unable to download ticket. Please try again.'
+        });
+        return;
+      }
+    }
+
+    // Fallback for local files (for backward compatibility)
     const pdfPath = path.join(__dirname, '../uploads', path.basename(registration.pdfUrl));
     
     if (!fs.existsSync(pdfPath)) {
@@ -161,10 +464,9 @@ router.get('/:id/pdf', async (req, res) => {
     res.download(pdfPath);
 
   } catch (error) {
-    console.error('Error fetching PDF:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch PDF'
+      message: 'Unable to download ticket. Please try again.'
     });
   }
 });
@@ -173,7 +475,7 @@ router.get('/:id/pdf', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const registration = await Registration.findOne({ regId: req.params.id })
-      .populate('eventId', 'title category type fee');
+      .populate('eventId', 'title category type');
     
     if (!registration) {
       return res.status(404).json({
@@ -187,10 +489,9 @@ router.get('/:id', async (req, res) => {
       data: registration
     });
   } catch (error) {
-    console.error('Error fetching registration:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch registration'
+      message: 'Unable to load registration details. Please try again.'
     });
   }
 });

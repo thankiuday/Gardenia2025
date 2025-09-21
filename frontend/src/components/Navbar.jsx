@@ -1,11 +1,46 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ElementalLogo from './ElementalLogo';
 import S3_ASSETS from '../config/s3-assets';
 
+// Enhanced Skeleton Loader Component
+const SkeletonLoader = ({ className = "" }) => (
+  <div className={`relative overflow-hidden rounded-lg ${className}`}>
+    {/* Base skeleton */}
+    <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 via-emerald-50 to-emerald-100 rounded-lg"></div>
+    
+    {/* Shimmer effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse rounded-lg"></div>
+    
+    {/* Moving shimmer */}
+    <div 
+      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent rounded-lg"
+      style={{
+        animation: 'logoShimmer 2s ease-in-out infinite',
+        width: '30%',
+        height: '100%'
+      }}
+    ></div>
+    
+    {/* Logo-like elements */}
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="w-8 h-8 bg-emerald-200/60 rounded-full animate-pulse"></div>
+    </div>
+  </div>
+);
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLogoLoading, setIsLogoLoading] = useState(true);
   const location = useLocation();
+
+  // Simulate logo loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLogoLoading(false);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   const isActive = (path) => location.pathname === path;
 
@@ -32,9 +67,13 @@ const Navbar = () => {
             <div className="flex items-center flex-shrink-0">
               <Link to="/" className="flex items-center" aria-label="Gardenia 2025 Home">
                 <div className="relative">
-                  <ElementalLogo className="w-32 sm:w-40 md:w-45 h-12 sm:h-14 md:h-16 animate-pulse" style={{
-                    animation: 'gentleGlow 2s ease-in-out infinite'
-                  }} />
+                  {isLogoLoading ? (
+                    <SkeletonLoader className="w-32 sm:w-40 md:w-45 h-12 sm:h-14 md:h-16 rounded-lg" />
+                  ) : (
+                    <ElementalLogo className="w-32 sm:w-40 md:w-45 h-12 sm:h-14 md:h-16 animate-pulse" style={{
+                      animation: 'gentleGlow 2s ease-in-out infinite'
+                    }} />
+                  )}
                 </div>
               </Link>
             </div>

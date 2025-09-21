@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: gardenia2025-frontend
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://gardenia2025-backend.onrender.com
+      - key: GENERATE_SOURCEMAP
+        value: false

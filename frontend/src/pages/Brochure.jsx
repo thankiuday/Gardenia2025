@@ -1,8 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import S3_ASSETS from '../config/s3-assets';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 const Brochure = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
+
+  // Simulate page loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPageLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleDownload = () => {
     setIsLoading(true);
@@ -13,6 +23,30 @@ const Brochure = () => {
       window.open(S3_ASSETS.documents.brochure, '_blank');
     }, 1000);
   };
+
+  if (pageLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section Skeleton */}
+        <section className="relative bg-gradient-to-br from-gray-900 via-primary-700 to-primary-900 text-white py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="animate-pulse">
+              <div className="h-16 bg-white/20 rounded w-1/2 mx-auto mb-6"></div>
+              <div className="h-8 bg-white/20 rounded w-3/4 mx-auto mb-8"></div>
+              <div className="h-6 bg-white/20 rounded w-2/3 mx-auto"></div>
+            </div>
+          </div>
+        </section>
+
+        {/* Content Skeleton */}
+        <section className="py-16">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SkeletonLoader type="card" />
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -51,7 +85,7 @@ const Brochure = () => {
               <button
                 onClick={handleDownload}
                 disabled={isLoading}
-                className="inline-flex items-center px-8 py-4 bg-green-500 hover:bg-green-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
@@ -79,31 +113,31 @@ const Brochure = () => {
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">What's Included</h3>
                   <ul className="space-y-3">
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Complete event schedule
                     </li>
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Venue locations and maps
                     </li>
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Event descriptions and rules
                     </li>
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Registration information
                     </li>
                     <li className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-emerald-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                       Contact details and support
@@ -114,13 +148,13 @@ const Brochure = () => {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">Event Highlights</h3>
                   <div className="space-y-4">
-                    <div className="p-4 bg-primary-50 rounded-lg">
-                      <h4 className="font-semibold text-primary-800">Department Flagship Events</h4>
-                      <p className="text-sm text-primary-600">Showcasing the best of each department</p>
+                    <div className="p-4 bg-emerald-50 rounded-lg">
+                      <h4 className="font-semibold text-emerald-800">Department Flagship Events</h4>
+                      <p className="text-sm text-emerald-600">Showcasing the best of each department</p>
                     </div>
-                    <div className="p-4 bg-red-50 rounded-lg">
-                      <h4 className="font-semibold text-red-800">Signature Events</h4>
-                      <p className="text-sm text-red-600">Unique events that define Gardenia 2025</p>
+                    <div className="p-4 bg-gold-50 rounded-lg">
+                      <h4 className="font-semibold text-gold-800">Signature Events</h4>
+                      <p className="text-sm text-gold-600">Unique events that define Gardenia 2025</p>
                     </div>
                     <div className="p-4 bg-green-50 rounded-lg">
                       <h4 className="font-semibold text-green-800">Sports Events</h4>

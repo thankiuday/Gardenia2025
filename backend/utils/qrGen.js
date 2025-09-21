@@ -13,7 +13,6 @@ const generateQRCode = async (data) => {
     
     return qrDataURL;
   } catch (error) {
-    console.error('Error generating QR code:', error);
     throw new Error('Failed to generate QR code');
   }
 };

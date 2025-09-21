@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const eventSchema = new mongoose.Schema({
+  customId: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
   title: {
     type: String,
     required: true,
@@ -35,12 +41,13 @@ const eventSchema = new mongoose.Schema({
     },
     phone: {
       type: String,
-      required: true
+      required: false,
+      default: ''
     },
     role: {
       type: String,
       required: true,
-      enum: ['SPOC', 'Student In-Charge']
+      enum: ['SPOC', 'Student In-Charge', 'Student co-ordinator – College-level', 'Student co-ordinator – School-level']
     }
   }],
   dates: {

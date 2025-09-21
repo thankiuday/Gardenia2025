@@ -210,7 +210,9 @@ This project is created for Garden City University's Gardenia 2025 event.
 
 For questions or support, please contact:
 - **Event Coordinator**: Garden City University
-- **Technical Support**: [Your Contact Information]
+- **Address**: 16th KM, Old Madras Road, Bangalore – 560 049
+- **Phone**: +91 (80) 66487600 / +91 90-1992-1992
+- **Email**: pro@gcu.edu.in
 
 ---
 

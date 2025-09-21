@@ -1,23 +1,73 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { allEvents } from '../data/events';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
+import SkeletonLoader from '../components/SkeletonLoader';
 
 const EventDetails = () => {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const foundEvent = allEvents.find(e => e.id === id);
-    if (foundEvent) {
-      setEvent(foundEvent);
+    const fetchEvent = async () => {
+      try {
+        setLoading(true);
+        if (!id) {
+          setError('No event ID provided');
+          setLoading(false);
+          return;
+        }
+        
+        const response = await axios.get(`${API_ENDPOINTS.EVENTS}/${id}`);
+        if (response.data.success) {
+          // Map customId to id for frontend compatibility
+          const eventWithId = {
+            ...response.data.data,
+            id: response.data.data.customId
+          };
+          setEvent(eventWithId);
+        } else {
+          setError('This event is no longer available or has been removed.');
+        }
+      } catch (err) {
+        console.error('EventDetails: Error fetching event:', err);
+        setError('We couldn\'t find this event. It may have been removed or there might be a connection issue.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchEvent();
+    } else {
+      setError('No event ID provided');
+      setLoading(false);
     }
   }, [id]);
 
-  if (!event) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SkeletonLoader type="card" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-4 text-red-500">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Event Not Found</h2>
+          <p className="text-gray-600 mb-6">The event you're looking for doesn't exist or has been removed.</p>
           <Link to="/events" className="btn-primary">
             Back to Events
           </Link>
@@ -33,7 +83,7 @@ const EventDetails = () => {
         <div className="mb-8">
           <Link 
             to="/events" 
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+            className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-medium"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -48,9 +98,9 @@ const EventDetails = () => {
             <div className="flex items-center gap-3 mb-4">
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 event.category === 'Department Flagship Events' 
-                  ? 'bg-blue-100 text-blue-800' 
+                  ? 'bg-emerald-100 text-emerald-800' 
                   : event.category === 'Signature Events'
-                  ? 'bg-purple-100 text-purple-800'
+                  ? 'bg-gold-100 text-gold-800'
                   : 'bg-green-100 text-green-800'
               }`}>
                 {event.category}
@@ -146,7 +196,7 @@ const EventDetails = () => {
                 <div key={index} className="bg-gray-50 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-medium text-gray-900">{contact.name}</h4>
-                    <span className="px-2 py-1 bg-primary-100 text-primary-800 text-xs font-medium rounded">
+                    <span className="px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded">
                       {contact.role}
                     </span>
                   </div>
@@ -155,7 +205,7 @@ const EventDetails = () => {
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
-                      <a href={`tel:${contact.phone}`} className="hover:text-primary-600">
+                      <a href={`tel:${contact.phone}`} className="hover:text-emerald-600">
                         {contact.phone}
                       </a>
                     </div>

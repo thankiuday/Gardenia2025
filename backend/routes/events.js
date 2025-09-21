@@ -13,18 +13,25 @@ router.get('/', async (req, res) => {
       data: events
     });
   } catch (error) {
-    console.error('Error fetching events:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch events'
+      message: 'Unable to load events. Please try again.'
     });
   }
 });
 
-// GET /api/events/:id - Get event by ID
+// GET /api/events/:id - Get event by ID (supports both ObjectId and string ID)
 router.get('/:id', async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id);
+    let event;
+    
+    // Check if it's a valid MongoDB ObjectId
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+      event = await Event.findById(req.params.id);
+    } else {
+      // If it's not an ObjectId, try to find by custom ID field
+      event = await Event.findOne({ customId: req.params.id });
+    }
     
     if (!event) {
       return res.status(404).json({
@@ -41,7 +48,7 @@ router.get('/:id', async (req, res) => {
     console.error('Error fetching event:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch event'
+      message: 'Unable to load event details. Please try again.'
     });
   }
 });
@@ -57,10 +64,9 @@ router.get('/category/:category', async (req, res) => {
       data: events
     });
   } catch (error) {
-    console.error('Error fetching events by category:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch events by category'
+      message: 'Unable to load events for this category. Please try again.'
     });
   }
 });
@@ -70,7 +76,6 @@ router.post('/', [
   body('title').notEmpty().withMessage('Event title is required'),
   body('category').isIn(['Department Flagship Events', 'Signature Events', 'Sports Events']).withMessage('Invalid category'),
   body('type').isIn(['Individual', 'Group']).withMessage('Invalid event type'),
-  body('fee').notEmpty().withMessage('Registration fee is required'),
   body('description').notEmpty().withMessage('Event description is required')
 ], async (req, res) => {
   try {
@@ -92,10 +97,9 @@ router.post('/', [
       data: event
     });
   } catch (error) {
-    console.error('Error creating event:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create event'
+      message: 'Unable to create event. Please try again.'
     });
   }
 });

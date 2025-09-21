@@ -3,17 +3,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* Professional Blue Primary Colors */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
+  /* Gardenia 2025 - Emerald Green Primary Colors */
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-300: #6ee7b7;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
   
   /* Professional Light Green Colors */
   --color-green-50: #f0fdf4;
@@ -27,7 +27,19 @@
   --color-green-800: #166534;
   --color-green-900: #14532d;
   
-  /* Professional Red Colors */
+  /* Gardenia 2025 - Warm Gold Accent Colors */
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+  --color-gold-800: #92400e;
+  --color-gold-900: #78350f;
+  
+  /* Professional Red Colors (for alerts/errors) */
   --color-red-50: #fef2f2;
   --color-red-100: #fee2e2;
   --color-red-200: #fecaca;
@@ -330,5 +342,112 @@
   
   .loading-spinner {
     @apply w-12 h-12 border-4 border-gray-200 border-t-primary-600 rounded-full animate-spin;
+  }
+  
+  /* Enhanced skeleton animations */
+  .skeleton-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes logoShimmer {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* QR Scanner Animations */
+@keyframes scanLine {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes cornerPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes movingBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+  
+  /* Improved responsive modal styles */
+  .modal-responsive {
+    @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4 md:p-6;
+  }
+  
+  .modal-content-responsive {
+    @apply bg-white rounded-lg sm:rounded-xl p-4 sm:p-6 md:p-8 max-w-sm sm:max-w-md w-full mx-2 sm:mx-4 shadow-2xl;
+  }
+  
+  /* Enhanced button responsiveness */
+  .btn-responsive {
+    @apply w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base font-medium rounded-lg transition-all duration-200 min-h-[44px] flex items-center justify-center;
+  }
+  
+  /* Mobile-optimized hero section */
+  .hero-mobile {
+    @apply min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh];
+  }
+  
+  /* Mobile video optimization */
+  @media (max-width: 640px) {
+    .hero-video {
+      object-position: center center;
+    }
   }
 }

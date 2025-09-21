@@ -8,10 +8,10 @@ const createAdmin = async () => {
     await mongoose.connect(config.MONGODB_URI);
     console.log('Connected to MongoDB');
 
-    // Create admin user
+    // Create admin user with predefined credentials
     const adminData = {
-      username: 'admin',
-      passwordHash: 'admin123' // This will be hashed by the pre-save middleware
+      username: 'gardencity.university.in',
+      passwordHash: 'gardenia@2025' // This will be hashed by the pre-save middleware
     };
 
     // Check if admin already exists
@@ -26,9 +26,9 @@ const createAdmin = async () => {
     await admin.save();
 
     console.log('Admin user created successfully:');
-    console.log('Username: admin');
-    console.log('Password: admin123');
-    console.log('Please change the password after first login!');
+    console.log('Username: gardencity.university.in');
+    console.log('Password: gardenia@2025');
+    console.log('Admin credentials are ready for Gardenia 2025!');
 
   } catch (error) {
     console.error('Error creating admin user:', error);

@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import useScrollToTop from '../hooks/useScrollToTop';
 
 const PageTransition = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [displayChildren, setDisplayChildren] = useState(children);
   const [animationClass, setAnimationClass] = useState('fade-in');
   const location = useLocation();
+  
+  // Use scroll to top hook
+  useScrollToTop();
 
   useEffect(() => {
     if (displayChildren !== children) {

@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
 const Registration = require('../models/Registration');
 const Contact = require('../models/Contact');
+const Visitor = require('../models/Visitor');
+const TicketDownload = require('../models/TicketDownload');
 const { body, validationResult } = require('express-validator');
 const config = require('../config');
 
@@ -24,7 +26,7 @@ const authenticateToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({
         success: false,
-        message: 'Invalid or expired token'
+        message: 'Your session has expired. Please log in again.'
       });
     }
     req.user = user;
@@ -54,7 +56,7 @@ router.post('/login', [
     if (!admin) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Incorrect username or password. Please try again.'
       });
     }
 
@@ -63,7 +65,7 @@ router.post('/login', [
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Incorrect username or password. Please try again.'
       });
     }
 
@@ -87,7 +89,6 @@ router.post('/login', [
     });
 
   } catch (error) {
-    console.error('Error during admin login:', error);
     res.status(500).json({
       success: false,
       message: 'Login failed'
@@ -105,9 +106,9 @@ router.get('/stats', authenticateToken, async (req, res) => {
     const gcuRegistrations = await Registration.countDocuments({ isGardenCityStudent: true });
     const outsideRegistrations = await Registration.countDocuments({ isGardenCityStudent: false });
     
-    // Get payment status counts
-    const pendingPayments = await Registration.countDocuments({ paymentStatus: 'PENDING' });
-    const completedPayments = await Registration.countDocuments({ paymentStatus: 'DONE' });
+    // Get registration status counts
+    const pendingRegistrations = await Registration.countDocuments({ status: 'PENDING' });
+    const approvedRegistrations = await Registration.countDocuments({ status: 'APPROVED' });
     
     // Get registrations per event
     const registrationsPerEvent = await Registration.aggregate([
@@ -136,24 +137,39 @@ router.get('/stats', authenticateToken, async (req, res) => {
     // Get total contact queries
     const totalContacts = await Contact.countDocuments();
 
+    // Get visitor statistics
+    const totalVisitors = await Visitor.countDocuments();
+    const uniqueVisitors = await Visitor.countDocuments({ isUnique: true });
+
+    // Get ticket download statistics
+    const totalTicketDownloads = await TicketDownload.countDocuments();
+    const uniqueTicketDownloads = await TicketDownload.distinct('registrationId').length;
+    const manualDownloads = await TicketDownload.countDocuments({ downloadType: 'manual' });
+    const autoDownloads = await TicketDownload.countDocuments({ downloadType: 'auto' });
+
     res.json({
       success: true,
       data: {
         totalRegistrations,
         gcuRegistrations,
         outsideRegistrations,
-        pendingPayments,
-        completedPayments,
+        pendingRegistrations,
+        approvedRegistrations,
         registrationsPerEvent,
-        totalContacts
+        totalContacts,
+        totalVisitors,
+        uniqueVisitors,
+        totalTicketDownloads,
+        uniqueTicketDownloads,
+        manualDownloads,
+        autoDownloads
       }
     });
 
   } catch (error) {
-    console.error('Error fetching admin stats:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch statistics'
+      message: 'Unable to load dashboard statistics. Please try again.'
     });
   }
 });
@@ -164,14 +180,46 @@ router.get('/registrations', authenticateToken, async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
+    const { studentType, search } = req.query;
 
-    const registrations = await Registration.find()
-      .populate('eventId', 'title category type fee')
+    // Build filter object
+    let filter = {};
+    
+    // Filter by student type
+    if (studentType && studentType !== 'ALL') {
+      if (studentType === 'GCU') {
+        filter.isGardenCityStudent = true;
+      } else if (studentType === 'EXTERNAL') {
+        filter.isGardenCityStudent = false;
+      }
+    }
+
+    // Search functionality
+    if (search) {
+      // First, find events that match the search term
+      const Event = require('../models/Event');
+      const matchingEvents = await Event.find({
+        title: { $regex: search, $options: 'i' }
+      }).select('_id');
+      
+      const matchingEventIds = matchingEvents.map(event => event._id);
+      
+      filter.$or = [
+        { 'leader.name': { $regex: search, $options: 'i' } },
+        { 'leader.email': { $regex: search, $options: 'i' } },
+        { 'leader.phone': { $regex: search, $options: 'i' } },
+        { regId: { $regex: search, $options: 'i' } },
+        ...(matchingEventIds.length > 0 ? [{ eventId: { $in: matchingEventIds } }] : [])
+      ];
+    }
+
+    const registrations = await Registration.find(filter)
+      .populate('eventId', 'title category type')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Registration.countDocuments();
+    const total = await Registration.countDocuments(filter);
 
     res.json({
       success: true,
@@ -186,17 +234,16 @@ router.get('/registrations', authenticateToken, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error fetching registrations:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch registrations'
+      message: 'Unable to load registrations. Please try again.'
     });
   }
 });
 
-// PATCH /api/admin/registrations/:id/payment - Update payment status (Protected)
-router.patch('/registrations/:id/payment', authenticateToken, [
-  body('paymentStatus').isIn(['PENDING', 'DONE']).withMessage('Invalid payment status')
+// PATCH /api/admin/registrations/:id/status - Update registration status (Protected)
+router.patch('/registrations/:id/status', authenticateToken, [
+  body('status').isIn(['PENDING', 'APPROVED', 'REJECTED']).withMessage('Invalid registration status')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -209,7 +256,7 @@ router.patch('/registrations/:id/payment', authenticateToken, [
     }
 
     const { id } = req.params;
-    const { paymentStatus } = req.body;
+    const { status } = req.body;
 
     const registration = await Registration.findOne({ regId: id });
     if (!registration) {
@@ -219,23 +266,22 @@ router.patch('/registrations/:id/payment', authenticateToken, [
       });
     }
 
-    registration.paymentStatus = paymentStatus;
+    registration.status = status;
     await registration.save();
 
     res.json({
       success: true,
-      message: 'Payment status updated successfully',
+      message: 'Registration status updated successfully',
       data: {
         regId: registration.regId,
-        paymentStatus: registration.paymentStatus
+        status: registration.status
       }
     });
 
   } catch (error) {
-    console.error('Error updating payment status:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update payment status'
+      message: 'Unable to update registration status. Please try again.'
     });
   }
 });
@@ -246,13 +292,27 @@ router.get('/contacts', authenticateToken, async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
+    const { search } = req.query;
 
-    const contacts = await Contact.find()
+    // Build filter object
+    let filter = {};
+    
+    // Search functionality
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } },
+        { message: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const contacts = await Contact.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Contact.countDocuments();
+    const total = await Contact.countDocuments(filter);
 
     res.json({
       success: true,
@@ -267,10 +327,9 @@ router.get('/contacts', authenticateToken, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error fetching contacts:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch contacts'
+      message: 'Unable to load contact messages. Please try again.'
     });
   }
 });

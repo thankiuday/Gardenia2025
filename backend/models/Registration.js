@@ -7,8 +7,7 @@ const registrationSchema = new mongoose.Schema({
     unique: true
   },
   eventId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
+    type: String,
     required: true
   },
   isGardenCityStudent: {
@@ -18,7 +17,7 @@ const registrationSchema = new mongoose.Schema({
   leader: {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Team leader name is required'],
       trim: true
     },
     registerNumber: {
@@ -29,15 +28,19 @@ const registrationSchema = new mongoose.Schema({
       type: String,
       trim: true
     },
+    collegeRegisterNumber: {
+      type: String,
+      trim: true
+    },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Team leader email is required'],
       trim: true,
       lowercase: true
     },
     phone: {
       type: String,
-      required: true,
+      required: [true, 'Team leader phone number is required'],
       trim: true
     }
   },
@@ -54,6 +57,10 @@ const registrationSchema = new mongoose.Schema({
     collegeName: {
       type: String,
       trim: true
+    },
+    collegeRegisterNumber: {
+      type: String,
+      trim: true
     }
   }],
   finalEventDate: {
@@ -64,11 +71,6 @@ const registrationSchema = new mongoose.Schema({
     type: String,
     enum: ['APPROVED', 'REJECTED', 'PENDING'],
     default: 'APPROVED'
-  },
-  paymentStatus: {
-    type: String,
-    enum: ['PENDING', 'DONE'],
-    default: 'PENDING'
   },
   qrPayload: {
     type: String,
@@ -85,6 +87,5 @@ const registrationSchema = new mongoose.Schema({
 // Index for faster queries
 registrationSchema.index({ regId: 1 });
 registrationSchema.index({ eventId: 1 });
-registrationSchema.index({ paymentStatus: 1 });
 
 module.exports = mongoose.model('Registration', registrationSchema);

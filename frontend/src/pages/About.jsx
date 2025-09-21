@@ -21,20 +21,20 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Garden City University
+                About Us / Our Legacy
               </h2>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Garden City University is a premier institution committed to excellence in education and innovation. 
-                Located in the heart of Bangalore, we have been nurturing minds and shaping futures for decades.
+                Garden City University (GCU), Bengaluru, was founded by the Garden City Education Trust in 1992 under the leadership of Dr. Joseph V. G., along with eminent educationists like Prof. Shivarudrappa, Dr. Hanumanthappa, Prof. V. B. Coutinho, and Prof. Rame Gowda.
+              </p>
+              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+                In 2013, GCU was established as a university under Karnataka State Act No. 47 of 2013, recognised by the UGC, and is accredited with an 'A-Grade' by NAAC.
               </p>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Our university believes in holistic development, combining academic excellence with cultural 
-                enrichment and creative expression. Gardenia 2025 is a testament to our commitment to 
-                providing students with opportunities to explore, innovate, and excel.
+                <strong>Motto:</strong> "Emphasis on Life", which reflects the institution's holistic educational philosophy — focusing not just on academics but on life skills, values, emotional intelligence, and practical exposure.
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary-600 mb-2">25+</div>
+                  <div className="text-3xl font-bold text-primary-600 mb-2">32+</div>
                   <div className="text-gray-600">Years of Excellence</div>
                 </div>
                 <div className="text-center">
@@ -42,12 +42,12 @@ const About = () => {
                   <div className="text-gray-600">Programs Offered</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary-600 mb-2">10,000+</div>
-                  <div className="text-gray-600">Alumni Worldwide</div>
+                  <div className="text-3xl font-bold text-primary-600 mb-2">A-Grade</div>
+                  <div className="text-gray-600">NAAC Accredited</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-primary-600 mb-2">100+</div>
-                  <div className="text-gray-600">Faculty Members</div>
+                  <div className="text-3xl font-bold text-primary-600 mb-2">UGC</div>
+                  <div className="text-gray-600">Recognized</div>
                 </div>
               </div>
             </div>

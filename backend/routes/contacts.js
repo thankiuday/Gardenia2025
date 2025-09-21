@@ -44,10 +44,9 @@ router.post('/', [
     });
 
   } catch (error) {
-    console.error('Error submitting contact form:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to submit contact form'
+      message: 'Unable to send your message. Please try again.'
     });
   }
 });

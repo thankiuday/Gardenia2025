@@ -1,0 +1,43 @@
+# Render Blueprint for Gardenia 2025
+# This file allows you to deploy both services with a single click
+
+services:
+  # Backend API Service
+  - type: web
+    name: gardenia2025-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://gardenia2025-frontend.onrender.com
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_REGION
+        value: us-east-1
+      - key: S3_BUCKET_NAME
+        sync: false
+
+  # Frontend Static Site
+  - type: web
+    name: gardenia2025-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://gardenia2025-backend.onrender.com
+      - key: GENERATE_SOURCEMAP
+        value: false

@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
+import SkeletonLoader from '../components/SkeletonLoader';
+import useVisitorTracking from '../hooks/useVisitorTracking';
+import useScrollToTop from '../hooks/useScrollToTop';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,8 +12,21 @@ const Contact = () => {
     phone: '',
     message: ''
   });
+  
+  // Track visitor
+  useVisitorTracking('Contact');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Scroll to top on component mount and when submitted state changes
+  useScrollToTop();
+
+  // Scroll to top when form is successfully submitted
+  useEffect(() => {
+    if (submitted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [submitted]);
 
   const handleChange = (e) => {
     setFormData({
@@ -23,17 +40,16 @@ const Contact = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/contact', formData);
+      const response = await axios.post(API_ENDPOINTS.CONTACTS, formData);
       
       if (response.data.success) {
         setSubmitted(true);
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
-        alert('Failed to submit contact form');
+        alert('We couldn\'t send your message right now. Please try again.');
       }
     } catch (error) {
-      console.error('Contact form error:', error);
-      alert('Failed to submit contact form. Please try again.');
+      alert('We encountered an issue while sending your message. Please check your internet connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -55,12 +71,14 @@ const Contact = () => {
             <p className="text-gray-600 mb-6">
               Thank you for contacting us. We'll get back to you as soon as possible.
             </p>
-            <button
-              onClick={() => setSubmitted(false)}
-              className="btn-primary"
-            >
-              Send Another Message
-            </button>
+            <div className="flex justify-center">
+              <button
+                onClick={() => setSubmitted(false)}
+                className="btn-primary"
+              >
+                Send Another Message
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -97,6 +115,7 @@ const Contact = () => {
                   name="name"
                   required
                   className="input-field"
+                  placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
                 />
@@ -111,6 +130,7 @@ const Contact = () => {
                   name="email"
                   required
                   className="input-field"
+                  placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={handleChange}
                 />
@@ -125,6 +145,7 @@ const Contact = () => {
                   name="phone"
                   required
                   className="input-field"
+                  placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={handleChange}
                 />
@@ -141,7 +162,7 @@ const Contact = () => {
                   className="input-field resize-none"
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us how we can help you..."
+                  placeholder="Please describe your inquiry, question, or feedback about Gardenia 2025. We'll get back to you as soon as possible!"
                 />
               </div>
 
@@ -174,7 +195,8 @@ const Contact = () => {
                     <h4 className="font-medium text-gray-900">Address</h4>
                     <p className="text-gray-600">
                       Garden City University<br />
-                      Bangalore, Karnataka, India
+                      16th KM, Old Madras Road<br />
+                      Bangalore – 560 049
                     </p>
                   </div>
                 </div>
@@ -187,7 +209,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">Phone</h4>
-                    <p className="text-gray-600">+91 (080) 1234-5678</p>
+                    <p className="text-gray-600">+91 (80) 66487600<br />+91 90-1992-1992</p>
                   </div>
                 </div>
 
@@ -199,7 +221,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-medium text-gray-900">Email</h4>
-                    <p className="text-gray-600">gardenia2025@gardencity.edu.in</p>
+                    <p className="text-gray-600">pro@gcu.edu.in</p>
                   </div>
                 </div>
               </div>

@@ -56,8 +56,10 @@ gardenia2025-assets/
 ├── logos/
 │   ├── elemental-logo.png
 │   └── garden_city_college_of_sc_and_mgt_studies_logo.jpeg
-└── documents/
-    └── gardenia-2025-brochure.pdf
+├── documents/
+│   └── gardenia-2025-brochure.pdf
+└── tickets/
+    └── (PDF tickets will be automatically uploaded here)
 ```
 
 #### **Upload Process:**
@@ -76,7 +78,19 @@ https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college
 https://gardenia2025-assets.s3.us-east-1.amazonaws.com/documents/gardenia-2025-brochure.pdf
 ```
 
-### **Step 6: Update Configuration File**
+### **Step 6: Configure Backend Environment**
+
+Add these environment variables to your backend `.env` file:
+
+```bash
+# AWS S3 Configuration for Ticket Storage
+AWS_ACCESS_KEY_ID=your-aws-access-key-id
+AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=gardenia2025-assets
+```
+
+### **Step 7: Update Configuration File**
 
 Update `frontend/src/config/s3-assets.js` with your actual URLs:
 
@@ -136,9 +150,32 @@ For better performance, you can add CloudFront:
 - [ ] Bucket policy configured
 - [ ] Files uploaded to correct folders
 - [ ] Files made public
+- [ ] Backend environment variables configured
 - [ ] Configuration file updated with correct URLs
 - [ ] Test URLs in browser
 - [ ] Deploy updated code to Render
+- [ ] Run migration script for existing tickets (if any)
+
+## 🔄 **Migrating Existing Tickets to S3**
+
+If you have existing tickets stored locally, you can migrate them to S3:
+
+### **Step 1: Run Migration Script**
+```bash
+cd backend
+npm run migrate:tickets
+```
+
+### **Step 2: Verify Migration**
+- Check your S3 bucket's `tickets/` folder
+- Verify that PDF URLs in your database now point to S3
+- Test downloading tickets through your application
+
+### **Step 3: Clean Up (Optional)**
+After successful migration, you can remove the local `uploads/` directory:
+```bash
+rm -rf backend/uploads
+```
 
 ## 🆘 **Troubleshooting**
 
