@@ -35,17 +35,18 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         '--no-default-browser-check',
         '--disable-ipc-flooding-protection',
         '--disable-background-networking',
-        '--disable-background-timer-throttling',
-        '--disable-renderer-backgrounding',
         '--disable-field-trial-config',
         '--disable-hang-monitor',
         '--disable-prompt-on-repost',
         '--disable-client-side-phishing-detection',
         '--disable-component-update',
-        '--disable-domain-reliability'
+        '--disable-domain-reliability',
+        '--disable-logging',
+        '--disable-notifications',
+        '--disable-popup-blocking'
       ],
-      timeout: 60000,
-      protocolTimeout: 60000
+      timeout: 90000,
+      protocolTimeout: 90000
     };
 
     // Try to find Chrome executable

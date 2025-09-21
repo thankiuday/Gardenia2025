@@ -93,20 +93,23 @@ router.post('/', [
       
       try {
         // Try custom PDF generation with Puppeteer first (your preferred method)
-        pdfBuffer = await generatePDF(registration, event, qrCodeDataURL);
+        const pdfData = { ...registration.toObject(), registrationId: regId };
+        pdfBuffer = await generatePDF(pdfData, event, qrCodeDataURL);
         console.log('PDF generated successfully with custom Puppeteer');
       } catch (puppeteerError) {
         console.log('Custom Puppeteer PDF generation failed, trying html-pdf-node:', puppeteerError.message);
         try {
           // Try proper PDF generation with html-pdf-node
           const { generateProperPDF } = require('../utils/properPdfGen');
-          pdfBuffer = await generateProperPDF(registration, event, qrCodeDataURL);
+          const pdfData = { ...registration.toObject(), registrationId: regId };
+          pdfBuffer = await generateProperPDF(pdfData, event, qrCodeDataURL);
           console.log('PDF generated successfully with html-pdf-node');
         } catch (properPdfError) {
           console.log('html-pdf-node generation failed, using HTML fallback:', properPdfError.message);
           // Fallback to HTML generation
           const { generatePDFFromHTML } = require('../utils/htmlToPdf');
-          const htmlPDF = await generatePDFFromHTML(registration, event, qrCodeDataURL);
+          const pdfData = { ...registration.toObject(), registrationId: regId };
+          const htmlPDF = await generatePDFFromHTML(pdfData, event, qrCodeDataURL);
           pdfBuffer = Buffer.from(htmlPDF.html, 'utf8');
           isHTMLFallback = true;
         }

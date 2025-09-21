@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npx puppeteer browsers install chrome --path=/opt/render/project/src/backend",
+    "build": "npx puppeteer browsers install chrome",
+    "postinstall": "npx puppeteer browsers install chrome",
     "seed:events": "node scripts/seedEvents.js",
     "seed:static": "node scripts/seedEventsFromStatic.js",
     "create:admin": "node scripts/createAdmin.js",
