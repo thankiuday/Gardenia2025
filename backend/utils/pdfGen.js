@@ -3,9 +3,13 @@ const path = require('path');
 const fs = require('fs');
 
 const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
+  let browser;
   try {
+    console.log('Starting PDF generation for registration:', registrationData.registrationId);
+    
     const browser = await puppeteer.launch({
       headless: 'new',
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -14,8 +18,15 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         '--no-first-run',
         '--no-zygote',
         '--single-process',
-        '--disable-gpu'
-      ]
+        '--disable-gpu',
+        '--disable-web-security',
+        '--disable-features=VizDisplayCompositor',
+        '--memory-pressure-off',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding'
+      ],
+      timeout: 30000
     });
 
     const page = await browser.newPage();
@@ -465,11 +476,18 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     });
 
     await browser.close();
-
+    console.log('PDF generated successfully for registration:', registrationData.registrationId);
     return pdfBuffer;
 
   } catch (error) {
     console.error('PDF generation error:', error);
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.error('Error closing browser:', closeError);
+      }
+    }
     throw new Error(`Failed to generate PDF: ${error.message}`);
   }
 };

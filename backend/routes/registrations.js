@@ -88,7 +88,18 @@ router.post('/', [
     // Generate PDF and QR code
     try {
       const qrCodeDataURL = await generateQRCode(qrPayload);
-      const pdfBuffer = await generatePDF(registration, event, qrCodeDataURL);
+      let pdfBuffer;
+      
+      try {
+        // Try full PDF generation with Puppeteer
+        pdfBuffer = await generatePDF(registration, event, qrCodeDataURL);
+      } catch (pdfError) {
+        console.log('Puppeteer PDF generation failed, using HTML fallback:', pdfError.message);
+        // Fallback to HTML PDF generation
+        const { generatePDFFromHTML } = require('../utils/htmlToPdf');
+        const htmlPDF = await generatePDFFromHTML(registration, event, qrCodeDataURL);
+        pdfBuffer = Buffer.from(htmlPDF.html, 'utf8');
+      }
 
       const pdfFileName = `${regId}.pdf`;
       let pdfUrl = '';
