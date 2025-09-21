@@ -1,6 +1,4 @@
-// Proper PDF generation using html-pdf-node (lighter alternative to Puppeteer)
-const htmlPdf = require('html-pdf-node');
-
+// HTML generation with beautiful design (no Puppeteer dependency)
 const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => {
   try {
     console.log('Generating proper PDF for registration:', registrationData.registrationId);
@@ -457,31 +455,12 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
     </html>
     `;
     
-    // PDF generation options
-    const options = {
-      format: 'A4',
-      margin: {
-        top: '15px',
-        right: '15px',
-        bottom: '15px',
-        left: '15px'
-      },
-      printBackground: true,
-      displayHeaderFooter: false,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ]
+    // Return HTML content directly (no Puppeteer dependency)
+    console.log('Proper HTML generated successfully for registration:', registrationData.registrationId);
+    return {
+      html: htmlContent,
+      type: 'html'
     };
-    
-    // Generate PDF
-    const file = { content: htmlContent };
-    const pdfBuffer = await htmlPdf.generatePdf(file, options);
-    
-    console.log('Proper PDF generated successfully for registration:', registrationData.registrationId);
-    return pdfBuffer;
     
   } catch (error) {
     console.error('Proper PDF generation error:', error);

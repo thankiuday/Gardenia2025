@@ -99,19 +99,51 @@ router.post('/', [
       } catch (puppeteerError) {
         console.log('Custom Puppeteer PDF generation failed, trying html-pdf-node:', puppeteerError.message);
         try {
-          // Try proper PDF generation with html-pdf-node
+          // Try proper HTML generation (no Puppeteer dependency)
           const { generateProperPDF } = require('../utils/properPdfGen');
           const pdfData = { ...registration.toObject(), registrationId: regId };
-          pdfBuffer = await generateProperPDF(pdfData, event, qrCodeDataURL);
-          console.log('PDF generated successfully with html-pdf-node');
-        } catch (properPdfError) {
-          console.log('html-pdf-node generation failed, using HTML fallback:', properPdfError.message);
-          // Fallback to HTML generation
-          const { generatePDFFromHTML } = require('../utils/htmlToPdf');
-          const pdfData = { ...registration.toObject(), registrationId: regId };
-          const htmlPDF = await generatePDFFromHTML(pdfData, event, qrCodeDataURL);
-          pdfBuffer = Buffer.from(htmlPDF.html, 'utf8');
+          const properHTML = await generateProperPDF(pdfData, event, qrCodeDataURL);
+          pdfBuffer = Buffer.from(properHTML.html, 'utf8');
           isHTMLFallback = true;
+          console.log('HTML generated successfully with proper generator');
+        } catch (properPdfError) {
+          console.log('Proper HTML generation failed, using basic HTML fallback:', properPdfError.message);
+          try {
+            // Fallback to basic HTML generation
+            const { generatePDFFromHTML } = require('../utils/htmlToPdf');
+            const pdfData = { ...registration.toObject(), registrationId: regId };
+            const htmlPDF = await generatePDFFromHTML(pdfData, event, qrCodeDataURL);
+            pdfBuffer = Buffer.from(htmlPDF.html, 'utf8');
+            isHTMLFallback = true;
+          } catch (htmlError) {
+            console.log('All HTML generation methods failed:', htmlError.message);
+            // Create a simple fallback HTML
+            const simpleHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <title>Registration Confirmation</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    h1 { color: #1e40af; }
+                    .info { margin: 10px 0; }
+                </style>
+            </head>
+            <body>
+                <h1>Registration Confirmation</h1>
+                <div class="info"><strong>Registration ID:</strong> ${regId}</div>
+                <div class="info"><strong>Event:</strong> ${event.title}</div>
+                <div class="info"><strong>Participant:</strong> ${registrationData.leader.name}</div>
+                <div class="info"><strong>Email:</strong> ${registrationData.leader.email}</div>
+                <div class="info"><strong>Date:</strong> ${new Date().toLocaleDateString()}</div>
+                <p>Please keep this confirmation for your records.</p>
+            </body>
+            </html>
+            `;
+            pdfBuffer = Buffer.from(simpleHTML, 'utf8');
+            isHTMLFallback = true;
+          }
         }
       }
 
@@ -148,18 +180,19 @@ router.post('/', [
       registration.pdfUrl = fileUrl;
       await registration.save();
 
-      res.status(201).json({
-        success: true,
-        message: 'Registration successful',
-        data: {
-          registrationId: regId,
-          event: event.title,
-          pdfUrl: registration.pdfUrl,
-          fileType: isHTMLFallback ? 'html' : 'pdf',
-          qrCode: qrCodeDataURL,
-          paymentStatus: 'PENDING'
-        }
-      });
+          res.status(201).json({
+            success: true,
+            message: 'Registration successful',
+            data: {
+              registrationId: regId,
+              event: event.title,
+              pdfUrl: registration.pdfUrl,
+              fileType: isHTMLFallback ? 'html' : 'pdf',
+              qrCode: qrCodeDataURL,
+              paymentStatus: 'PENDING',
+              note: isHTMLFallback ? 'Registration ticket generated as HTML file (can be printed as PDF)' : 'Registration ticket generated as PDF file'
+            }
+          });
 
     } catch (pdfError) {
       console.error('PDF generation failed:', pdfError);
