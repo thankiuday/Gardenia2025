@@ -151,96 +151,29 @@ const generatePDFFromHTML = async (registrationData, eventData, qrCodeDataURL) =
         </div>
         
         <div class="content">
-            <!-- Participant Verification Status -->
-            <div class="verification-section" style="background: #d1fae5; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #10b981;">
-                <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                    <div style="width: 20px; height: 20px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-                        <span style="color: white; font-size: 12px; font-weight: bold;">✓</span>
-                    </div>
-                    <h3 style="margin: 0; color: #065f46; font-size: 18px;">Participant Verified</h3>
-                </div>
-                <p style="margin: 0; color: #065f46; font-size: 14px;">Registration details confirmed</p>
-            </div>
-
-            <!-- Event Information -->
-            <div class="event-info-section" style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
-                <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 16px; border-bottom: 2px solid #1e40af; padding-bottom: 8px;">Event Information</h3>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="detail-row">
-                        <span class="detail-label">Event:</span>
-                        <span class="detail-value">${eventData.title || 'N/A'}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Category:</span>
-                        <span class="detail-value">${eventData.category || 'N/A'}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Date:</span>
-                        <span class="detail-value">${eventData.date || '8th October 2025'}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Registration ID:</span>
-                        <span class="detail-value">${registrationData.registrationId || registrationData.regId}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Event Type:</span>
-                        <span class="detail-value">${eventData.type || 'N/A'}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Department:</span>
-                        <span class="detail-value">${eventData.department || 'N/A'}</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Participant Details -->
-            <div class="participant-details-section" style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
-                <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 16px; border-bottom: 2px solid #1e40af; padding-bottom: 8px;">Participant Details</h3>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div class="detail-row">
-                        <span class="detail-label">Name:</span>
-                        <span class="detail-value">${registrationData.leader.name}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Email:</span>
-                        <span class="detail-value">${registrationData.leader.email}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Phone:</span>
-                        <span class="detail-value">${registrationData.leader.phone}</span>
-                    </div>
-                    
-                    <div class="detail-row">
-                        <span class="detail-label">Institution:</span>
-                        <span class="detail-value">Garden City University (${registrationData.leader.registerNumber})</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Entry Decision -->
-            <div class="entry-decision-section" style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #f59e0b;">
-                <h3 style="margin: 0 0 15px 0; color: #92400e; font-size: 16px;">Entry Decision</h3>
-                <div style="display: flex; gap: 20px;">
-                    <button style="background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Allow Entry</button>
-                    <button style="background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer;">Deny Entry</button>
-                </div>
-            </div>
+            <h3>Participant Verified</h3>
+            <p>Registration details confirmed</p>
             
-            <!-- QR Code Section -->
-            <div class="qr-section" style="text-align: center; background: #f9fafb; padding: 20px; border-radius: 8px; border: 2px dashed #d1d5db;">
-                <div class="section-title" style="margin-bottom: 15px; color: #1f2937; font-size: 16px; font-weight: bold;">QR Code Verification</div>
-                ${qrCodeDataURL ? `<img src="${qrCodeDataURL}" alt="QR Code" class="qr-code" style="max-width: 200px; height: auto; margin: 10px 0;">` : '<div style="color: #6b7280;">QR Code not available</div>'}
-                <div class="qr-label" style="font-size: 14px; color: #6b7280; margin-top: 10px;">Scan this QR code for verification</div>
-            </div>
+            <h3>Event Information</h3>
+            <p><strong>Event:</strong> ${eventData.title || 'N/A'}</p>
+            <p><strong>Category:</strong> ${eventData.category || 'N/A'}</p>
+            <p><strong>Date:</strong> ${eventData.date || '8th October 2025'}</p>
+            <p><strong>Registration ID:</strong> ${registrationData.registrationId || registrationData.regId}</p>
+            <p><strong>Event Type:</strong> ${eventData.type || 'N/A'}</p>
+            <p><strong>Department:</strong> ${eventData.department || 'N/A'}</p>
+            
+            <h3>Participant Details</h3>
+            <p><strong>Name:</strong> ${registrationData.leader.name}</p>
+            <p><strong>Email:</strong> ${registrationData.leader.email}</p>
+            <p><strong>Phone:</strong> ${registrationData.leader.phone}</p>
+            <p><strong>Institution:</strong> Garden City University (${registrationData.leader.registerNumber})</p>
+            
+            <h3>Entry Decision</h3>
+            <p><strong>Allow Entry</strong> | <strong>Deny Entry</strong></p>
+            
+            <h3>QR Code Verification</h3>
+            ${qrCodeDataURL ? `<img src="${qrCodeDataURL}" alt="QR Code" style="max-width: 200px; height: auto;">` : '<p>QR Code not available</p>'}
+            <p>Scan this QR code for verification</p>
         </div>
         
         <div class="footer">
