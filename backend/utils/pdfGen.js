@@ -7,9 +7,9 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
   try {
     console.log('Starting PDF generation for registration:', registrationData.registrationId);
     
-    const browser = await puppeteer.launch({
+    // Configure Puppeteer for Render environment
+    const launchOptions = {
       headless: 'new',
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -24,10 +24,69 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         '--memory-pressure-off',
         '--disable-background-timer-throttling',
         '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding'
+        '--disable-renderer-backgrounding',
+        '--disable-extensions',
+        '--disable-plugins',
+        '--disable-default-apps',
+        '--disable-sync',
+        '--disable-translate',
+        '--hide-scrollbars',
+        '--mute-audio',
+        '--no-default-browser-check',
+        '--disable-ipc-flooding-protection',
+        '--disable-background-networking',
+        '--disable-background-timer-throttling',
+        '--disable-renderer-backgrounding',
+        '--disable-field-trial-config',
+        '--disable-hang-monitor',
+        '--disable-prompt-on-repost',
+        '--disable-client-side-phishing-detection',
+        '--disable-component-update',
+        '--disable-domain-reliability'
       ],
-      timeout: 30000
-    });
+      timeout: 60000,
+      protocolTimeout: 60000
+    };
+
+    // Try to find Chrome executable
+    let executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    
+    if (!executablePath) {
+      // Try common Chrome paths on Linux
+      const possiblePaths = [
+        '/usr/bin/google-chrome',
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium',
+        '/opt/google/chrome/chrome',
+        '/opt/render/project/src/backend/.local-chromium/linux-*/chrome-linux*/chrome'
+      ];
+      
+      const fs = require('fs');
+      for (const path of possiblePaths) {
+        if (path.includes('*')) {
+          // Handle glob patterns
+          const glob = require('glob');
+          const matches = glob.sync(path);
+          if (matches.length > 0) {
+            executablePath = matches[0];
+            break;
+          }
+        } else if (fs.existsSync(path)) {
+          executablePath = path;
+          break;
+        }
+      }
+    }
+    
+    if (executablePath) {
+      launchOptions.executablePath = executablePath;
+      console.log('Using Chrome executable:', executablePath);
+    } else {
+      console.log('No Chrome executable found, using bundled Chromium');
+    }
+
+    const browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
 
