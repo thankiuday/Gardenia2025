@@ -1,14 +1,14 @@
-const AWS = require('aws-sdk');
-const config = require('../config');
+const { S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
-// Configure AWS SDK
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION || 'us-east-1'
+// Configure AWS SDK v3
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION || 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
-
-const s3 = new AWS.S3();
 
 /**
  * Upload a PDF ticket to S3
@@ -21,23 +21,22 @@ const uploadTicketToS3 = async (pdfBuffer, fileName) => {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
-    const uploadParams = {
+    const uploadCommand = new PutObjectCommand({
       Bucket: bucketName,
       Key: key,
       Body: pdfBuffer,
       ContentType: 'application/pdf',
-      // Remove ACL as newer buckets don't support it
-      // ACL: 'public-read', 
       Metadata: {
         'uploaded-by': 'gardenia-backend',
         'upload-date': new Date().toISOString()
       }
-    };
+    });
 
-    const result = await s3.upload(uploadParams).promise();
+    await s3Client.send(uploadCommand);
     
-    console.log(`Ticket uploaded successfully: ${result.Location}`);
-    return result.Location;
+    const publicUrl = `https://${bucketName}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`;
+    console.log(`Ticket uploaded successfully: ${publicUrl}`);
+    return publicUrl;
     
   } catch (error) {
     console.error('Error uploading ticket to S3:', error);
@@ -55,12 +54,12 @@ const deleteTicketFromS3 = async (fileName) => {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
-    const deleteParams = {
+    const deleteCommand = new DeleteObjectCommand({
       Bucket: bucketName,
       Key: key
-    };
+    });
 
-    await s3.deleteObject(deleteParams).promise();
+    await s3Client.send(deleteCommand);
     console.log(`Ticket deleted successfully: ${key}`);
     return true;
     
@@ -80,16 +79,16 @@ const checkTicketExistsInS3 = async (fileName) => {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
-    const headParams = {
+    const headCommand = new HeadObjectCommand({
       Bucket: bucketName,
       Key: key
-    };
+    });
 
-    await s3.headObject(headParams).promise();
+    await s3Client.send(headCommand);
     return true;
     
   } catch (error) {
-    if (error.statusCode === 404) {
+    if (error.name === 'NotFound') {
       return false;
     }
     console.error('Error checking ticket in S3:', error);
@@ -108,13 +107,12 @@ const getSignedDownloadUrl = async (fileName, expiresIn = 3600) => {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
-    const params = {
+    const getObjectCommand = new GetObjectCommand({
       Bucket: bucketName,
-      Key: key,
-      Expires: expiresIn
-    };
+      Key: key
+    });
 
-    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+    const signedUrl = await getSignedUrl(s3Client, getObjectCommand, { expiresIn });
     return signedUrl;
     
   } catch (error) {

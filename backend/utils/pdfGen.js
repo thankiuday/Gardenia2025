@@ -58,32 +58,49 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         '/usr/bin/google-chrome-stable',
         '/usr/bin/chromium-browser',
         '/usr/bin/chromium',
-        '/opt/google/chrome/chrome',
-        '/opt/render/project/src/backend/.local-chromium/linux-*/chrome-linux*/chrome'
+        '/opt/google/chrome/chrome'
       ];
       
       const fs = require('fs');
-      for (const path of possiblePaths) {
-        if (path.includes('*')) {
-          // Handle glob patterns
-          const glob = require('glob');
-          const matches = glob.sync(path);
-          if (matches.length > 0) {
-            executablePath = matches[0];
-            break;
-          }
-        } else if (fs.existsSync(path)) {
-          executablePath = path;
+      const path = require('path');
+      const glob = require('glob');
+      
+      // First try static paths
+      for (const staticPath of possiblePaths) {
+        if (fs.existsSync(staticPath)) {
+          executablePath = staticPath;
           break;
+        }
+      }
+      
+      // If no static path found, try to find bundled Chromium
+      if (!executablePath) {
+        const chromiumPaths = [
+          '/opt/render/project/src/backend/.local-chromium/linux-*/chrome-linux*/chrome',
+          '/opt/render/project/src/backend/.local-chromium/linux-*/chrome-linux*/chrome',
+          '/opt/render/project/src/backend/node_modules/puppeteer/.local-chromium/linux-*/chrome-linux*/chrome'
+        ];
+        
+        for (const chromiumPath of chromiumPaths) {
+          try {
+            const matches = glob.sync(chromiumPath);
+            if (matches.length > 0 && fs.existsSync(matches[0])) {
+              executablePath = matches[0];
+              break;
+            }
+          } catch (error) {
+            console.log('Glob error for path:', chromiumPath, error.message);
+          }
         }
       }
     }
     
-    if (executablePath) {
+    if (executablePath && require('fs').existsSync(executablePath)) {
       launchOptions.executablePath = executablePath;
       console.log('Using Chrome executable:', executablePath);
     } else {
       console.log('No Chrome executable found, using bundled Chromium');
+      // Don't set executablePath, let Puppeteer use its bundled Chromium
     }
 
     const browser = await puppeteer.launch(launchOptions);

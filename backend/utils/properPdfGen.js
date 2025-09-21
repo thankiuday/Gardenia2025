@@ -230,7 +230,13 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
         left: '15px'
       },
       printBackground: true,
-      displayHeaderFooter: false
+      displayHeaderFooter: false,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ]
     };
     
     // Generate PDF
