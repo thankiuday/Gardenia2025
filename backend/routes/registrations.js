@@ -89,28 +89,40 @@ router.post('/', [
     try {
       const qrCodeDataURL = await generateQRCode(qrPayload);
       let pdfBuffer;
+      let isHTMLFallback = false;
       
       try {
-        // Try full PDF generation with Puppeteer
-        pdfBuffer = await generatePDF(registration, event, qrCodeDataURL);
-      } catch (pdfError) {
-        console.log('Puppeteer PDF generation failed, using HTML fallback:', pdfError.message);
-        // Fallback to HTML PDF generation
-        const { generatePDFFromHTML } = require('../utils/htmlToPdf');
-        const htmlPDF = await generatePDFFromHTML(registration, event, qrCodeDataURL);
-        pdfBuffer = Buffer.from(htmlPDF.html, 'utf8');
+        // Try proper PDF generation with html-pdf-node
+        const { generateProperPDF } = require('../utils/properPdfGen');
+        pdfBuffer = await generateProperPDF(registration, event, qrCodeDataURL);
+        console.log('PDF generated successfully with html-pdf-node');
+      } catch (properPdfError) {
+        console.log('Proper PDF generation failed, trying Puppeteer:', properPdfError.message);
+        try {
+          // Try full PDF generation with Puppeteer
+          pdfBuffer = await generatePDF(registration, event, qrCodeDataURL);
+          console.log('PDF generated successfully with Puppeteer');
+        } catch (puppeteerError) {
+          console.log('Puppeteer PDF generation failed, using HTML fallback:', puppeteerError.message);
+          // Fallback to HTML generation
+          const { generatePDFFromHTML } = require('../utils/htmlToPdf');
+          const htmlPDF = await generatePDFFromHTML(registration, event, qrCodeDataURL);
+          pdfBuffer = Buffer.from(htmlPDF.html, 'utf8');
+          isHTMLFallback = true;
+        }
       }
 
-      const pdfFileName = `${regId}.pdf`;
-      let pdfUrl = '';
+      const fileName = isHTMLFallback ? `${regId}.html` : `${regId}.pdf`;
+      const contentType = isHTMLFallback ? 'text/html' : 'application/pdf';
+      let fileUrl = '';
 
       // Try S3 upload first, fallback to local storage
       try {
         // Check if S3 is configured
         if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && 
             process.env.AWS_ACCESS_KEY_ID !== 'your-aws-access-key-id') {
-          pdfUrl = await uploadTicketToS3(pdfBuffer, pdfFileName);
-          console.log('✅ PDF uploaded to S3:', pdfUrl);
+          fileUrl = await uploadTicketToS3(pdfBuffer, fileName);
+          console.log('✅ File uploaded to S3:', fileUrl);
         } else {
           throw new Error('S3 not configured, falling back to local storage');
         }
@@ -123,14 +135,14 @@ router.post('/', [
           fs.mkdirSync(uploadsDir, { recursive: true });
         }
 
-        const pdfPath = path.join(uploadsDir, pdfFileName);
-        fs.writeFileSync(pdfPath, pdfBuffer);
-        pdfUrl = `/uploads/${pdfFileName}`;
-        console.log('✅ PDF saved locally:', pdfUrl);
+        const filePath = path.join(uploadsDir, fileName);
+        fs.writeFileSync(filePath, pdfBuffer);
+        fileUrl = `/uploads/${fileName}`;
+        console.log('✅ File saved locally:', fileUrl);
       }
 
-      // Update registration with PDF URL
-      registration.pdfUrl = pdfUrl;
+      // Update registration with file URL
+      registration.pdfUrl = fileUrl;
       await registration.save();
 
       res.status(201).json({
@@ -140,6 +152,7 @@ router.post('/', [
           registrationId: regId,
           event: event.title,
           pdfUrl: registration.pdfUrl,
+          fileType: isHTMLFallback ? 'html' : 'pdf',
           qrCode: qrCodeDataURL,
           paymentStatus: 'PENDING'
         }
