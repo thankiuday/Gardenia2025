@@ -277,7 +277,7 @@ router.get('/validate/:regId', async (req, res) => {
     const { regId } = req.params;
     
     const registration = await Registration.findOne({ regId })
-      .populate('eventId', 'title category department type time teamSize rules date location dates')
+      .populate('eventId', 'title category department type time teamSize rules dates description eligibility')
       .lean();
     
     if (!registration) {
@@ -297,10 +297,12 @@ router.get('/validate/:regId', async (req, res) => {
         type: registration.eventId?.type || 'Competition',
         time: registration.eventId?.time || 'TBA',
         date: registration.eventId?.date || 'TBA',
-        location: registration.eventId?.location || 'Garden City University',
+        location: 'Garden City University', // Default location since field doesn't exist in Event model
         dates: registration.eventId?.dates || { inhouse: 'TBA', outside: 'TBA' },
         teamSize: registration.eventId?.teamSize || { min: 1, max: 1 },
-        rules: registration.eventId?.rules || []
+        rules: registration.eventId?.rules || [],
+        description: registration.eventId?.description || '',
+        eligibility: registration.eventId?.eligibility || ''
       },
       leader: {
         name: registration.leader?.name || 'N/A',

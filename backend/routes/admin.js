@@ -121,11 +121,39 @@ router.get('/stats', authenticateToken, async (req, res) => {
         }
       },
       {
-        $unwind: '$event'
+        $lookup: {
+          from: 'events',
+          localField: 'eventId',
+          foreignField: 'customId',
+          as: 'eventByCustomId'
+        }
+      },
+      {
+        $addFields: {
+          event: {
+            $cond: {
+              if: { $gt: [{ $size: '$event' }, 0] },
+              then: '$event',
+              else: '$eventByCustomId'
+            }
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$event',
+          preserveNullAndEmptyArrays: true
+        }
       },
       {
         $group: {
-          _id: '$event.title',
+          _id: {
+            $cond: {
+              if: { $ne: ['$event.title', null] },
+              then: '$event.title',
+              else: 'Unknown Event'
+            }
+          },
           count: { $sum: 1 }
         }
       },
@@ -143,7 +171,8 @@ router.get('/stats', authenticateToken, async (req, res) => {
 
     // Get ticket download statistics
     const totalTicketDownloads = await TicketDownload.countDocuments();
-    const uniqueTicketDownloads = await TicketDownload.distinct('registrationId').length;
+    const uniqueTicketDownloadsArray = await TicketDownload.distinct('registrationId');
+    const uniqueTicketDownloads = uniqueTicketDownloadsArray.length;
     const manualDownloads = await TicketDownload.countDocuments({ downloadType: 'manual' });
     const autoDownloads = await TicketDownload.countDocuments({ downloadType: 'auto' });
 
@@ -214,7 +243,11 @@ router.get('/registrations', authenticateToken, async (req, res) => {
     }
 
     const registrations = await Registration.find(filter)
-      .populate('eventId', 'title category type')
+      .populate({
+        path: 'eventId',
+        select: 'title category type customId',
+        options: { strictPopulate: false }
+      })
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

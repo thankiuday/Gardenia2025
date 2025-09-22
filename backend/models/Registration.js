@@ -7,8 +7,9 @@ const registrationSchema = new mongoose.Schema({
     unique: true
   },
   eventId: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: false
   },
   isGardenCityStudent: {
     type: Boolean,

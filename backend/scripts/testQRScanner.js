@@ -1,60 +1,51 @@
 const mongoose = require('mongoose');
+const config = require('../config');
 const Registration = require('../models/Registration');
 const Event = require('../models/Event');
-const { generateQRCode, createQRPayload, generateRegistrationId } = require('../utils/qrGen');
 
-// Connect to MongoDB
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/gardenia2025');
-    console.log('✅ Connected to MongoDB');
-  } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
-    process.exit(1);
-  }
-};
-
-// Test QR Scanner functionality
 const testQRScanner = async () => {
   try {
-    console.log('🔍 Testing QR Scanner functionality...\n');
+    await mongoose.connect(config.MONGODB_URI);
+    console.log('✅ Connected to MongoDB');
 
-    // Find an existing event
-    const event = await Event.findOne();
-    if (!event) {
-      console.log('❌ No events found. Please create an event first.');
-      return;
-    }
+    console.log('\n🔍 Testing QR Scanner Data for GDN2025-1211...\n');
 
-    console.log('📅 Using event:', event.title);
-
-    // Find an existing registration
-    const registration = await Registration.findOne({ eventId: event._id })
+    // Test the specific registration
+    const regId = 'GDN2025-1211';
+    const registration = await Registration.findOne({ regId })
       .populate('eventId', 'title category department type time teamSize rules date location dates')
       .lean();
 
     if (!registration) {
-      console.log('❌ No registrations found for this event. Please create a registration first.');
+      console.log('❌ Registration not found');
       return;
     }
 
-    console.log('👤 Found registration:', registration.regId);
-    console.log('📋 Registration details:');
-    console.log('   - Name:', registration.leader?.name || 'N/A');
-    console.log('   - Email:', registration.leader?.email || 'N/A');
-    console.log('   - Phone:', registration.leader?.phone || 'N/A');
-    console.log('   - Event:', registration.eventId?.title || 'N/A');
-    console.log('   - Category:', registration.eventId?.category || 'N/A');
-    console.log('   - Department:', registration.eventId?.department || 'N/A');
-    console.log('   - Type:', registration.eventId?.type || 'N/A');
-    console.log('   - Time:', registration.eventId?.time || 'N/A');
-    console.log('   - Location:', registration.eventId?.location || 'N/A');
-    console.log('   - Status:', registration.status || 'N/A');
+    console.log('📋 Raw Registration Data:');
+    console.log(`   Registration ID: ${registration.regId}`);
+    console.log(`   Event ID: ${registration.eventId}`);
+    console.log(`   Event Title: ${registration.eventId?.title || 'NULL'}`);
+    console.log(`   Event Category: ${registration.eventId?.category || 'NULL'}`);
+    console.log(`   Event Department: ${registration.eventId?.department || 'NULL'}`);
+    console.log(`   Event Type: ${registration.eventId?.type || 'NULL'}`);
+    console.log(`   Event Time: ${registration.eventId?.time || 'NULL'}`);
+    console.log(`   Event Location: ${registration.eventId?.location || 'NULL'}`);
+    console.log(`   Event Dates: ${JSON.stringify(registration.eventId?.dates || 'NULL')}`);
+    console.log(`   Final Event Date: ${registration.finalEventDate || 'NULL'}`);
+    console.log(`   Is Garden City Student: ${registration.isGardenCityStudent}`);
+    console.log(`   Status: ${registration.status}`);
 
-    // Test the validation endpoint data structure
-    console.log('\n🔧 Testing validation endpoint data structure...');
-    
+    console.log('\n👤 Leader Information:');
+    console.log(`   Name: ${registration.leader?.name || 'NULL'}`);
+    console.log(`   Email: ${registration.leader?.email || 'NULL'}`);
+    console.log(`   Phone: ${registration.leader?.phone || 'NULL'}`);
+    console.log(`   Register Number: ${registration.leader?.registerNumber || 'NULL'}`);
+    console.log(`   College Name: ${registration.leader?.collegeName || 'NULL'}`);
+    console.log(`   College Register Number: ${registration.leader?.collegeRegisterNumber || 'NULL'}`);
+
     // Simulate the validation endpoint response
+    console.log('\n🔍 Simulating QR Scanner Validation Response:');
+    
     const responseData = {
       ...registration,
       eventId: {
@@ -84,55 +75,100 @@ const testQRScanner = async () => {
       isGardenCityStudent: registration.isGardenCityStudent || false
     };
 
-    console.log('✅ Validation endpoint would return:');
-    console.log('   - Event Title:', responseData.eventId.title);
-    console.log('   - Event Category:', responseData.eventId.category);
-    console.log('   - Event Department:', responseData.eventId.department);
-    console.log('   - Event Type:', responseData.eventId.type);
-    console.log('   - Event Time:', responseData.eventId.time);
-    console.log('   - Event Location:', responseData.eventId.location);
-    console.log('   - Leader Name:', responseData.leader.name);
-    console.log('   - Leader Email:', responseData.leader.email);
-    console.log('   - Leader Phone:', responseData.leader.phone);
-    console.log('   - Registration Status:', responseData.status);
-
-    // Generate QR code for testing
-    console.log('\n📱 Generating QR code for testing...');
-    const qrPayload = createQRPayload(registration, event);
-    const qrCodeDataURL = await generateQRCode(qrPayload);
+    console.log('\n📱 QR Scanner Display Data:');
+    console.log('   Event:');
+    console.log(`     Event: ${responseData.eventId.title}`);
+    console.log(`     Category: ${responseData.eventId.category}`);
+    console.log(`     Date: ${responseData.finalEventDate}`);
+    console.log(`     Registration ID: ${responseData.regId}`);
+    console.log(`     Event Type: ${responseData.eventId.type}`);
+    console.log(`     Department: ${responseData.eventId.department}`);
+    console.log(`     Time: ${responseData.eventId.time}`);
+    console.log(`     Location: ${responseData.eventId.location}`);
     
-    console.log('✅ QR Code generated successfully');
-    console.log('📊 QR Payload:', JSON.stringify(qrPayload, null, 2));
+    console.log('\n   Participant Details:');
+    console.log(`     Name: ${responseData.leader.name}`);
+    console.log(`     Email: ${responseData.leader.email}`);
+    console.log(`     Phone: ${responseData.leader.phone}`);
+    console.log(`     Institution: ${responseData.leader.collegeName}`);
+    console.log(`     Registration/Roll No: ${responseData.leader.collegeRegisterNumber}`);
+    console.log(`     Status: ${responseData.status}`);
 
-    // Test API endpoint
-    console.log('\n🌐 Testing API endpoint...');
-    console.log(`📡 You can test the validation endpoint at:`);
-    console.log(`   GET /api/registrations/validate/${registration.regId}`);
-    console.log(`   Or visit: http://localhost:5000/api/registrations/validate/${registration.regId}`);
+    // Check for any issues
+    console.log('\n🔍 Data Quality Check:');
+    
+    const issues = [];
+    
+    if (responseData.eventId.title === 'Event') {
+      issues.push('Event title is showing default value');
+    }
+    
+    if (responseData.eventId.category === 'General') {
+      issues.push('Event category is showing default value');
+    }
+    
+    if (responseData.eventId.department === 'General') {
+      issues.push('Event department is showing default value');
+    }
+    
+    if (responseData.eventId.type === 'Competition') {
+      issues.push('Event type is showing default value');
+    }
+    
+    if (responseData.eventId.time === 'TBA') {
+      issues.push('Event time is showing default value');
+    }
+    
+    if (responseData.eventId.location === 'Garden City University') {
+      issues.push('Event location is showing default value');
+    }
+    
+    if (responseData.finalEventDate === 'TBA') {
+      issues.push('Final event date is showing default value');
+    }
+    
+    if (responseData.leader.collegeName === 'Garden City University' && !responseData.isGardenCityStudent) {
+      issues.push('College name is showing default value for external student');
+    }
+    
+    if (responseData.leader.collegeRegisterNumber === 'N/A') {
+      issues.push('College register number is showing default value');
+    }
 
-    console.log('\n✅ QR Scanner test completed successfully!');
-    console.log('\n📝 Next steps:');
-    console.log('   1. Start your backend server');
-    console.log('   2. Open the QR Scanner page in your frontend');
-    console.log('   3. Scan the QR code or manually enter the registration ID');
-    console.log('   4. Verify that all fields are populated correctly');
+    if (issues.length > 0) {
+      console.log('\n⚠️  Issues Found:');
+      issues.forEach((issue, index) => {
+        console.log(`   ${index + 1}. ${issue}`);
+      });
+    } else {
+      console.log('\n✅ No issues found - all data is displaying correctly!');
+    }
+
+    // Test the actual API endpoint
+    console.log('\n🌐 Testing API Endpoint:');
+    try {
+      const axios = require('axios');
+      const backendUrl = process.env.API_URL || 'http://localhost:5000';
+      const response = await axios.get(`${backendUrl}/api/register/validate/${regId}`);
+      
+      if (response.data.success) {
+        console.log('✅ API endpoint is working correctly');
+        console.log(`   Event Title: ${response.data.data.eventId.title}`);
+        console.log(`   Participant Name: ${response.data.data.leader.name}`);
+        console.log(`   Status: ${response.data.data.status}`);
+      } else {
+        console.log('❌ API endpoint returned error:', response.data.message);
+      }
+    } catch (error) {
+      console.log('⚠️  API endpoint test skipped - server not running or not accessible');
+    }
 
   } catch (error) {
-    console.error('❌ Test failed:', error);
+    console.error('❌ Error testing QR scanner:', error.message);
+  } finally {
+    await mongoose.disconnect();
+    console.log('\n🔌 Disconnected from MongoDB');
   }
 };
 
-// Main execution
-const main = async () => {
-  await connectDB();
-  await testQRScanner();
-  await mongoose.connection.close();
-  console.log('\n👋 Test completed. Database connection closed.');
-};
-
-// Run the test
-if (require.main === module) {
-  main().catch(console.error);
-}
-
-module.exports = { testQRScanner };
+testQRScanner().catch(console.error);
