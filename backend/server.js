@@ -32,14 +32,20 @@ app.use('/api/', limiter);
 // CORS configuration
 const allowedOrigins = process.env.NODE_ENV === 'production' 
   ? [
-      'https://gardenia2025.onrender.com',
       'https://gardenia2025-frontend.onrender.com',
+      'https://gardenia2025.onrender.com',
       process.env.FRONTEND_URL
     ].filter(Boolean)
   : ['http://localhost:3000', 'http://localhost:5173'];
 
+// CORS configuration with better debugging
+console.log('CORS Configuration:');
+console.log('Environment:', process.env.NODE_ENV);
+console.log('Allowed Origins:', allowedOrigins);
+
 // Temporary fix: Allow all origins if CORS_ALLOW_ALL is set
 if (process.env.CORS_ALLOW_ALL === 'true') {
+  console.log('CORS: Allowing all origins (CORS_ALLOW_ALL=true)');
   app.use(cors({
     origin: true,
     credentials: true,
@@ -49,13 +55,20 @@ if (process.env.CORS_ALLOW_ALL === 'true') {
 } else {
   app.use(cors({
     origin: function (origin, callback) {
+      console.log('CORS Request from origin:', origin);
+      
       // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('CORS: Allowing request with no origin');
+        return callback(null, true);
+      }
       
       if (allowedOrigins.indexOf(origin) !== -1) {
+        console.log('CORS: Allowing origin:', origin);
         callback(null, true);
       } else {
-        console.log('CORS blocked origin:', origin);
+        console.log('CORS: Blocking origin:', origin);
+        console.log('CORS: Allowed origins:', allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -64,6 +77,16 @@ if (process.env.CORS_ALLOW_ALL === 'true') {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   }));
 }
+
+// Handle preflight OPTIONS requests
+app.options('*', (req, res) => {
+  console.log('CORS Preflight request for:', req.url);
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
