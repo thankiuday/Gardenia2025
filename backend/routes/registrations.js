@@ -68,7 +68,7 @@ router.post('/', [
     // Create registration data
     const registrationData = {
       regId,
-      eventId,
+      eventId: event._id, // Use the actual event ObjectId, not the string customId
       isGardenCityStudent,
       leader,
       teamMembers,
