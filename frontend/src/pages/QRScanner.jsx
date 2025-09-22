@@ -517,27 +517,35 @@ const QRScanner = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Event:</span>
-                      <span className="font-medium">{participantInfo.eventId?.title || 'N/A'}</span>
+                      <span className="font-medium">{participantInfo.eventId?.title || 'Event'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Category:</span>
-                      <span className="font-medium">{participantInfo.eventId?.category || 'N/A'}</span>
+                      <span className="font-medium">{participantInfo.eventId?.category || 'General'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Date:</span>
-                      <span className="font-medium">{participantInfo.finalEventDate}</span>
+                      <span className="font-medium">{participantInfo.finalEventDate || 'TBA'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Registration ID:</span>
-                      <span className="font-medium font-mono text-sm">{participantInfo.regId}</span>
+                      <span className="font-medium font-mono text-sm">{participantInfo.regId || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Event Type:</span>
-                      <span className="font-medium">{participantInfo.eventId?.type || 'N/A'}</span>
+                      <span className="font-medium">{participantInfo.eventId?.type || 'Competition'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Department:</span>
-                      <span className="font-medium">{participantInfo.eventId?.department || 'N/A'}</span>
+                      <span className="font-medium">{participantInfo.eventId?.department || 'General'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Time:</span>
+                      <span className="font-medium">{participantInfo.eventId?.time || 'TBA'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Location:</span>
+                      <span className="font-medium">{participantInfo.eventId?.location || 'Garden City University'}</span>
                     </div>
                   </div>
                 </div>
@@ -548,31 +556,43 @@ const QRScanner = () => {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Name:</span>
-                      <span className="font-medium">{participantInfo.leader.name}</span>
+                      <span className="font-medium">{participantInfo.leader?.name || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Email:</span>
-                      <span className="font-medium text-sm">{participantInfo.leader.email}</span>
+                      <span className="font-medium text-sm">{participantInfo.leader?.email || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Phone:</span>
-                      <span className="font-medium">{participantInfo.leader.phone}</span>
+                      <span className="font-medium">{participantInfo.leader?.phone || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Institution:</span>
                       <span className="font-medium">
                         {participantInfo.isGardenCityStudent 
-                          ? `Garden City University (${participantInfo.leader.registerNumber})`
-                          : participantInfo.leader.collegeName
+                          ? `Garden City University (${participantInfo.leader?.registerNumber || 'N/A'})`
+                          : (participantInfo.leader?.collegeName || 'Garden City University')
                         }
                       </span>
                     </div>
-                    {!participantInfo.isGardenCityStudent && participantInfo.leader.collegeRegisterNumber && (
+                    {!participantInfo.isGardenCityStudent && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Registration/Roll No:</span>
-                        <span className="font-medium">{participantInfo.leader.collegeRegisterNumber}</span>
+                        <span className="font-medium">{participantInfo.leader?.collegeRegisterNumber || 'N/A'}</span>
                       </div>
                     )}
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Status:</span>
+                      <span className="font-medium">
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          participantInfo.status === 'APPROVED' 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {participantInfo.status || 'PENDING'}
+                        </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -584,16 +604,21 @@ const QRScanner = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {participantInfo.teamMembers.map((member, index) => (
                       <div key={index} className="bg-gray-50 rounded-lg p-4">
-                        <div className="font-medium text-gray-900">{member.name}</div>
+                        <div className="font-medium text-gray-900">{member.name || 'N/A'}</div>
                         <div className="text-sm text-gray-600">
                           {participantInfo.isGardenCityStudent 
-                            ? `Reg: ${member.registerNumber}`
-                            : `College: ${member.collegeName}`
+                            ? `Reg: ${member.registerNumber || 'N/A'}`
+                            : `College/School: ${member.collegeName || 'N/A'}`
                           }
                         </div>
-                        {!participantInfo.isGardenCityStudent && member.collegeRegisterNumber && (
+                        {!participantInfo.isGardenCityStudent && (
                           <div className="text-sm text-gray-500">
-                            Reg/Roll: {member.collegeRegisterNumber}
+                            Reg/Roll: {member.collegeRegisterNumber || 'N/A'}
+                          </div>
+                        )}
+                        {member.email && (
+                          <div className="text-sm text-gray-500">
+                            Email: {member.email}
                           </div>
                         )}
                       </div>

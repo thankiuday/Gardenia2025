@@ -5,7 +5,7 @@ const TicketDownload = require('../models/TicketDownload');
 const { body, validationResult } = require('express-validator');
 const { generatePDF } = require('../utils/pdfGen');
 const { generateQRCode, generateRegistrationId, createQRPayload } = require('../utils/qrGen');
-const { uploadTicketToS3, getPublicTicketUrl } = require('../utils/s3Upload');
+const { uploadTicketToS3, getPublicTicketUrl, isS3Available } = require('../utils/s3Upload');
 const fs = require('fs');
 const path = require('path');
 
@@ -121,9 +121,8 @@ router.post('/', [
 
       // Try S3 upload first, fallback to local storage
       try {
-        // Check if S3 is configured
-        if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && 
-            process.env.AWS_ACCESS_KEY_ID !== 'your-aws-access-key-id') {
+        // Check if S3 is configured and available
+        if (isS3Available()) {
           fileUrl = await uploadTicketToS3(pdfBuffer, fileName);
           console.log('✅ File uploaded to S3:', fileUrl);
         } else {
@@ -278,7 +277,7 @@ router.get('/validate/:regId', async (req, res) => {
     const { regId } = req.params;
     
     const registration = await Registration.findOne({ regId })
-      .populate('eventId', 'title category department time teamSize rules')
+      .populate('eventId', 'title category department type time teamSize rules date location dates')
       .lean();
     
     if (!registration) {
@@ -288,12 +287,43 @@ router.get('/validate/:regId', async (req, res) => {
       });
     }
     
+    // Ensure all required fields are present with fallback values
+    const responseData = {
+      ...registration,
+      eventId: {
+        title: registration.eventId?.title || 'Event',
+        category: registration.eventId?.category || 'General',
+        department: registration.eventId?.department || 'General',
+        type: registration.eventId?.type || 'Competition',
+        time: registration.eventId?.time || 'TBA',
+        date: registration.eventId?.date || 'TBA',
+        location: registration.eventId?.location || 'Garden City University',
+        dates: registration.eventId?.dates || { inhouse: 'TBA', outside: 'TBA' },
+        teamSize: registration.eventId?.teamSize || { min: 1, max: 1 },
+        rules: registration.eventId?.rules || []
+      },
+      leader: {
+        name: registration.leader?.name || 'N/A',
+        email: registration.leader?.email || 'N/A',
+        phone: registration.leader?.phone || 'N/A',
+        registerNumber: registration.leader?.registerNumber || 'N/A',
+        collegeName: registration.leader?.collegeName || 'Garden City University',
+        collegeRegisterNumber: registration.leader?.collegeRegisterNumber || 'N/A'
+      },
+      teamMembers: registration.teamMembers || [],
+      finalEventDate: registration.finalEventDate || 'TBA',
+      regId: registration.regId || 'N/A',
+      status: registration.status || 'PENDING',
+      isGardenCityStudent: registration.isGardenCityStudent || false
+    };
+    
     res.json({
       success: true,
-      data: registration
+      data: responseData
     });
     
   } catch (error) {
+    console.error('Validation error:', error);
     res.status(500).json({
       success: false,
       message: 'Unable to verify registration. Please check the QR code and try again.'

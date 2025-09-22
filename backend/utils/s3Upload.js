@@ -1,14 +1,39 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+// Check if AWS SDK is available and configured
+let S3Client, PutObjectCommand, DeleteObjectCommand, HeadObjectCommand, GetObjectCommand, getSignedUrl;
+let s3Client = null;
 
-// Configure AWS SDK v3
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+try {
+  const awsS3 = require('@aws-sdk/client-s3');
+  const awsS3Presigner = require('@aws-sdk/s3-request-presigner');
+  
+  S3Client = awsS3.S3Client;
+  PutObjectCommand = awsS3.PutObjectCommand;
+  DeleteObjectCommand = awsS3.DeleteObjectCommand;
+  HeadObjectCommand = awsS3.HeadObjectCommand;
+  GetObjectCommand = awsS3.GetObjectCommand;
+  getSignedUrl = awsS3Presigner.getSignedUrl;
+
+  // Check if AWS credentials are configured
+  const hasAwsConfig = process.env.AWS_ACCESS_KEY_ID && 
+                      process.env.AWS_SECRET_ACCESS_KEY && 
+                      process.env.AWS_ACCESS_KEY_ID !== 'your-aws-access-key-id';
+
+  if (hasAwsConfig) {
+    // Configure AWS SDK v3
+    s3Client = new S3Client({
+      region: process.env.AWS_REGION || 'us-east-1',
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+    console.log('✅ AWS S3 client configured successfully');
+  } else {
+    console.log('⚠️ AWS S3 not configured - will use local storage fallback');
+  }
+} catch (error) {
+  console.log('⚠️ AWS SDK not available - will use local storage fallback');
+}
 
 /**
  * Upload a PDF ticket to S3
@@ -17,6 +42,10 @@ const s3Client = new S3Client({
  * @returns {Promise<string>} - The S3 URL of the uploaded file
  */
 const uploadTicketToS3 = async (pdfBuffer, fileName) => {
+  if (!s3Client) {
+    throw new Error('S3 client not configured. Please configure AWS credentials or use local storage.');
+  }
+
   try {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
@@ -50,6 +79,11 @@ const uploadTicketToS3 = async (pdfBuffer, fileName) => {
  * @returns {Promise<boolean>} - True if successful
  */
 const deleteTicketFromS3 = async (fileName) => {
+  if (!s3Client) {
+    console.log('S3 client not configured. Cannot delete from S3.');
+    return false;
+  }
+
   try {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
@@ -75,6 +109,11 @@ const deleteTicketFromS3 = async (fileName) => {
  * @returns {Promise<boolean>} - True if file exists
  */
 const checkTicketExistsInS3 = async (fileName) => {
+  if (!s3Client) {
+    console.log('S3 client not configured. Cannot check S3.');
+    return false;
+  }
+
   try {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
@@ -103,6 +142,10 @@ const checkTicketExistsInS3 = async (fileName) => {
  * @returns {Promise<string>} - The signed URL
  */
 const getSignedDownloadUrl = async (fileName, expiresIn = 3600) => {
+  if (!s3Client) {
+    throw new Error('S3 client not configured. Cannot generate signed URL.');
+  }
+
   try {
     const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
@@ -133,10 +176,19 @@ const getPublicTicketUrl = (fileName) => {
   return `https://${bucketName}.s3.${region}.amazonaws.com/tickets/${fileName}`;
 };
 
+/**
+ * Check if S3 is configured and available
+ * @returns {boolean} - True if S3 is available
+ */
+const isS3Available = () => {
+  return s3Client !== null;
+};
+
 module.exports = {
   uploadTicketToS3,
   deleteTicketFromS3,
   checkTicketExistsInS3,
   getSignedDownloadUrl,
-  getPublicTicketUrl
+  getPublicTicketUrl,
+  isS3Available
 };

@@ -498,9 +498,15 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 <div class="section-title">Participant Information</div>
                 <div class="info-grid">
                     <div class="info-item">
-                        <div class="info-label">${registrationData.isGardenCityStudent ? 'Register Number' : 'College Name'}</div>
+                        <div class="info-label">${registrationData.isGardenCityStudent ? 'Register Number' : 'College/School Name'}</div>
                         <div class="info-value">${registrationData.isGardenCityStudent ? registrationData.leader.registerNumber : registrationData.leader.collegeName}</div>
                     </div>
+                    ${!registrationData.isGardenCityStudent ? `
+                    <div class="info-item">
+                        <div class="info-label">Registration/Roll Number</div>
+                        <div class="info-value">${registrationData.leader.collegeRegisterNumber || 'N/A'}</div>
+                    </div>
+                    ` : ''}
                     <div class="info-item">
                         <div class="info-label">Name</div>
                         <div class="info-value">${registrationData.leader.name}</div>
@@ -521,7 +527,10 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                     ${registrationData.teamMembers.map(member => `
                         <div class="team-member">
                             <strong>${member.name}</strong>
-                            ${registrationData.isGardenCityStudent ? `<br><small>Register Number: ${member.registerNumber}</small>` : `<br><small>College: ${member.collegeName}</small>`}
+                            ${registrationData.isGardenCityStudent 
+                                ? `<br><small>Register Number: ${member.registerNumber}</small>` 
+                                : `<br><small>College/School: ${member.collegeName}<br>Registration/Roll Number: ${member.collegeRegisterNumber || 'N/A'}</small>`
+                            }
                         </div>
                     `).join('')}
                 </div>

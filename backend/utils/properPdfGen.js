@@ -162,8 +162,8 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
                 </div>
                 
                 <div class="detail-row">
-                    <span class="detail-label">Register No:</span>
-                    <span class="detail-value">${registrationData.leader.registerNumber}</span>
+                    <span class="detail-label">${registrationData.isGardenCityStudent ? 'Register No:' : 'Registration/Roll No:'}</span>
+                    <span class="detail-value">${registrationData.isGardenCityStudent ? registrationData.leader.registerNumber : registrationData.leader.collegeRegisterNumber}</span>
                 </div>
                 
                 <div class="detail-row">
@@ -176,10 +176,12 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
                     <span class="detail-value">${registrationData.leader.phone}</span>
                 </div>
                 
+                ${!registrationData.isGardenCityStudent ? `
                 <div class="detail-row">
-                    <span class="detail-label">College:</span>
-                    <span class="detail-value">${registrationData.leader.collegeName || 'Garden City College'}</span>
+                    <span class="detail-label">College/School:</span>
+                    <span class="detail-value">${registrationData.leader.collegeName || 'N/A'}</span>
                 </div>
+                ` : ''}
                 
                 <div class="detail-row">
                     <span class="detail-label">Registration Date:</span>
@@ -222,7 +224,10 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
                     ${registrationData.teamMembers.map(member => `
                         <div class="team-member">
                             <strong>${member.name}</strong><br>
-                            ${member.registerNumber} | ${member.email}
+                            ${registrationData.isGardenCityStudent 
+                                ? `Register No: ${member.registerNumber}` 
+                                : `College/School: ${member.collegeName}<br>Registration/Roll No: ${member.collegeRegisterNumber}`
+                            }
                         </div>
                     `).join('')}
                 </div>

@@ -24,6 +24,7 @@ const Registration = () => {
       name: '',
       registerNumber: '',
       collegeName: '',
+      collegeRegisterNumber: '',
       email: '',
       phone: ''
     },
@@ -66,7 +67,7 @@ const Registration = () => {
         ...formData,
         teamMembers: [
           ...formData.teamMembers,
-          { name: '', registerNumber: '', collegeName: '' }
+          { name: '', registerNumber: '', collegeName: '', collegeRegisterNumber: '' }
         ]
       });
     }
@@ -107,7 +108,12 @@ const Registration = () => {
     }
 
     if (!isGardenCityStudent && !formData.leader.collegeName) {
-      alert('Please enter the name of your college or institution');
+      alert('Please enter the name of your college/school or institution');
+      return false;
+    }
+
+    if (!isGardenCityStudent && !formData.leader.collegeRegisterNumber) {
+      alert('Please enter your college registration/roll number');
       return false;
     }
 
@@ -129,7 +135,11 @@ const Registration = () => {
           return false;
         }
         if (!isGardenCityStudent && !member.collegeName) {
-          alert(`Please enter the college name for team member ${i + 1}`);
+          alert(`Please enter the college/school name for team member ${i + 1}`);
+          return false;
+        }
+        if (!isGardenCityStudent && !member.collegeRegisterNumber) {
+          alert(`Please enter the college registration/roll number for team member ${i + 1}`);
           return false;
         }
       }
@@ -472,19 +482,34 @@ const Registration = () => {
                     />
                   </div>
                 ) : (
-                  <div className="form-group">
-                    <label className="form-label">
-                      College Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      className="input-field"
-                      value={formData.leader.collegeName}
-                      onChange={(e) => handleInputChange('collegeName', e.target.value)}
-                      placeholder="Enter your college name"
-                    />
-                  </div>
+                  <>
+                    <div className="form-group">
+                      <label className="form-label">
+                        College/School Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className="input-field"
+                        value={formData.leader.collegeName}
+                        onChange={(e) => handleInputChange('collegeName', e.target.value)}
+                        placeholder="Enter your college/school name"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">
+                        Registration/Roll Number *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        className="input-field"
+                        value={formData.leader.collegeRegisterNumber}
+                        onChange={(e) => handleInputChange('collegeRegisterNumber', e.target.value)}
+                        placeholder="Enter your college registration/roll number"
+                      />
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -544,19 +569,34 @@ const Registration = () => {
                             />
                           </div>
                         ) : (
-                          <div className="form-group">
-                            <label className="form-label">
-                              College Name *
-                            </label>
-                            <input
-                              type="text"
-                              required
-                              className="input-field"
-                              value={member.collegeName}
-                              onChange={(e) => updateTeamMember(index, 'collegeName', e.target.value)}
-                              placeholder="Enter college name"
-                            />
-                          </div>
+                          <>
+                            <div className="form-group">
+                              <label className="form-label">
+                                College/School Name *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                className="input-field"
+                                value={member.collegeName}
+                                onChange={(e) => updateTeamMember(index, 'collegeName', e.target.value)}
+                                placeholder="Enter college/school name"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label className="form-label">
+                                Registration/Roll Number *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                className="input-field"
+                                value={member.collegeRegisterNumber}
+                                onChange={(e) => updateTeamMember(index, 'collegeRegisterNumber', e.target.value)}
+                                placeholder="Enter registration/roll number"
+                              />
+                            </div>
+                          </>
                         )}
                       </div>
                     </div>
