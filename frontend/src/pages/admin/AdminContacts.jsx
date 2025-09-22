@@ -418,7 +418,14 @@ const AdminContacts = () => {
               Garden City University • Gardenia 2025 Admin Panel
             </p>
             <p className="text-sm text-gray-400 mt-1">
-              Developed by <span className="text-emerald-500 font-bold text-base">NerdsAndGeeks</span>
+              Developed by <a 
+                href="https://nerdsandgeeks.in/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-emerald-500 font-bold text-base hover:text-emerald-400 transition-colors duration-200"
+              >
+                NerdsAndGeeks Private Limited
+              </a>
             </p>
           </div>
         </div>

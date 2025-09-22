@@ -123,7 +123,14 @@ const Footer = () => {
               © {currentYear} Garden City University. All rights reserved. | Gardenia 2025
             </p>
             <p className="text-gray-400 text-xs mt-2">
-              Developed by <span className="text-emerald-400 font-bold text-sm">NerdsAndGeeks</span>
+              Developed by <a 
+                href="https://nerdsandgeeks.in/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-emerald-400 font-bold text-sm hover:text-emerald-300 transition-colors duration-200"
+              >
+                NerdsAndGeeks Private Limited
+              </a>
             </p>
           </div>
       </div>
