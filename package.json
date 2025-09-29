@@ -9,7 +9,10 @@
     "frontend": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
     "start": "cd backend && npm start",
-    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "deploy:hostinger": "chmod +x quick-setup-hostinger.sh && ./quick-setup-hostinger.sh",
+    "setup:ssl": "chmod +x setup-ssl.sh && ./setup-ssl.sh",
+    "deploy:production": "chmod +x deploy-hostinger.sh && ./deploy-hostinger.sh"
   },
   "keywords": ["event-management", "mern", "gardenia"],
   "author": "Garden City University",
