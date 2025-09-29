@@ -38,16 +38,21 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
       // Your VPS domain
       'https://gardenia.gardencity.university'
     ].filter(Boolean)
-  : ['http://localhost:3000', 'http://localhost:5173'];
+  : [
+      'http://localhost:3000', 
+      'http://localhost:5173',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:5173'
+    ];
 
 // CORS configuration with better debugging
 console.log('CORS Configuration:');
 console.log('Environment:', process.env.NODE_ENV);
 console.log('Allowed Origins:', allowedOrigins);
 
-// Temporary fix: Allow all origins if CORS_ALLOW_ALL is set
-if (process.env.CORS_ALLOW_ALL === 'true') {
-  console.log('CORS: Allowing all origins (CORS_ALLOW_ALL=true)');
+// CORS configuration - More permissive for development
+if (process.env.CORS_ALLOW_ALL === 'true' || process.env.NODE_ENV === 'development') {
+  console.log('CORS: Allowing all origins (Development mode or CORS_ALLOW_ALL=true)');
   app.use(cors({
     origin: true,
     credentials: true,
