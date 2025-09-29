@@ -34,7 +34,10 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   ? [
       'https://gardenia2025-frontend.onrender.com',
       'https://gardenia2025.onrender.com',
-      process.env.FRONTEND_URL
+      process.env.FRONTEND_URL,
+      // Add your VPS domain here
+      'https://your-domain.com',
+      'https://www.your-domain.com'
     ].filter(Boolean)
   : ['http://localhost:3000', 'http://localhost:5173'];
 

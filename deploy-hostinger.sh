@@ -71,6 +71,12 @@ FRONTEND_URL=https://your-domain.com
 CORS_ALLOW_ALL=false
 EOF
 
+# Create frontend environment file
+cat > $PROJECT_DIR/frontend/.env << EOF
+VITE_API_URL=https://your-domain.com
+NODE_ENV=production
+EOF
+
 # Start application with PM2
 echo "🚀 Starting application with PM2..."
 cd $PROJECT_DIR
