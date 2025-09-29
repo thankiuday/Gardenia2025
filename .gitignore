@@ -18,6 +18,11 @@ pnpm-debug.log*
 .env.test.local
 .env.production.local
 
+# Backend environment files (contain sensitive data)
+backend/env.development
+backend/env.hostinger.production
+backend/env.gardenia.production
+
 # Logs
 logs
 *.log
