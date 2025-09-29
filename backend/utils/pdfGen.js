@@ -156,12 +156,18 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 text-align: center;
                 margin: 0 20px;
             }
-            .festival-title {
-                font-size: 28px;
-                font-weight: bold;
-                color: #1e40af;
-                margin-bottom: 5px;
-                text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            .festival-logo {
+                margin-bottom: 10px;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .festival-logo img {
+                max-height: 60px;
+                width: auto;
+                object-fit: contain;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             }
             .event-title {
                 font-size: 20px;
@@ -420,7 +426,9 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/elemental-logo.png" alt="Gardenia 2025 Logo" />
             </div>
             <div class="header-content">
-                <div class="festival-title">GARDENIA 2025</div>
+                <div class="festival-logo">
+                    <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="max-height: 60px; width: auto; object-fit: contain;" />
+                </div>
                 <div class="event-title">${eventData.title}</div>
                 <div class="event-category">${eventData.category}</div>
                 <div style="font-size: 14px; color: #059669; font-weight: 500;">Garden City University</div>

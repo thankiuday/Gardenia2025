@@ -139,9 +139,7 @@ const generatePDFFromHTML = async (registrationData, eventData, qrCodeDataURL) =
     <body>
         <div class="header">
             <div class="event-logo">
-                <div style="font-size: 12px; text-align: center; color: #1e40af; font-weight: bold;">
-                    GARDENIA<br>2025
-                </div>
+                <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" />
             </div>
             <div class="event-info">
                 <div class="event-title">${eventData.title || eventData.name || 'Event Registration'}</div>

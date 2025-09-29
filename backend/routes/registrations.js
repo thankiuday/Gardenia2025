@@ -48,8 +48,8 @@ router.post('/', [
       });
     }
 
-    // Validate team size for group events
-    if (event.type === 'Group') {
+    // Validate team size for group events and individual/group events
+    if (event.type === 'Group' || event.type === 'Individual/Group') {
       const totalMembers = 1 + teamMembers.length; // leader + team members
       if (totalMembers < event.teamSize.min || totalMembers > event.teamSize.max) {
         return res.status(400).json({

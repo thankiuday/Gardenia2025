@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import AdminNavbar from './components/AdminNavbar';
 import Footer from './components/Footer';
 import PageTransition from './components/PageTransition';
+import WelcomeModal from './components/WelcomeModal';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import Brochure from './pages/Brochure';
@@ -14,6 +15,7 @@ import About from './pages/About';
 import Admin from './pages/Admin';
 import EventDetails from './pages/EventDetails';
 import QRScanner from './pages/QRScanner';
+import './utils/globalErrorHandler'; // Load global error handler for S3 CORS tracking
 // import './utils/environmentTest'; // Load environment test utilities
 
 // Component to conditionally render navbar and footer
@@ -61,6 +63,7 @@ const AppLayout = ({ children }) => {
             {children}
           </PageTransition>
         </main>
+        <WelcomeModal />
       </div>
     );
   }
@@ -75,6 +78,7 @@ const AppLayout = ({ children }) => {
         </PageTransition>
       </main>
       <Footer />
+      <WelcomeModal />
     </div>
   );
 };

@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import S3_ASSETS from '../config/s3-assets';
 import SkeletonLoader from '../components/SkeletonLoader';
+import EventCard from '../components/EventCard';
 import useVisitorTracking from '../hooks/useVisitorTracking';
 
 const Home = () => {
@@ -42,7 +43,7 @@ const Home = () => {
     fetchEvents();
   }, []);
 
-  const getFilteredEvents = () => {
+  const filteredEvents = useMemo(() => {
     let filtered = events;
 
     // Filter by category
@@ -61,7 +62,7 @@ const Home = () => {
     }
 
     return filtered;
-  };
+  }, [events, selectedCategory, searchTerm]);
 
   const categories = [
     { key: 'All', label: 'All Events', icon: '🎯', color: 'bg-primary-600' },
@@ -107,7 +108,7 @@ const Home = () => {
                   WebkitMaskComposite: 'xor'
                 }}
               ></div>
-              <span className="relative z-10 text-xs sm:text-sm font-bold text-white/90">March 15-16, 2025</span>
+              <span className="relative z-10 text-xs sm:text-sm font-bold text-white/90">October 15th, 16th & 17th 2025</span>
             </div>
             
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white via-green-200 to-primary-200 bg-clip-text text-transparent leading-tight fade-in animate-delay-100">
@@ -220,7 +221,7 @@ const Home = () => {
                   }}
                 ></div>
                 <div className="relative z-10">
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">2</div>
+                  <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">3</div>
                   <div className="text-xs sm:text-sm font-bold text-red-300">Days</div>
                 </div>
               </div>
@@ -251,6 +252,175 @@ const Home = () => {
         <div className="absolute top-20 left-10 w-20 h-20 bg-green-400/15 rounded-full blur-xl"></div>
         <div className="absolute bottom-20 right-10 w-32 h-32 bg-red-400/10 rounded-full blur-2xl"></div>
         <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-primary-400/20 rounded-full blur-lg"></div>
+      </section>
+
+      {/* The Essence of Gardenia 2K25 Section */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-gray-50 via-white to-primary-50 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-primary-200/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-10 w-24 h-24 bg-green-200/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-gold-200/20 rounded-full blur-xl"></div>
+          <div className="absolute bottom-10 right-1/3 w-28 h-28 bg-emerald-200/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container-responsive relative z-10">
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-12 sm:mb-16">
+              <div className="inline-block px-6 py-3 bg-gradient-to-r from-primary-100 to-green-100 rounded-full border-2 border-primary-200/50 mb-6 fade-in">
+                <span className="text-sm font-bold text-primary-700">The Essence of Gardenia 2K25</span>
+              </div>
+              
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 fade-in animate-delay-100">
+                <span className="bg-gradient-to-r from-primary-600 via-green-600 to-emerald-600 bg-clip-text text-transparent">
+                  "Elements"
+                </span>
+              </h2>
+              
+              <p className="text-lg sm:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed fade-in animate-delay-200">
+                Gardenia has always been about celebrating the identity of Garden City University, and this year's theme, "Elements," reflects exactly who we are.
+              </p>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Left Side - Content */}
+              <div className="space-y-8 fade-in animate-delay-300">
+                <div className="space-y-6">
+                  <div className="p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-primary-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary-500 to-green-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">Unity in Diversity</h3>
+                        <p className="text-gray-600 leading-relaxed">
+                          Just as Earth, Water, Fire, Air, and Space are the forces that hold the world together, our university is held together by the incredible diversity of its departments.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-green-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">Sustainability & Coexistence</h3>
+                        <p className="text-gray-600 leading-relaxed">
+                          "Elements" also speaks on sustainability and coexistence, reminding us that creativity, professionalism, and sportsmanship can only grow when we value balance, respect diversity, and nurture harmony.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8 bg-gradient-to-br from-primary-50 to-green-50 rounded-2xl border-2 border-primary-200/50 shadow-lg">
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">More Than Just a Theme</h3>
+                    <p className="text-gray-700 leading-relaxed text-lg">
+                      Hence Gardenia Elements is more than just a theme; it is both a celebration of our identity and a call to build a sustainable, unified future.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side - Visual Elements */}
+              <div className="relative fade-in animate-delay-400">
+                {/* Elements Grid */}
+                <div className="grid grid-cols-2 gap-6">
+                  {/* Earth Element */}
+                  <div className="group relative p-6 bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl border-2 border-amber-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-element-float">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-2xl">🌍</span>
+                      </div>
+                      <h4 className="font-bold text-gray-900 mb-2">Earth</h4>
+                      <p className="text-sm text-gray-600">Foundation & Growth</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+
+                  {/* Water Element */}
+                  <div className="group relative p-6 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-2xl border-2 border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-element-float">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-2xl">💧</span>
+                      </div>
+                      <h4 className="font-bold text-gray-900 mb-2">Water</h4>
+                      <p className="text-sm text-gray-600">Flow & Adaptability</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+
+                  {/* Fire Element */}
+                  <div className="group relative p-6 bg-gradient-to-br from-red-100 to-pink-100 rounded-2xl border-2 border-red-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-element-float">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-2xl">🔥</span>
+                      </div>
+                      <h4 className="font-bold text-gray-900 mb-2">Fire</h4>
+                      <p className="text-sm text-gray-600">Passion & Energy</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-400/20 to-pink-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+
+                  {/* Air Element */}
+                  <div className="group relative p-6 bg-gradient-to-br from-sky-100 to-indigo-100 rounded-2xl border-2 border-sky-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-element-float">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-sky-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-2xl">💨</span>
+                      </div>
+                      <h4 className="font-bold text-gray-900 mb-2">Air</h4>
+                      <p className="text-sm text-gray-600">Freedom & Innovation</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-sky-400/20 to-indigo-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                </div>
+
+                {/* Space Element - Centered */}
+                <div className="mt-6 flex justify-center">
+                  <div className="group relative p-6 bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl border-2 border-purple-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 animate-element-float">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <span className="text-2xl">🌌</span>
+                      </div>
+                      <h4 className="font-bold text-gray-900 mb-2">Space</h4>
+                      <p className="text-sm text-gray-600">Infinite Possibilities</p>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-violet-400/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center mt-16 sm:mt-20 fade-in animate-delay-500">
+              <div className="inline-flex flex-col sm:flex-row gap-4">
+                <Link 
+                  to="/events" 
+                  className="group relative px-8 py-4 bg-gradient-to-r from-primary-600 to-green-600 text-white font-bold text-lg rounded-xl shadow-2xl hover:shadow-primary-500/25 transition-all duration-300 hover:scale-105 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary-400 to-green-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                  <span className="relative z-10">Explore the Elements</span>
+                </Link>
+                
+                <Link 
+                  to="/about" 
+                  className="group relative px-8 py-4 border-2 border-primary-600 text-primary-600 font-bold text-lg rounded-xl hover:bg-primary-600 hover:text-white transition-all duration-300 hover:scale-105"
+                >
+                  <span className="relative z-10">Learn More</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Event Categories Section */}
@@ -353,7 +523,7 @@ const Home = () => {
                 Try Again
               </button>
             </div>
-          ) : getFilteredEvents().length === 0 ? (
+          ) : filteredEvents.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -381,79 +551,12 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid-responsive">
-              {getFilteredEvents().map((event, index) => (
-                <div key={event.id} className="card fade-in overflow-hidden flex flex-col" style={{ animationDelay: `${index * 100}ms` }}>
-                  {/* Event Image */}
-                  <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden flex-shrink-0">
-                    <img 
-                      src={S3_ASSETS.events.getEventImage(event.title)} 
-                      alt={event.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        e.target.src = S3_ASSETS.events.default;
-                      }}
-                    />
-                    <div className="absolute top-2 left-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        event.type === 'Individual' 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {event.type}
-                      </span>
-                    </div>
-                    <div className="absolute top-2 right-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        event.category === 'Department Flagship Events' 
-                          ? 'bg-emerald-100 text-emerald-800' 
-                          : event.category === 'Signature Events'
-                          ? 'bg-gold-100 text-gold-800'
-                          : 'bg-green-100 text-green-800'
-                      }`}>
-                        {event.category.split(' ')[0]}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card Content - Flex to push buttons to bottom */}
-                  <div className="p-4 sm:p-6 flex flex-col flex-1">
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem]">
-                      {event.title}
-                    </h3>
-                    
-                    <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 min-h-[3rem] sm:min-h-[4rem]">
-                      <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                        <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span className="truncate text-xs sm:text-sm">{event.time}</span>
-                      </div>
-                      
-                      <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                        <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span className="text-xs sm:text-sm">Team: {event.type === 'Group' ? `${event.teamSize.min}-${event.teamSize.max}` : '1'}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Actions - Pushed to bottom */}
-                    <div className="flex flex-col sm:flex-row gap-2 mt-auto">
-                      <Link
-                        to={`/events/${event.id}`}
-                        className="flex-1 btn-secondary text-sm px-3 sm:px-4 py-2 text-center"
-                      >
-                        View Details
-                      </Link>
-                      <Link
-                        to={`/register/${event.id}`}
-                        className="flex-1 btn-primary text-sm px-3 sm:px-4 py-2 text-center"
-                      >
-                        Register
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+              {filteredEvents.map((event, index) => (
+                <EventCard 
+                  key={event.id} 
+                  event={event} 
+                  index={index}
+                />
               ))}
             </div>
           )}
@@ -485,7 +588,7 @@ const Home = () => {
               <div className="text-sm sm:text-base text-gray-600">Categories</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-primary-600 mb-2">2</div>
+              <div className="text-3xl sm:text-4xl font-bold text-primary-600 mb-2">3</div>
               <div className="text-sm sm:text-base text-gray-600">Event Days</div>
             </div>
             <div className="text-center">

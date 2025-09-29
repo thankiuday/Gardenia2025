@@ -1,72 +1,66 @@
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import useScrollToTop from '../hooks/useScrollToTop';
+import { useEffect } from 'react';
+
+const pageVariants = {
+  initial: {
+    opacity: 0,
+    y: 30,
+    scale: 0.95,
+    filter: 'blur(4px)'
+  },
+  in: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    filter: 'blur(0px)'
+  },
+  out: {
+    opacity: 0,
+    y: -30,
+    scale: 1.05,
+    filter: 'blur(4px)'
+  }
+};
+
+const pageTransition = {
+  type: 'spring',
+  stiffness: 300,
+  damping: 30,
+  mass: 0.8
+};
 
 const PageTransition = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [displayChildren, setDisplayChildren] = useState(children);
-  const [animationClass, setAnimationClass] = useState('fade-in');
   const location = useLocation();
-  
-  // Use scroll to top hook
-  useScrollToTop();
 
+  // Scroll to top when route changes
   useEffect(() => {
-    if (displayChildren !== children) {
-      setIsLoading(true);
-      
-      // Determine animation direction based on route
-      const getAnimationClass = (pathname) => {
-        const routes = {
-          '/': 'fade-in',
-          '/events': 'slide-in-right',
-          '/brochure': 'slide-in-left',
-          '/rules': 'slide-in-right',
-          '/contact': 'slide-in-left',
-          '/about': 'scale-in',
-          '/admin': 'fade-in'
-        };
-        
-        // Check for dynamic routes like /events/:id or /register/:id
-        if (pathname.includes('/events/') || pathname.includes('/register/')) {
-          return 'scale-in';
-        }
-        
-        return routes[pathname] || 'fade-in';
-      };
-      
-      setAnimationClass(getAnimationClass(location.pathname));
-      
-      // Show loading state for a brief moment
-      const timer = setTimeout(() => {
-        setDisplayChildren(children);
-        setIsLoading(false);
-      }, 400);
+    // Small delay to ensure the animation starts before scrolling
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }, 50);
 
-      return () => clearTimeout(timer);
-    }
-  }, [children, displayChildren, location.pathname]);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
   return (
-    <>
-      {/* Page Loader Bar */}
-      {isLoading && <div className="page-loader"></div>}
-      
-      {/* Loading Overlay */}
-      {isLoading && (
-        <div className="loading-overlay">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="loading-spinner"></div>
-            <p className="text-gray-600 font-medium">Loading...</p>
-          </div>
-        </div>
-      )}
-      
-      {/* Page Content with Animation */}
-      <div className={`${animationClass} ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-        {displayChildren}
-      </div>
-    </>
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={pageVariants}
+        transition={pageTransition}
+        className="w-full min-h-full"
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

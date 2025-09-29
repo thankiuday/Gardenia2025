@@ -20,6 +20,18 @@ const eventSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
+    enum: ['Individual', 'Group', 'Individual/Group']
+  },
+  participationTypes: {
+    type: [String],
+    default: function() {
+      // If type is Individual/Group, set both options
+      if (this.type === 'Individual/Group') {
+        return ['Individual', 'Group'];
+      }
+      // Otherwise, return the single type
+      return [this.type];
+    },
     enum: ['Individual', 'Group']
   },
   teamSize: {

@@ -4,6 +4,7 @@ import { API_ENDPOINTS } from '../config/api';
 import SkeletonLoader from '../components/SkeletonLoader';
 import useVisitorTracking from '../hooks/useVisitorTracking';
 import useScrollToTop from '../hooks/useScrollToTop';
+import { validatePhoneNumber, validateEmail, validateName } from '../utils/validation';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,13 @@ const Contact = () => {
     email: '',
     phone: '',
     message: ''
+  });
+
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState({
+    name: '',
+    email: '',
+    phone: ''
   });
   
   // Track visitor
@@ -29,14 +37,63 @@ const Contact = () => {
   }, [submitted]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
+    });
+
+    // Validate the field as user types
+    let validationResult = { isValid: true, message: '' };
+    
+    switch (name) {
+      case 'name':
+        validationResult = validateName(value);
+        break;
+      case 'email':
+        validationResult = validateEmail(value);
+        break;
+      case 'phone':
+        validationResult = validatePhoneNumber(value);
+        break;
+      default:
+        break;
+    }
+
+    setValidationErrors({
+      ...validationErrors,
+      [name]: validationResult.isValid ? '' : validationResult.message
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate all fields before submission
+    const nameValidation = validateName(formData.name);
+    const emailValidation = validateEmail(formData.email);
+    const phoneValidation = validatePhoneNumber(formData.phone);
+
+    if (!nameValidation.isValid) {
+      alert(`Name Error: ${nameValidation.message}`);
+      return;
+    }
+
+    if (!emailValidation.isValid) {
+      alert(`Email Error: ${emailValidation.message}`);
+      return;
+    }
+
+    if (!phoneValidation.isValid) {
+      alert(`Phone Number Error: ${phoneValidation.message}`);
+      return;
+    }
+
+    if (!formData.message.trim()) {
+      alert('Please enter your message.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -45,6 +102,7 @@ const Contact = () => {
       if (response.data.success) {
         setSubmitted(true);
         setFormData({ name: '', email: '', phone: '', message: '' });
+        setValidationErrors({ name: '', email: '', phone: '' });
       } else {
         alert('We couldn\'t send your message right now. Please try again.');
       }
@@ -114,12 +172,15 @@ const Contact = () => {
                   type="text"
                   name="name"
                   required
-                  className="input-field"
+                  className={`input-field ${validationErrors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
                   autoComplete="name"
                 />
+                {validationErrors.name && (
+                  <p className="text-red-500 text-sm mt-1">{validationErrors.name}</p>
+                )}
               </div>
 
               <div>
@@ -130,12 +191,15 @@ const Contact = () => {
                   type="email"
                   name="email"
                   required
-                  className="input-field"
+                  className={`input-field ${validationErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
                   placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={handleChange}
                   autoComplete="email"
                 />
+                {validationErrors.email && (
+                  <p className="text-red-500 text-sm mt-1">{validationErrors.email}</p>
+                )}
               </div>
 
               <div>
@@ -146,12 +210,15 @@ const Contact = () => {
                   type="tel"
                   name="phone"
                   required
-                  className="input-field"
-                  placeholder="+91 98765 43210"
+                  className={`input-field ${validationErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                  placeholder="Enter your 10-digit phone number (e.g., 9876543210)"
                   value={formData.phone}
                   onChange={handleChange}
                   autoComplete="tel"
                 />
+                {validationErrors.phone && (
+                  <p className="text-red-500 text-sm mt-1">{validationErrors.phone}</p>
+                )}
               </div>
 
               <div>

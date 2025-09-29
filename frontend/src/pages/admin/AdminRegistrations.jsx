@@ -17,6 +17,12 @@ const AdminRegistrations = () => {
   const [showModal, setShowModal] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
   
+  // Statistics state
+  const [totalRegistrations, setTotalRegistrations] = useState(0);
+  const [totalGcuStudents, setTotalGcuStudents] = useState(0);
+  const [totalExternalStudents, setTotalExternalStudents] = useState(0);
+  const [statsLoading, setStatsLoading] = useState(true);
+  
   // Scroll to top when component mounts or route changes
   useScrollToTop();
 
@@ -25,6 +31,18 @@ const AdminRegistrations = () => {
   useEffect(() => {
     fetchRegistrations();
   }, [currentPage, filterType, searchTerm]);
+
+  // Fetch statistics on component mount and when refresh is clicked
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
+
+  // Cleanup body class on unmount
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
 
   const fetchRegistrations = async () => {
     try {
@@ -48,6 +66,29 @@ const AdminRegistrations = () => {
       setError('We couldn\'t load the registrations. Please refresh the page to try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStatistics = async () => {
+    try {
+      setStatsLoading(true);
+      const token = localStorage.getItem('adminToken');
+      
+      // Fetch all-time statistics from dedicated stats endpoint
+      const response = await axios.get(API_ENDPOINTS.ADMIN.STATS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.data.success) {
+        setTotalRegistrations(response.data.data.totalRegistrations || 0);
+        setTotalGcuStudents(response.data.data.gcuRegistrations || 0);
+        setTotalExternalStudents(response.data.data.outsideRegistrations || 0);
+      }
+    } catch (error) {
+      console.error('Error fetching statistics:', error);
+      // Don't show error to user for stats, just keep existing values
+    } finally {
+      setStatsLoading(false);
     }
   };
 
@@ -84,11 +125,15 @@ const AdminRegistrations = () => {
   const handleRegistrationClick = (registration) => {
     setSelectedRegistration(registration);
     setShowModal(true);
+    // Prevent body scroll on mobile
+    document.body.classList.add('modal-open');
   };
 
   const closeModal = () => {
     setShowModal(false);
     setSelectedRegistration(null);
+    // Restore body scroll
+    document.body.classList.remove('modal-open');
   };
 
   const exportToExcel = async () => {
@@ -244,12 +289,40 @@ const AdminRegistrations = () => {
         </div>
 
         {/* Stats Cards */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Registration Statistics</h2>
+            <button
+              onClick={() => {
+                fetchRegistrations();
+                fetchStatistics();
+              }}
+              disabled={loading || statsLoading}
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <svg className={`w-4 h-4 ${(loading || statsLoading) ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {(loading || statsLoading) ? 'Refreshing...' : 'Refresh Stats'}
+            </button>
+          </div>
+          <p className="text-sm text-gray-600 mb-4">
+            📊 Statistics show all-time registration data (total counts from the beginning) and are not affected by filters or search
+          </p>
+        </div>
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Total Registrations</p>
-                <p className="text-2xl font-bold text-gray-900">{registrations.length}</p>
+                {statsLoading ? (
+                  <div className="animate-pulse">
+                    <div className="h-8 w-16 bg-gray-200 rounded"></div>
+                  </div>
+                ) : (
+                  <p className="text-2xl font-bold text-gray-900">{totalRegistrations.toLocaleString()}</p>
+                )}
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,9 +336,15 @@ const AdminRegistrations = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">External Students</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {registrations.filter(r => r.isGardenCityStudent === false).length}
-                </p>
+                {statsLoading ? (
+                  <div className="animate-pulse">
+                    <div className="h-8 w-16 bg-gray-200 rounded"></div>
+                  </div>
+                ) : (
+                  <p className="text-2xl font-bold text-blue-600">
+                    {totalExternalStudents.toLocaleString()}
+                  </p>
+                )}
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,9 +358,15 @@ const AdminRegistrations = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">GCU Students</p>
-                <p className="text-2xl font-bold text-emerald-600">
-                  {registrations.filter(r => r.isGardenCityStudent === true).length}
-                </p>
+                {statsLoading ? (
+                  <div className="animate-pulse">
+                    <div className="h-8 w-16 bg-gray-200 rounded"></div>
+                  </div>
+                ) : (
+                  <p className="text-2xl font-bold text-emerald-600">
+                    {totalGcuStudents.toLocaleString()}
+                  </p>
+                )}
               </div>
               <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
                 <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -482,42 +567,43 @@ const AdminRegistrations = () => {
 
         {/* Team Member Details Modal */}
         {showModal && selectedRegistration && (
-          <div className="fixed inset-0 bg-gradient-to-br from-gray-50 to-emerald-50 flex items-center justify-center p-2 sm:p-4 lg:p-6 z-50">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto mx-2 sm:mx-4">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-0 sm:p-2 md:p-4 lg:p-6">
+            <div className="bg-white w-full h-full sm:w-auto sm:h-auto sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl sm:max-h-[90vh] sm:rounded-xl shadow-2xl sm:mx-2 sm:mx-4 sm:my-4 flex flex-col mobile-modal">
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 truncate">Registration Details</h3>
-                  <p className="text-xs sm:text-sm text-gray-500 truncate">Registration ID: {selectedRegistration.regId}</p>
+              <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-200 sticky top-0 bg-white z-10 mobile-modal-header">
+                <div className="flex-1 min-w-0 pr-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 break-words">Registration Details</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 break-all mt-1">Registration ID: {selectedRegistration.regId}</p>
                 </div>
                 <button
                   onClick={closeModal}
-                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 flex-shrink-0 ml-2"
+                  className="text-gray-400 hover:text-gray-600 transition-colors duration-200 flex-shrink-0 p-2 -m-2 touch-manipulation"
+                  aria-label="Close modal"
                 >
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
 
               {/* Modal Content */}
-              <div className="p-4 sm:p-6">
+              <div className="p-3 sm:p-6 space-y-4 sm:space-y-8 flex-1 overflow-y-auto min-h-0 mobile-modal-content">
                 {/* Event Information */}
-                <div className="mb-8">
+                <div>
                   <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">Event Information</h4>
                   <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div>
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Event Name</p>
-                        <p className="text-gray-900">{selectedRegistration.eventId?.title || 'N/A'}</p>
+                        <p className="text-gray-900 break-words">{selectedRegistration.eventId?.title || 'N/A'}</p>
                       </div>
-                      <div>
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Event Date</p>
-                        <p className="text-gray-900">{selectedRegistration.finalEventDate || 'N/A'}</p>
+                        <p className="text-gray-900 break-words">{selectedRegistration.finalEventDate || 'N/A'}</p>
                       </div>
-                      <div>
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Student Type</p>
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
                           selectedRegistration.isGardenCityStudent 
                             ? 'bg-emerald-100 text-emerald-800' 
                             : 'bg-blue-100 text-blue-800'
@@ -525,36 +611,36 @@ const AdminRegistrations = () => {
                           {selectedRegistration.isGardenCityStudent ? 'GCU Student' : 'External Student'}
                         </span>
                       </div>
-                      <div>
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Registration Date</p>
-                        <p className="text-gray-900">{formatDate(selectedRegistration.createdAt)}</p>
+                        <p className="text-gray-900 break-words">{formatDate(selectedRegistration.createdAt)}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Team Leader Information */}
-                <div className="mb-8">
+                <div>
                   <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">Team Leader</h4>
                   <div className="bg-emerald-50 rounded-lg p-3 sm:p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                      <div>
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Name</p>
-                        <p className="text-gray-900 font-medium">{selectedRegistration.leader.name}</p>
+                        <p className="text-gray-900 font-medium break-words">{selectedRegistration.leader.name}</p>
                       </div>
-                      <div>
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Email</p>
-                        <p className="text-gray-900">{selectedRegistration.leader.email}</p>
+                        <p className="text-gray-900 break-all">{selectedRegistration.leader.email}</p>
                       </div>
-                      <div>
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">Phone</p>
-                        <p className="text-gray-900">{selectedRegistration.leader.phone}</p>
+                        <p className="text-gray-900 break-words">{selectedRegistration.leader.phone}</p>
                       </div>
-                      <div>
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">
                           {selectedRegistration.isGardenCityStudent ? 'Register Number' : 'Institution Name'}
                         </p>
-                        <p className="text-gray-900">
+                        <p className="text-gray-900 break-words">
                           {selectedRegistration.isGardenCityStudent 
                             ? selectedRegistration.leader.registerNumber || 'N/A'
                             : selectedRegistration.leader.collegeName || 'N/A'
@@ -562,9 +648,9 @@ const AdminRegistrations = () => {
                         </p>
                       </div>
                       {!selectedRegistration.isGardenCityStudent && (
-                        <div>
+                        <div className="space-y-1 sm:col-span-2">
                           <p className="text-sm font-medium text-gray-600">Registration/Roll Number</p>
-                          <p className="text-gray-900">{selectedRegistration.leader.collegeRegisterNumber || 'N/A'}</p>
+                          <p className="text-gray-900 break-words">{selectedRegistration.leader.collegeRegisterNumber || 'N/A'}</p>
                         </div>
                       )}
                     </div>
@@ -573,23 +659,23 @@ const AdminRegistrations = () => {
 
                 {/* Team Members */}
                 {selectedRegistration.teamMembers && selectedRegistration.teamMembers.length > 0 && (
-                  <div className="mb-8">
+                  <div>
                     <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">
                       Team Members ({selectedRegistration.teamMembers.length})
                     </h4>
                     <div className="space-y-4">
                       {selectedRegistration.teamMembers.map((member, index) => (
-                        <div key={index} className="bg-blue-50 rounded-lg p-3 sm:p-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                            <div>
+                       <div key={index} className="bg-blue-50 rounded-lg p-3 sm:p-4">
+                         <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                            <div className="space-y-1">
                               <p className="text-sm font-medium text-gray-600">Name</p>
-                              <p className="text-gray-900 font-medium">{member.name}</p>
+                              <p className="text-gray-900 font-medium break-words">{member.name}</p>
                             </div>
-                            <div>
+                            <div className="space-y-1">
                               <p className="text-sm font-medium text-gray-600">
                                 {selectedRegistration.isGardenCityStudent ? 'Register Number' : 'Institution Name'}
                               </p>
-                              <p className="text-gray-900">
+                              <p className="text-gray-900 break-words">
                                 {selectedRegistration.isGardenCityStudent 
                                   ? member.registerNumber || 'N/A'
                                   : member.collegeName || 'N/A'
@@ -597,9 +683,9 @@ const AdminRegistrations = () => {
                               </p>
                             </div>
                             {!selectedRegistration.isGardenCityStudent && (
-                              <div>
+                              <div className="space-y-1 sm:col-span-2">
                                 <p className="text-sm font-medium text-gray-600">Registration/Roll Number</p>
-                                <p className="text-gray-900">{member.collegeRegisterNumber || 'N/A'}</p>
+                                <p className="text-gray-900 break-words">{member.collegeRegisterNumber || 'N/A'}</p>
                               </div>
                             )}
                           </div>
@@ -610,18 +696,18 @@ const AdminRegistrations = () => {
                 )}
 
                 {/* QR Code Information */}
-                <div className="mb-8">
+                <div>
                   <h4 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">QR Code Information</h4>
                   <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
+                    <div className="space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+                      <div className="space-y-1">
                         <p className="text-sm font-medium text-gray-600">QR Code Generated</p>
                         <p className="text-gray-900">
                           {selectedRegistration.qrPayload ? 'Yes' : 'No'}
                         </p>
                       </div>
                       {selectedRegistration.pdfUrl && (
-                        <div>
+                        <div className="space-y-1">
                           <p className="text-sm font-medium text-gray-600">PDF Generated</p>
                           <p className="text-gray-900">Yes</p>
                         </div>
@@ -632,10 +718,10 @@ const AdminRegistrations = () => {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-end p-4 sm:p-6 border-t border-gray-200">
+              <div className="flex items-center justify-center sm:justify-end p-3 sm:p-6 border-t border-gray-200 sticky bottom-0 bg-white flex-shrink-0">
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-sm sm:text-base"
+                  className="w-full sm:w-auto px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-base font-medium touch-manipulation"
                 >
                   Close
                 </button>

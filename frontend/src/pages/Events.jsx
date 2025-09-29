@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import SkeletonLoader from '../components/SkeletonLoader';
+import EventCard from '../components/EventCard';
+import DirectImageTest from '../components/DirectImageTest';
+import s3Tracker from '../utils/s3ImageTracker';
 import S3_ASSETS from '../config/s3-assets';
 
 const Events = () => {
@@ -44,7 +47,7 @@ const Events = () => {
     fetchEvents();
   }, []);
 
-  const getFilteredEvents = () => {
+  const filteredEvents = useMemo(() => {
     let filtered = events;
 
     // Filter by category
@@ -62,9 +65,7 @@ const Events = () => {
     }
 
     return filtered;
-  };
-
-  const filteredEvents = getFilteredEvents();
+  }, [events, selectedCategory, searchTerm]);
 
   if (loading) {
     return (
@@ -197,90 +198,59 @@ const Events = () => {
           </div>
         </div>
 
+        {/* Debug Section - Remove this after testing */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-8 space-y-4">
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <h3 className="font-bold text-yellow-800 mb-2">Debug Info (Development Only)</h3>
+              {filteredEvents.length > 0 && (
+                <p className="text-sm text-yellow-700">
+                  First event: "{filteredEvents[0]?.title}" → 
+                  Generated URL: {S3_ASSETS.events.getEventImage(filteredEvents[0]?.title)}
+                </p>
+              )}
+            </div>
+            
+            {/* S3 Image Tracking Debug Panel */}
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <h3 className="font-bold text-red-800 mb-2">S3 Image Tracking</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-semibold text-red-700">CORS Blocked Images:</p>
+                  <p className="text-red-600">
+                    {s3Tracker.getCORSBlockedImages().length} images blocked by CORS
+                  </p>
+                </div>
+                <div>
+                  <p className="font-semibold text-red-700">Failed Images:</p>
+                  <p className="text-red-600">
+                    {s3Tracker.getFailedImages().length} images failed to load
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => {
+                  console.log('🔍 CORS Blocked Images:', s3Tracker.getCORSBlockedImages());
+                  console.log('❌ Failed Images:', s3Tracker.getFailedImages());
+                }}
+                className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+              >
+                Log S3 Errors to Console
+              </button>
+            </div>
+            
+            <DirectImageTest />
+          </div>
+        )}
+
         {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredEvents.map((event) => (
-            <div key={event.id} className="card hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col">
-              {/* Event Image */}
-              <div className="relative h-48 bg-gray-200 overflow-hidden flex-shrink-0">
-                <img 
-                  src={S3_ASSETS.events.getEventImage(event.title)} 
-                  alt={event.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    e.target.src = S3_ASSETS.events.default;
-                  }}
-                />
-                <div className="absolute top-3 left-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    event.type === 'Individual' 
-                      ? 'bg-orange-100 text-orange-800' 
-                      : 'bg-green-100 text-green-800'
-                  }`}>
-                    {event.type}
-                  </span>
-                </div>
-                <div className="absolute top-3 right-3">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                    event.category === 'Department Flagship Events' 
-                      ? 'bg-emerald-100 text-emerald-800' 
-                      : event.category === 'Signature Events'
-                      ? 'bg-gold-100 text-gold-800'
-                      : 'bg-green-100 text-green-800'
-                  }`}>
-                    {event.category.split(' ')[0]}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card Content - Flex to push buttons to bottom */}
-              <div className="p-6 flex flex-col flex-1">
-                {/* Event Title - Fixed height */}
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 min-h-[3.5rem]">
-                  {event.title}
-                </h3>
-
-                {/* Event Details - Fixed height */}
-                <div className="space-y-2 mb-6 min-h-[6rem]">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="truncate">{event.time}</span>
-                  </div>
-                  
-                  <div className="flex items-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span>Team Size: {event.type === 'Group' ? `${event.teamSize.min}-${event.teamSize.max}` : '1'} member{event.teamSize.max > 1 ? 's' : ''}</span>
-                  </div>
-
-                  <div className="flex items-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                    <span className="truncate">{event.department}</span>
-                  </div>
-                </div>
-
-                {/* Actions - Pushed to bottom */}
-                <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-                  <Link
-                    to={`/events/${event.id}`}
-                    className="flex-1 btn-secondary text-center text-sm sm:text-base"
-                  >
-                    View Details
-                  </Link>
-                  <Link
-                    to={`/register/${event.id}`}
-                    className="flex-1 btn-primary text-center text-sm sm:text-base"
-                  >
-                    Register Now
-                  </Link>
-                </div>
-              </div>
-            </div>
+          {filteredEvents.map((event, index) => (
+            <EventCard 
+              key={event.id} 
+              event={event} 
+              index={index}
+            />
           ))}
         </div>
 
