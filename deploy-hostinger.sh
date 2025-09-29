@@ -56,26 +56,22 @@ cp /path/to/your/nginx.conf /etc/nginx/sites-available/gardenia2025
 chown -R www-data:www-data $PROJECT_DIR
 chmod -R 755 $PROJECT_DIR
 
-# Create environment file
-echo "⚙️ Creating environment file..."
-cat > $PROJECT_DIR/backend/.env << EOF
-NODE_ENV=production
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_REGION=us-east-1
-AWS_S3_BUCKET=gardenia2025-assets
-FRONTEND_URL=https://your-domain.com
-CORS_ALLOW_ALL=false
-EOF
+# Create environment files
+echo "⚙️ Setting up environment files..."
 
-# Create frontend environment file
-cat > $PROJECT_DIR/frontend/.env << EOF
-VITE_API_URL=https://your-domain.com
-NODE_ENV=production
-EOF
+# Copy production environment files
+cp $PROJECT_DIR/backend/env.gardenia.production $PROJECT_DIR/backend/.env
+cp $PROJECT_DIR/frontend/env.gardenia.production $PROJECT_DIR/frontend/.env
+
+echo "📝 Environment files created. Please update the following:"
+echo "   - Backend: $PROJECT_DIR/backend/.env"
+echo "   - Frontend: $PROJECT_DIR/frontend/.env"
+echo ""
+echo "🔧 Required updates:"
+echo "   - Update MONGODB_URI with your MongoDB Atlas connection string"
+echo "   - Update JWT_SECRET with a secure secret key"
+echo "   - Update AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)"
+echo "   - Domain is already configured: https://gardenia.gardencity.university"
 
 # Start application with PM2
 echo "🚀 Starting application with PM2..."

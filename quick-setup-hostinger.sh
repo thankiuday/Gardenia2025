@@ -31,12 +31,12 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Get domain name from user
-read -p "Enter your domain name (e.g., gardenia2025.com): " DOMAIN_NAME
+# Set domain and get email
+DOMAIN_NAME="gardenia.gardencity.university"
 read -p "Enter your email for SSL certificate: " EMAIL
 
-if [ -z "$DOMAIN_NAME" ] || [ -z "$EMAIL" ]; then
-    print_error "Domain name and email are required"
+if [ -z "$EMAIL" ]; then
+    print_error "Email is required for SSL certificate"
     exit 1
 fi
 
@@ -119,5 +119,5 @@ echo "3. Install dependencies: cd /var/www/gardenia2025/backend && npm install"
 echo "4. Build frontend: cd /var/www/gardenia2025/frontend && npm install && npm run build"
 echo "5. Start application: pm2 start ecosystem.config.js"
 echo ""
-print_status "Your domain will be available at: https://$DOMAIN_NAME"
+print_status "Your domain will be available at: https://gardenia.gardencity.university"
 print_status "SSL certificate is configured and auto-renewal is enabled"
