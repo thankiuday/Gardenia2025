@@ -204,7 +204,7 @@ const Events = () => {
               {/* Event Image */}
               <div className="relative h-48 bg-gray-200 overflow-hidden flex-shrink-0">
                 <img 
-                  src={S3_ASSETS.events.getEventImage(event.id)} 
+                  src={S3_ASSETS.events.getEventImage(event.title)} 
                   alt={event.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
