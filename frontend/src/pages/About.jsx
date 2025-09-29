@@ -239,13 +239,13 @@ const About = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
               href="/events" 
-              className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
+              className="btn-primary bg-white text-primary-600 hover:bg-gray-100 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold min-h-[48px] flex items-center justify-center"
             >
               Explore Events
             </a>
             <a 
               href="/contact" 
-              className="btn-secondary border-2 border-white text-green hover:bg-white hover:text-primary-600 px-8 py-3 text-lg font-semibold"
+              className="btn-secondary border-2 border-white text-white hover:bg-white hover:text-primary-600 px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold min-h-[48px] flex items-center justify-center"
             >
               Contact Us
             </a>

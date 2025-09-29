@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import SkeletonLoader from '../components/SkeletonLoader';
+import S3_ASSETS from '../config/s3-assets';
 
 const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -128,7 +129,7 @@ const Events = () => {
         </div>
 
         {/* Mobile-Friendly Search and Filter */}
-        <div className="mb-12 space-y-4">
+        <div className="mb-8 sm:mb-12 space-y-4">
           {/* Search Bar */}
           <div className="relative max-w-md mx-auto">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -141,8 +142,18 @@ const Events = () => {
               placeholder="Search events..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent min-h-[44px] text-base"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
 
           {/* Desktop: Horizontal buttons */}
@@ -164,11 +175,11 @@ const Events = () => {
 
           {/* Mobile: Dropdown select */}
           <div className="sm:hidden">
-            <div className="relative">
+            <div className="relative max-w-md mx-auto">
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent appearance-none"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent appearance-none min-h-[44px] text-base"
               >
                 {categories.map((category) => (
                   <option key={category.key} value={category.key}>
@@ -189,24 +200,18 @@ const Events = () => {
         {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredEvents.map((event) => (
-            <div key={event.id} className="card hover:shadow-xl transition-all duration-300 group">
-              <div className="p-6">
-                {/* Event Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-2 ${
-                      event.category === 'Department Flagship Events' 
-                        ? 'bg-emerald-100 text-emerald-800' 
-                        : event.category === 'Signature Events'
-                        ? 'bg-gold-100 text-gold-800'
-                        : 'bg-green-100 text-green-800'
-                    }`}>
-                      {event.category}
-                    </span>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                      {event.title}
-                    </h3>
-                  </div>
+            <div key={event.id} className="card hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col">
+              {/* Event Image */}
+              <div className="relative h-48 bg-gray-200 overflow-hidden flex-shrink-0">
+                <img 
+                  src={S3_ASSETS.events.getEventImage(event.id)} 
+                  alt={event.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    e.target.src = S3_ASSETS.events.default;
+                  }}
+                />
+                <div className="absolute top-3 left-3">
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                     event.type === 'Individual' 
                       ? 'bg-orange-100 text-orange-800' 
@@ -215,32 +220,52 @@ const Events = () => {
                     {event.type}
                   </span>
                 </div>
+                <div className="absolute top-3 right-3">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    event.category === 'Department Flagship Events' 
+                      ? 'bg-emerald-100 text-emerald-800' 
+                      : event.category === 'Signature Events'
+                      ? 'bg-gold-100 text-gold-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {event.category.split(' ')[0]}
+                  </span>
+                </div>
+              </div>
 
-                {/* Event Details */}
-                <div className="space-y-3 mb-6">
+              {/* Card Content - Flex to push buttons to bottom */}
+              <div className="p-6 flex flex-col flex-1">
+                {/* Event Title - Fixed height */}
+                <h3 className="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2 min-h-[3.5rem]">
+                  {event.title}
+                </h3>
+
+                {/* Event Details - Fixed height */}
+                <div className="space-y-2 mb-6 min-h-[6rem]">
                   <div className="flex items-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    {event.time}
+                    <span className="truncate">{event.time}</span>
                   </div>
                   
                   <div className="flex items-center text-sm text-gray-600">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
-                    Team Size: {event.type === 'Group' ? `${event.teamSize.min}-${event.teamSize.max}` : '1'} member{event.teamSize.max > 1 ? 's' : ''}
+                    <span>Team Size: {event.type === 'Group' ? `${event.teamSize.min}-${event.teamSize.max}` : '1'} member{event.teamSize.max > 1 ? 's' : ''}</span>
                   </div>
 
+                  <div className="flex items-center text-sm text-gray-600">
+                    <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    <span className="truncate">{event.department}</span>
+                  </div>
                 </div>
 
-                {/* Description */}
-                <p className="text-sm text-gray-600 mb-6 line-clamp-3">
-                  {event.description}
-                </p>
-
-                {/* Actions */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                {/* Actions - Pushed to bottom */}
+                <div className="flex flex-col sm:flex-row gap-3 mt-auto">
                   <Link
                     to={`/events/${event.id}`}
                     className="flex-1 btn-secondary text-center text-sm sm:text-base"

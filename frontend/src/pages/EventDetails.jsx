@@ -219,13 +219,13 @@ const EventDetails = () => {
           <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
             <Link
               to={`/register/${event.id}`}
-              className="flex-1 btn-primary text-center"
+              className="flex-1 btn-primary text-center min-h-[48px] flex items-center justify-center"
             >
               Register Now
             </Link>
             <Link
               to="/events"
-              className="flex-1 btn-secondary text-center"
+              className="flex-1 btn-secondary text-center min-h-[48px] flex items-center justify-center"
             >
               Browse Other Events
             </Link>

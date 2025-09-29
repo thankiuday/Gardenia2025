@@ -267,8 +267,8 @@ const Home = () => {
 
           {/* Modern Search and Filter */}
           <div className="max-w-4xl mx-auto mb-8 sm:mb-12">
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
-              <div className="flex flex-col lg:flex-row gap-4">
+            <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 border border-gray-100">
+              <div className="flex flex-col sm:flex-row gap-4">
                 {/* Search Bar */}
                 <div className="flex-1">
                   <div className="relative">
@@ -279,20 +279,30 @@ const Home = () => {
                     </div>
                     <input
                       type="text"
-                      placeholder="Search events by title, description, or department..."
+                      placeholder="Search events..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm placeholder-gray-500"
+                      className="block w-full pl-10 pr-3 py-3 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base placeholder-gray-500 min-h-[44px]"
                     />
+                    {searchTerm && (
+                      <button
+                        onClick={() => setSearchTerm('')}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 min-h-[44px]"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
                   </div>
                 </div>
                 
                 {/* Category Filter */}
-                <div className="lg:w-64">
+                <div className="sm:w-64">
                   <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm bg-white"
+                    className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base bg-white min-h-[44px]"
                   >
                     {categories.map((category) => (
                       <option key={category.key} value={category.key}>
@@ -372,10 +382,19 @@ const Home = () => {
           ) : (
             <div className="grid-responsive">
               {getFilteredEvents().map((event, index) => (
-                <div key={event.id} className="card fade-in" style={{ animationDelay: `${index * 100}ms` }}>
-                  <div className="p-4 sm:p-6">
-                    <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${
+                <div key={event.id} className="card fade-in overflow-hidden flex flex-col" style={{ animationDelay: `${index * 100}ms` }}>
+                  {/* Event Image */}
+                  <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden flex-shrink-0">
+                    <img 
+                      src={S3_ASSETS.events.getEventImage(event.id)} 
+                      alt={event.title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.target.src = S3_ASSETS.events.default;
+                      }}
+                    />
+                    <div className="absolute top-2 left-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         event.type === 'Individual' 
                           ? 'bg-blue-100 text-blue-800' 
                           : 'bg-green-100 text-green-800'
@@ -383,22 +402,43 @@ const Home = () => {
                         {event.type}
                       </span>
                     </div>
-                    
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                    <div className="absolute top-2 right-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        event.category === 'Department Flagship Events' 
+                          ? 'bg-emerald-100 text-emerald-800' 
+                          : event.category === 'Signature Events'
+                          ? 'bg-gold-100 text-gold-800'
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {event.category.split(' ')[0]}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card Content - Flex to push buttons to bottom */}
+                  <div className="p-4 sm:p-6 flex flex-col flex-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3 line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem]">
                       {event.title}
                     </h3>
                     
-                    <p className="text-sm text-gray-600 mb-3 sm:mb-4 line-clamp-3">
-                      {event.description}
-                    </p>
-                    
-                    <div className="flex items-center justify-between mb-3 sm:mb-4">
-                      <span className="text-xs text-gray-500">
-                        {event.department}
-                      </span>
+                    <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4 min-h-[3rem] sm:min-h-[4rem]">
+                      <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="truncate text-xs sm:text-sm">{event.time}</span>
+                      </div>
+                      
+                      <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span className="text-xs sm:text-sm">Team: {event.type === 'Group' ? `${event.teamSize.min}-${event.teamSize.max}` : '1'}</span>
+                      </div>
                     </div>
                     
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    {/* Actions - Pushed to bottom */}
+                    <div className="flex flex-col sm:flex-row gap-2 mt-auto">
                       <Link
                         to={`/events/${event.id}`}
                         className="flex-1 btn-secondary text-sm px-3 sm:px-4 py-2 text-center"

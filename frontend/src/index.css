@@ -245,11 +245,11 @@
   
   /* Mobile-first navigation */
   .nav-mobile {
-    @apply md:hidden;
+    @apply lg:hidden;
   }
   
   .nav-desktop {
-    @apply hidden md:flex;
+    @apply hidden lg:flex;
   }
   
   /* Loading states */
@@ -448,6 +448,54 @@
   @media (max-width: 640px) {
     .hero-video {
       object-position: center center;
+    }
+    
+    /* Better touch targets on mobile */
+    .btn-primary, .btn-secondary, .btn-outline {
+      min-height: 48px;
+      font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    /* Improve form inputs on mobile */
+    .input-field {
+      font-size: 16px; /* Prevents zoom on iOS */
+      min-height: 48px;
+    }
+    
+    /* Better spacing for mobile cards */
+    .card {
+      margin-bottom: 1rem;
+    }
+    
+    /* Improve mobile navigation */
+    .nav-mobile .space-y-2 > * + * {
+      margin-top: 0.5rem;
+    }
+    
+    /* Better mobile modal spacing */
+    .modal-responsive {
+      padding: 1rem;
+    }
+    
+    /* Improve mobile grid spacing */
+    .grid-responsive {
+      gap: 1rem;
+    }
+  }
+  
+  /* Extra small mobile devices */
+  @media (max-width: 375px) {
+    .container-responsive {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .text-responsive {
+      font-size: 0.875rem;
+    }
+    
+    .heading-responsive {
+      font-size: 1.5rem;
     }
   }
 }

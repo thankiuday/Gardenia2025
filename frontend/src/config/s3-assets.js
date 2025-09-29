@@ -10,7 +10,14 @@ const S3_ASSETS = {
     university: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg'
   },
   documents: {
-    brochure: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/documents/gardenia-2025-brochure.pdf'
+    brochure: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/documents/gardenia-2025-brochure (1).pdf'
+  },
+  events: {
+    baseUrl: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events',
+    // Function to get event image URL
+    getEventImage: (eventId) => `${S3_ASSETS.events.baseUrl}/${eventId}.jpg`,
+    // Fallback image for events without specific images
+    default: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/default-event.jpg'
   }
 };
 

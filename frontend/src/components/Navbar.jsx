@@ -79,7 +79,7 @@ const Navbar = () => {
             </div>
 
             {/* Center: Navigation Links (Desktop) */}
-            <div className="nav-desktop items-center space-x-2 lg:space-x-4">
+            <div className="hidden lg:flex items-center space-x-2 lg:space-x-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -96,7 +96,7 @@ const Navbar = () => {
             </div>
 
             {/* Right: University Logo (Desktop) */}
-            <div className="nav-desktop items-center">
+            <div className="hidden lg:flex items-center">
               <img 
                 src={S3_ASSETS.logos.university}
                 alt="Garden City University Logo" 
@@ -105,10 +105,10 @@ const Navbar = () => {
             </div>
 
             {/* Mobile menu button */}
-            <div className="nav-mobile">
+            <div className="lg:hidden flex items-center">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600 p-2 rounded-md"
+                className="text-gray-700 hover:text-primary-600 focus:outline-none focus:text-primary-600 p-2 rounded-md min-h-[44px] min-w-[44px] flex items-center justify-center"
                 aria-label="Toggle navigation menu"
                 aria-expanded={isMenuOpen}
               >
@@ -125,13 +125,13 @@ const Navbar = () => {
 
           {/* Mobile menu */}
           {isMenuOpen && (
-            <div className="nav-mobile">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 rounded-lg mt-2 border border-gray-200">
+            <div className="lg:hidden">
+              <div className="px-3 pt-3 pb-4 space-y-2 bg-gray-50 rounded-lg mt-2 border border-gray-200 shadow-lg">
                 {navLinks.map((link, index) => (
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`block px-3 py-3 rounded-md text-base font-medium transition-all duration-300 transform hover:scale-105 ${
+                    className={`block px-4 py-4 rounded-lg text-base font-medium transition-all duration-300 transform hover:scale-105 min-h-[48px] flex items-center ${
                       isActive(link.path)
                         ? 'text-primary-600 bg-primary-100 shadow-sm'
                         : 'text-gray-700 hover:text-primary-600 hover:bg-gray-100'
@@ -145,13 +145,13 @@ const Navbar = () => {
                 
                 {/* Mobile University Logo */}
                 <div className="pt-3 border-t border-gray-200 mt-3">
-                  <div className="flex items-center px-3 py-2">
+                  <div className="flex items-center px-4 py-3">
                     <img 
                       src={S3_ASSETS.logos.university}
                       alt="Garden City University Logo" 
-                      className="w-8 h-8 object-contain mr-3"
+                      className="w-10 h-10 object-contain mr-3 flex-shrink-0"
                     />
-                    <span className="text-sm text-gray-600">Garden City University</span>
+                    <span className="text-sm text-gray-600 font-medium">Garden City University</span>
                   </div>
                 </div>
               </div>

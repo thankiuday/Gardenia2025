@@ -10,7 +10,9 @@ const RulesAndRegulations = () => {
     { id: 'performance', label: 'Performance Guidelines', icon: '🎭', category: 'Performance' },
     { id: 'scoring', label: 'Scoring Criteria', icon: '⭐', category: 'Evaluation' },
     { id: 'disqualification', label: 'Disqualification', icon: '⚠️', category: 'Penalties' },
-    { id: 'sports', label: 'Sports Rules', icon: '🏆', category: 'Sports' }
+    { id: 'sports', label: 'Sports Rules', icon: '🏆', category: 'Sports' },
+    { id: 'conduct', label: 'Code of Conduct', icon: '🤝', category: 'Conduct' },
+    { id: 'disclaimer', label: 'Disclaimer', icon: '📄', category: 'Legal' }
   ];
 
   const categories = [
@@ -19,7 +21,9 @@ const RulesAndRegulations = () => {
     { key: 'Performance', label: 'Performance' },
     { key: 'Evaluation', label: 'Evaluation' },
     { key: 'Penalties', label: 'Penalties' },
-    { key: 'Sports', label: 'Sports' }
+    { key: 'Sports', label: 'Sports' },
+    { key: 'Conduct', label: 'Conduct' },
+    { key: 'Legal', label: 'Legal' }
   ];
 
   const generalRules = [
@@ -39,9 +43,9 @@ const RulesAndRegulations = () => {
       title: "Theme Adherence",
       content: "All performances, artworks, and ideas must align with the festival themes:",
       subItems: [
-        "Neo-Tribe – Find Your Clan (Flagship Events)",
+        "Neo-Tribe – Find Your Clan (Department Flagship Events)",
         "Elements – Live the Essence (Signature Events)",
-        "Arena – Play for Glory"
+        "Arena – Play for Glory (Sports Events)"
       ]
     },
     {
@@ -103,6 +107,47 @@ const RulesAndRegulations = () => {
     "Registration closes at 20 teams, even before the last date.",
     "Participants must be under 25 years of age as on 27th February 2025.",
     "Matches will not be postponed except for valid natural causes (rain, bad light, etc.)."
+  ];
+
+  const codeOfConduct = [
+    {
+      title: "Purpose",
+      content: "This Code of Conduct outlines the expected standards of behaviour for all external participants attending/participating in events organized by Garden City University. By signing this document, participants agree to abide by these rules and accept responsibility for their actions during the event."
+    },
+    {
+      title: "General Conduct",
+      content: "Participants must conduct themselves in a respectful, responsible, and professional manner at all times.",
+      subItems: [
+        "Harassment, discrimination, or offensive behavior (verbal, physical, or digital) will not be tolerated.",
+        "Respect for university staff, students, fellow participants, and property is mandatory.",
+        "Alcohol, drugs, and prohibited substances are strictly banned on campus.",
+        "Participants must follow all instructions issued by university authorities, organizers, and security personnel.",
+        "Promotion or expression of religious, caste, creed, or political activities, symbols, propaganda, or affiliations is strictly prohibited within the event premises. The university maintains a neutral, inclusive, secular, and apolitical environment."
+      ]
+    },
+    {
+      title: "Safety & Security",
+      content: "Participants must adhere to all campus safety rules, fire safety measures, and emergency protocols.",
+      subItems: [
+        "Any damage to university property caused by a participant will be their financial responsibility.",
+        "Please take care of your personal belongings, as the university will not be held responsible for any loss during the event."
+      ]
+    },
+    {
+      title: "Compliance",
+      content: "Participants must carry valid ID and event registration proof at all times. Any act violating university policies, laws, or regulations will result in removal from the event and may invite legal action."
+    },
+    {
+      title: "Media & Photography Consent",
+      content: "By participating, individuals consent to the use of their photographs, videos, or recordings by the university for promotional or academic purposes."
+    }
+  ];
+
+  const disclaimer = [
+    {
+      title: "Disclaimer of Liability",
+      content: "Participation is voluntary. The university is not responsible for any injury, illness, accident, or loss arising during the event. Medical emergencies will be assisted promptly, but costs beyond first aid are the responsibility of the participant."
+    }
   ];
 
   // Filter sections based on search term and category
@@ -173,6 +218,29 @@ const RulesAndRegulations = () => {
         title: `Rule ${index + 1}`,
         content: rule,
         type: 'sportsRule'
+      });
+    });
+
+    // Add code of conduct
+    codeOfConduct.forEach((rule, index) => {
+      allContent.push({
+        section: 'conduct',
+        sectionLabel: 'Code of Conduct',
+        title: rule.title,
+        content: rule.content,
+        subItems: rule.subItems,
+        type: 'conduct'
+      });
+    });
+
+    // Add disclaimer
+    disclaimer.forEach((rule, index) => {
+      allContent.push({
+        section: 'disclaimer',
+        sectionLabel: 'Disclaimer',
+        title: rule.title,
+        content: rule.content,
+        type: 'disclaimer'
       });
     });
 
@@ -329,6 +397,42 @@ const RulesAndRegulations = () => {
             </div>
           ));
         
+        case 'Conduct':
+          return codeOfConduct.map((rule, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+              <h3 className="text-xl font-semibold text-primary-700 mb-3 flex items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                  {index + 1}
+                </span>
+                {rule.title}
+              </h3>
+              <p className="text-gray-700 leading-relaxed">{rule.content}</p>
+              {rule.subItems && (
+                <ul className="mt-4 space-y-2">
+                  {rule.subItems.map((item, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <span className="text-primary-500 mr-2">•</span>
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ));
+        
+        case 'Legal':
+          return disclaimer.map((rule, index) => (
+            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-red-100">
+              <h3 className="text-xl font-semibold text-red-700 mb-3 flex items-center">
+                <span className="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+                  {index + 1}
+                </span>
+                {rule.title}
+              </h3>
+              <p className="text-gray-700 leading-relaxed">{rule.content}</p>
+            </div>
+          ));
+        
         default:
           return null;
       }
@@ -369,11 +473,17 @@ const RulesAndRegulations = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Rules & Regulations
+            Gardenia 2025 – General Rules & Regulations
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive guidelines and regulations for Gardenia 2025 participants
+            Comprehensive guidelines, code of conduct, and regulations for all participants
           </p>
+          <div className="mt-6 flex justify-center space-x-4 text-sm text-gray-500">
+            <span className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full">General Rules</span>
+            <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full">Performance Guidelines</span>
+            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">Code of Conduct</span>
+            <span className="bg-red-50 text-red-700 px-3 py-1 rounded-full">Legal Disclaimer</span>
+          </div>
         </div>
 
         {/* Search and Filter Controls */}

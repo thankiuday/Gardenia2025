@@ -118,6 +118,7 @@ const Contact = () => {
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={handleChange}
+                  autoComplete="name"
                 />
               </div>
 
@@ -133,6 +134,7 @@ const Contact = () => {
                   placeholder="your.email@example.com"
                   value={formData.email}
                   onChange={handleChange}
+                  autoComplete="email"
                 />
               </div>
 
@@ -148,6 +150,7 @@ const Contact = () => {
                   placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={handleChange}
+                  autoComplete="tel"
                 />
               </div>
 
