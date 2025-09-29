@@ -55,7 +55,7 @@ Based on the event grid, here are all the event image names you need to create:
 
 ### S3 Bucket (Primary)
 ```
-https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/
+https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images/
 ```
 
 ### Local Fallback
@@ -74,7 +74,7 @@ frontend/public/optimized/
 
 - [ ] Create 36 event images with exact names above
 - [ ] Create 1 default fallback image
-- [ ] Upload to S3 bucket: `gardenia2025-assets/events/`
+- [ ] Upload to S3 bucket: `gardenia2025-assets/event-images/`
 - [ ] Test image loading in application
 - [ ] Verify fallback image works for missing events
 
@@ -82,10 +82,10 @@ frontend/public/optimized/
 
 Images will be accessible at:
 ```
-https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/{event-id}.jpg
+https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images/{event-id}.jpg
 ```
 
 Example:
-- `https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/basketball.jpg`
-- `https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/waves-of-the-mind.jpg`
-- `https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/default-event.jpg`
+- `https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images/basketball.jpg`
+- `https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images/waves-of-the-mind.jpg`
+- `https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images/default-event.jpg`

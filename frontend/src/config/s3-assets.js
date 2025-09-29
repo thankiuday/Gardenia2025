@@ -13,11 +13,11 @@ const S3_ASSETS = {
     brochure: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/documents/gardenia-2025-brochure (1).pdf'
   },
   events: {
-    baseUrl: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events',
+    baseUrl: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images',
     // Function to get event image URL
     getEventImage: (eventId) => `${S3_ASSETS.events.baseUrl}/${eventId}.jpg`,
     // Fallback image for events without specific images
-    default: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/events/default-event.jpg'
+    default: 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com/event-images/default-event.jpg'
   }
 };
 

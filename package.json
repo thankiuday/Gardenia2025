@@ -12,7 +12,9 @@
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
     "deploy:hostinger": "chmod +x quick-setup-hostinger.sh && ./quick-setup-hostinger.sh",
     "setup:ssl": "chmod +x setup-ssl.sh && ./setup-ssl.sh",
-    "deploy:production": "chmod +x deploy-hostinger.sh && ./deploy-hostinger.sh"
+    "deploy:production": "chmod +x deploy-hostinger.sh && ./deploy-hostinger.sh",
+    "setup:event-images": "chmod +x setup-event-images.sh && ./setup-event-images.sh",
+    "upload:event-images": "chmod +x upload-event-images.sh && ./upload-event-images.sh"
   },
   "keywords": ["event-management", "mern", "gardenia"],
   "author": "Garden City University",
