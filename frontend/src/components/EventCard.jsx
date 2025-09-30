@@ -50,7 +50,7 @@ const EventCard = memo(({ event, index = 0 }) => {
         </h3>
 
         {/* Event Details - Fixed height */}
-        <div className="space-y-2 mb-6 min-h-[6rem]">
+        <div className="space-y-2 mb-6 min-h-[8rem]">
           <div className="flex items-center text-sm text-gray-600">
             <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -77,6 +77,37 @@ const EventCard = memo(({ event, index = 0 }) => {
             </svg>
             <span className="truncate">{event.department}</span>
           </div>
+
+          {/* Contact Information */}
+          {event.contacts && event.contacts.length > 0 && (
+            <div className="space-y-1">
+              {event.contacts.slice(0, 2).map((contact, index) => (
+                <div key={index} className="flex items-center text-sm text-gray-600">
+                  <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate font-medium">{contact.name}</span>
+                      <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-700 text-xs rounded-full flex-shrink-0">
+                        {contact.role === 'SPOC' ? 'SPOC' : contact.role === 'Student In-Charge' ? 'Student' : contact.role.split(' ')[0]}
+                      </span>
+                    </div>
+                    {contact.phone && (
+                      <div className="text-xs text-gray-500 truncate">
+                        📞 {contact.phone}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {event.contacts.length > 2 && (
+                <div className="text-xs text-gray-500">
+                  +{event.contacts.length - 2} more contact{event.contacts.length - 2 > 1 ? 's' : ''}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Actions - Pushed to bottom */}

@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "68cfdd60432937f71f7a0344",
+    "name": "uday thanki",
+    "email": "udaythanki2@gmail.com",
+    "phone": "9265738301",
+    "message": "abc query",
+    "createdAt": "2025-09-21T11:11:28.051Z",
+    "updatedAt": "2025-09-21T11:11:28.051Z",
+    "__v": 0
+  },
+  {
+    "_id": "68d0051234bbf3c4a84f088e",
+    "name": "uday thanki",
+    "email": "udaythanki2@gmail.com",
+    "phone": "9265738301",
+    "message": "example",
+    "createdAt": "2025-09-21T14:00:50.230Z",
+    "updatedAt": "2025-09-21T14:00:50.230Z",
+    "__v": 0
+  },
+  {
+    "_id": "68db423adf8e940013532433",
+    "name": "uday thanki",
+    "email": "udaythanki2@gmail.com",
+    "phone": "9265738301",
+    "message": "xyz query from student",
+    "createdAt": "2025-09-30T02:36:42.191Z",
+    "updatedAt": "2025-09-30T02:36:42.191Z",
+    "__v": 0
+  }
+]

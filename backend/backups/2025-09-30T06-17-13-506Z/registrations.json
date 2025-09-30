@@ -1,0 +1,1565 @@
+[
+  {
+    "leader": {
+      "name": "Test User",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfba290c4ec6aac35e3aec",
+    "regId": "GDN2025-4357",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-4357\",\"name\":\"Test User\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T08:41:13.353Z\"}",
+    "pdfUrl": "/uploads/GDN2025-4357.pdf",
+    "createdAt": "2025-09-21T08:41:13.361Z",
+    "updatedAt": "2025-09-21T08:41:15.605Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday thanki",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "uday2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfba91779f71e943d206b1",
+    "regId": "GDN2025-2547",
+    "eventId": "68cfb972546b0ee8e182d23f",
+    "isGardenCityStudent": true,
+    "teamMembers": [
+      {
+        "name": "uday thanki",
+        "registerNumber": "uday2@gmail.com",
+        "collegeName": "",
+        "_id": "68cfba91779f71e943d206b2"
+      }
+    ],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-2547\",\"name\":\"uday thanki\",\"event\":\"Cell Survivor (Life Sciences Challenge)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T08:42:57.439Z\"}",
+    "pdfUrl": "/uploads/GDN2025-2547.pdf",
+    "createdAt": "2025-09-21T08:42:57.466Z",
+    "updatedAt": "2025-09-21T08:42:58.828Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfbc0c7979ce9449f96054",
+    "regId": "GDN2025-5031",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-5031\",\"name\":\"Test User\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T08:49:16.908Z\"}",
+    "pdfUrl": "/uploads/GDN2025-5031.pdf",
+    "createdAt": "2025-09-21T08:49:16.918Z",
+    "updatedAt": "2025-09-21T08:49:19.016Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfbc89701382398341dd2e",
+    "regId": "GDN2025-6951",
+    "eventId": "68cfb972546b0ee8e182d222",
+    "isGardenCityStudent": true,
+    "teamMembers": [
+      {
+        "name": "uday",
+        "registerNumber": "24MCAR107",
+        "collegeName": "",
+        "_id": "68cfbc89701382398341dd2f"
+      },
+      {
+        "name": "uday",
+        "registerNumber": "24MCAR107",
+        "collegeName": "",
+        "_id": "68cfbc89701382398341dd30"
+      }
+    ],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-6951\",\"name\":\"uday\",\"event\":\"Chasing Shadows (Forensic Science Challenge)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T08:51:21.539Z\"}",
+    "pdfUrl": "/uploads/GDN2025-6951.pdf",
+    "createdAt": "2025-09-21T08:51:21.562Z",
+    "updatedAt": "2025-09-21T08:51:23.155Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User with Logos",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfbdea6303d43a8d7adcdb",
+    "regId": "GDN2025-5411",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-5411\",\"name\":\"Test User with Logos\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T08:57:14.510Z\"}",
+    "pdfUrl": "/uploads/GDN2025-5411.pdf",
+    "createdAt": "2025-09-21T08:57:14.520Z",
+    "updatedAt": "2025-09-21T08:57:28.854Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User No Fee",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfbf4fcc12bd3858337321",
+    "regId": "GDN2025-9776",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-9776\",\"name\":\"Test User No Fee\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T09:03:11.670Z\"}",
+    "pdfUrl": "/uploads/GDN2025-9776.pdf",
+    "createdAt": "2025-09-21T09:03:11.681Z",
+    "updatedAt": "2025-09-21T09:03:24.450Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "udaythanki2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfbf9d8f5df12019cb250c",
+    "regId": "GDN2025-4152",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "paymentStatus": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-4152\",\"name\":\"uday \",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"paymentStatus\":\"PENDING\",\"timestamp\":\"2025-09-21T09:04:29.461Z\"}",
+    "pdfUrl": "/uploads/GDN2025-4152.pdf",
+    "createdAt": "2025-09-21T09:04:29.482Z",
+    "updatedAt": "2025-09-21T09:04:38.828Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User Success",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfc085e105318af7e1ddeb",
+    "regId": "GDN2025-7404",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7404\",\"name\":\"Test User Success\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T09:08:21.068Z\"}",
+    "pdfUrl": "/uploads/GDN2025-7404.pdf",
+    "createdAt": "2025-09-21T09:08:21.096Z",
+    "updatedAt": "2025-09-21T09:08:30.409Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfc0c31ec06b5d78826373",
+    "regId": "GDN2025-2327",
+    "eventId": "68cfb972546b0ee8e182d216",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2327\",\"name\":\"uday\",\"event\":\"Paper Draping (Fashion Design with Paper)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T09:09:23.912Z\"}",
+    "pdfUrl": "/uploads/GDN2025-2327.pdf",
+    "createdAt": "2025-09-21T09:09:23.934Z",
+    "updatedAt": "2025-09-21T09:09:32.739Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User with Gardenia Logo",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfc140514455cab6fe8851",
+    "regId": "GDN2025-0653",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-0653\",\"name\":\"Test User with Gardenia Logo\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T09:11:28.958Z\"}",
+    "pdfUrl": "/uploads/GDN2025-0653.pdf",
+    "createdAt": "2025-09-21T09:11:28.966Z",
+    "updatedAt": "2025-09-21T09:11:38.089Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfc1835b485bd9346ba877",
+    "regId": "GDN2025-8176",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-8176\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T09:12:35.003Z\"}",
+    "pdfUrl": "/uploads/GDN2025-8176.pdf",
+    "createdAt": "2025-09-21T09:12:35.030Z",
+    "updatedAt": "2025-09-21T09:12:43.740Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User Corrected Layout",
+      "registerNumber": "24MCAR107",
+      "email": "test@example.com",
+      "phone": "1234567890"
+    },
+    "_id": "68cfc4a48ad7106c118903b6",
+    "regId": "GDN2025-8519",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-8519\",\"name\":\"Test User Corrected Layout\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T09:25:56.137Z\"}",
+    "pdfUrl": "/uploads/GDN2025-8519.pdf",
+    "createdAt": "2025-09-21T09:25:56.145Z",
+    "updatedAt": "2025-09-21T09:26:05.541Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "udaythaki2@gmail.com",
+      "phone": "926573"
+    },
+    "_id": "68cfc5060357248f9ba6103f",
+    "regId": "GDN2025-1431",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1431\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T09:27:34.864Z\"}",
+    "pdfUrl": "/uploads/GDN2025-1431.pdf",
+    "createdAt": "2025-09-21T09:27:34.887Z",
+    "updatedAt": "2025-09-21T09:27:44.357Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "",
+      "collegeName": "don bosco",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfce780357248f9ba61bd9",
+    "regId": "GDN2025-6981",
+    "eventId": "68cfb972546b0ee8e182d28b",
+    "isGardenCityStudent": false,
+    "teamMembers": [],
+    "finalEventDate": "16th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-6981\",\"name\":\"uday\",\"event\":\"Chess\",\"type\":\"Individual\",\"affiliation\":\"Outside\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T10:07:52.329Z\"}",
+    "pdfUrl": "/uploads/GDN2025-6981.pdf",
+    "createdAt": "2025-09-21T10:07:52.333Z",
+    "updatedAt": "2025-09-21T10:08:01.541Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uda",
+      "registerNumber": "",
+      "collegeName": "don bosco college",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfcf300357248f9ba61bfa",
+    "regId": "GDN2025-0496",
+    "eventId": "68cfb972546b0ee8e182d28b",
+    "isGardenCityStudent": false,
+    "teamMembers": [],
+    "finalEventDate": "16th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-0496\",\"name\":\"uda\",\"event\":\"Chess\",\"type\":\"Individual\",\"affiliation\":\"Outside\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T10:10:56.362Z\"}",
+    "pdfUrl": "/uploads/GDN2025-0496.pdf",
+    "createdAt": "2025-09-21T10:10:56.364Z",
+    "updatedAt": "2025-09-21T10:11:07.568Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfcff44c18ceaf05339743",
+    "regId": "GDN2025-3949",
+    "eventId": "68cfb972546b0ee8e182d28b",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3949\",\"name\":\"uday\",\"event\":\"Chess\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T10:14:12.147Z\"}",
+    "pdfUrl": "/uploads/GDN2025-3949.pdf",
+    "createdAt": "2025-09-21T10:14:12.157Z",
+    "updatedAt": "2025-09-21T10:14:21.472Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "udaythanki2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68cfd3000fe7d12cdddde738",
+    "regId": "GDN2025-7434",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7434\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T10:27:12.465Z\"}",
+    "pdfUrl": "/uploads/GDN2025-7434.pdf",
+    "createdAt": "2025-09-21T10:27:12.499Z",
+    "updatedAt": "2025-09-21T10:27:26.173Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User",
+      "registerNumber": "24TEST001",
+      "email": "test@example.com",
+      "phone": "9876543210"
+    },
+    "_id": "68cfd5596b7e36330e1419ae",
+    "regId": "GDN2025-1355",
+    "eventId": "68cfb972546b0ee8e182d212",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1355\",\"name\":\"Test User\",\"event\":\"Waves of the Mind (Psychology Challenge)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T10:37:13.507Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T10:37:13.523Z",
+    "updatedAt": "2025-09-21T10:37:13.523Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Test User",
+      "registerNumber": "24TEST001",
+      "email": "test@example.com",
+      "phone": "9876543210"
+    },
+    "_id": "68cfd5816b7e36330e1419b8",
+    "regId": "GDN2025-5999",
+    "eventId": "68cfb972546b0ee8e182d212",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "PENDING",
+    "qrPayload": "{\"regId\":\"GDN2025-5999\",\"name\":\"Test User\",\"event\":\"Waves of the Mind (Psychology Challenge)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T10:37:53.287Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T10:37:53.291Z",
+    "updatedAt": "2025-09-21T11:41:33.640Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "udaythanki2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d0122cc627b70a640fdc57",
+    "regId": "GDN2025-2029",
+    "eventId": "68cfb972546b0ee8e182d27c",
+    "isGardenCityStudent": true,
+    "teamMembers": [
+      {
+        "name": "bhargav",
+        "registerNumber": "24mcar107",
+        "collegeName": "",
+        "_id": "68d0122cc627b70a640fdc58"
+      },
+      {
+        "name": "priyanshu",
+        "registerNumber": "24mcar161",
+        "collegeName": "",
+        "_id": "68d0122cc627b70a640fdc59"
+      },
+      {
+        "name": "sarvesh",
+        "registerNumber": "24mcar110",
+        "collegeName": "",
+        "_id": "68d0122cc627b70a640fdc5a"
+      },
+      {
+        "name": "shubham",
+        "registerNumber": "24mcar142",
+        "collegeName": "",
+        "_id": "68d0122cc627b70a640fdc5b"
+      },
+      {
+        "name": "yash",
+        "registerNumber": "24mcar115",
+        "collegeName": "",
+        "_id": "68d0122cc627b70a640fdc5c"
+      },
+      {
+        "name": "gibeon",
+        "registerNumber": "24mcar108",
+        "collegeName": "",
+        "_id": "68d0122cc627b70a640fdc5d"
+      }
+    ],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2029\",\"name\":\"uday\",\"event\":\"Box Cricket\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T14:56:44.518Z\"}",
+    "pdfUrl": "/uploads/GDN2025-2029.pdf",
+    "createdAt": "2025-09-21T14:56:44.538Z",
+    "updatedAt": "2025-09-21T14:57:03.941Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "udaythanki2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d012f3c627b70a640fdd48",
+    "regId": "GDN2025-2471",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2471\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T15:00:03.122Z\"}",
+    "pdfUrl": "/uploads/GDN2025-2471.pdf",
+    "createdAt": "2025-09-21T15:00:03.123Z",
+    "updatedAt": "2025-09-21T15:00:22.919Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "23mcar107",
+      "collegeName": "",
+      "email": "udaythankii2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d034dabb46929b0c800707",
+    "regId": "GDN2025-2154",
+    "eventId": "68cfb972546b0ee8e182d232",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2154\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T17:24:42.781Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T17:24:42.792Z",
+    "updatedAt": "2025-09-21T17:24:42.792Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d03cbfcbc59aa226723fa7",
+    "regId": "GDN2025-1622",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1622\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T17:58:23.862Z\"}",
+    "pdfUrl": "/uploads/GDN2025-1622.pdf",
+    "createdAt": "2025-09-21T17:58:23.869Z",
+    "updatedAt": "2025-09-22T09:12:12.313Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d040bcc65f802e066781f0",
+    "regId": "GDN2025-9241",
+    "eventId": "68d037caaf930c013ae1ab74",
+    "isGardenCityStudent": true,
+    "teamMembers": [
+      {
+        "name": "udy",
+        "registerNumber": "24mcar108",
+        "collegeName": "",
+        "_id": "68d040bcc65f802e066781f1"
+      }
+    ],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-9241\",\"name\":\"uday\",\"event\":\"Herb‑a‑thon (Medicinal Plant Quiz)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:15:24.009Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-9241.pdf",
+    "createdAt": "2025-09-21T18:15:24.020Z",
+    "updatedAt": "2025-09-22T09:12:12.405Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar106",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d0424fc76ca6d87869cb33",
+    "regId": "GDN2025-1664",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1664\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:22:07.017Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-1664.pdf",
+    "createdAt": "2025-09-21T18:22:07.024Z",
+    "updatedAt": "2025-09-22T09:12:12.491Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d043cc2f1034dd644edc5a",
+    "regId": "GDN2025-1398",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1398\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:28:28.051Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-1398.pdf",
+    "createdAt": "2025-09-21T18:28:28.058Z",
+    "updatedAt": "2025-09-22T09:12:12.572Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d04525dcec60278d8a8bdc",
+    "regId": "GDN2025-2659",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2659\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:34:13.964Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-2659.pdf",
+    "createdAt": "2025-09-21T18:34:13.966Z",
+    "updatedAt": "2025-09-22T09:12:12.661Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uda",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d046759870e1512420a95d",
+    "regId": "GDN2025-3964",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3964\",\"name\":\"uda\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:39:49.648Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-3964.pdf",
+    "createdAt": "2025-09-21T18:39:49.654Z",
+    "updatedAt": "2025-09-22T09:12:12.732Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d047c10921241660e657d6",
+    "regId": "GDN2025-7999",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7999\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:45:21.900Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-7999.pdf",
+    "createdAt": "2025-09-21T18:45:21.903Z",
+    "updatedAt": "2025-09-22T09:12:12.810Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d0483d0921241660e657ec",
+    "regId": "GDN2025-3719",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3719\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:47:25.346Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-3719.pdf",
+    "createdAt": "2025-09-21T18:47:25.348Z",
+    "updatedAt": "2025-09-22T09:12:12.889Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d048d70921241660e658eb",
+    "regId": "GDN2025-1304",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1304\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:49:59.436Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-1304.pdf",
+    "createdAt": "2025-09-21T18:49:59.437Z",
+    "updatedAt": "2025-09-22T09:12:12.994Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265728201"
+    },
+    "_id": "68d0497fe36d80c75214278c",
+    "regId": "GDN2025-9622",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-9622\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T18:52:47.769Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-9622.pdf",
+    "createdAt": "2025-09-21T18:52:47.776Z",
+    "updatedAt": "2025-09-22T09:12:13.070Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d04dbef58851cfbd3b99a3",
+    "regId": "GDN2025-3635",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3635\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:10:54.380Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:10:54.385Z",
+    "updatedAt": "2025-09-22T09:12:13.150Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738302"
+    },
+    "_id": "68d052109ba443c71f0caa3c",
+    "regId": "GDN2025-5655",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5655\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:29:20.170Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:29:20.173Z",
+    "updatedAt": "2025-09-22T09:12:13.276Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d052519ba443c71f0cab28",
+    "regId": "GDN2025-5521",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5521\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:30:25.696Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:30:25.697Z",
+    "updatedAt": "2025-09-22T09:12:13.363Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d05377c49633a1eefd385a",
+    "regId": "GDN2025-7569",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7569\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:35:19.443Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:35:19.446Z",
+    "updatedAt": "2025-09-22T09:12:13.442Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar108",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d05463c49633a1eefd38d5",
+    "regId": "GDN2025-9236",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-9236\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:39:15.483Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:39:15.484Z",
+    "updatedAt": "2025-09-22T09:12:13.521Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d05559214cab7f2a30d576",
+    "regId": "GDN2025-7568",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7568\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:43:21.024Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:43:21.028Z",
+    "updatedAt": "2025-09-22T09:12:13.589Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d0558a214cab7f2a30d601",
+    "regId": "GDN2025-1982",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1982\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:44:10.273Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:44:10.274Z",
+    "updatedAt": "2025-09-22T09:12:13.671Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d055e4214cab7f2a30d6e9",
+    "regId": "GDN2025-0826",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-0826\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T19:45:40.449Z\"}",
+    "pdfUrl": "",
+    "createdAt": "2025-09-21T19:45:40.450Z",
+    "updatedAt": "2025-09-22T09:12:13.759Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d059a4b011b918f004b5f9",
+    "regId": "GDN2025-7088",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7088\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T20:01:40.382Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-7088.pdf",
+    "createdAt": "2025-09-21T20:01:40.384Z",
+    "updatedAt": "2025-09-22T09:12:13.838Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "224mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d05d7b71031b6fe46c4851",
+    "regId": "GDN2025-2098",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2098\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T20:18:03.215Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-2098.pdf",
+    "createdAt": "2025-09-21T20:18:03.223Z",
+    "updatedAt": "2025-09-22T09:12:13.923Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d05f547b5b71cfcb187314",
+    "regId": "GDN2025-3886",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3886\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T20:25:56.708Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.amazonaws.com/tickets/GDN2025-3886.html",
+    "createdAt": "2025-09-21T20:25:56.711Z",
+    "updatedAt": "2025-09-22T09:12:13.990Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d0613a061df619afa1950d",
+    "regId": "GDN2025-0842",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-0842\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T20:34:02.208Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-0842.pdf",
+    "createdAt": "2025-09-21T20:34:02.212Z",
+    "updatedAt": "2025-09-22T09:12:14.068Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d06302b0ef95d7adb2cb5b",
+    "regId": "GDN2025-3634",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3634\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T20:41:38.314Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-3634.pdf",
+    "createdAt": "2025-09-21T20:41:38.318Z",
+    "updatedAt": "2025-09-22T09:12:14.149Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d06668fffa076a23a0f0c5",
+    "regId": "GDN2025-7365",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7365\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T20:56:08.120Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-7365.html",
+    "createdAt": "2025-09-21T20:56:08.123Z",
+    "updatedAt": "2025-09-22T09:12:14.209Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d06877fbc6fddb6a095cad",
+    "regId": "GDN2025-5322",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5322\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T21:04:55.744Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-5322.html",
+    "createdAt": "2025-09-21T21:04:55.746Z",
+    "updatedAt": "2025-09-22T09:12:14.289Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d06a1857020b2279a6c480",
+    "regId": "GDN2025-6797",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-6797\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T21:11:52.461Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-6797.html",
+    "createdAt": "2025-09-21T21:11:52.464Z",
+    "updatedAt": "2025-09-22T09:12:14.379Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d06b3d76779e9a612b5ac7",
+    "regId": "GDN2025-9855",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-9855\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T21:16:45.387Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-9855.pdf",
+    "createdAt": "2025-09-21T21:16:45.390Z",
+    "updatedAt": "2025-09-22T09:12:14.451Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d06e36f462e07ef3159c2e",
+    "regId": "GDN2025-7359",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7359\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T21:29:26.826Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-7359.pdf",
+    "createdAt": "2025-09-21T21:29:26.828Z",
+    "updatedAt": "2025-09-22T09:12:14.528Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d075880798e364aeb88af0",
+    "regId": "GDN2025-9729",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-9729\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T22:00:40.367Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-9729.pdf",
+    "createdAt": "2025-09-21T22:00:40.370Z",
+    "updatedAt": "2025-09-22T09:12:14.610Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "email": "u@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d077929aa652893b286f49",
+    "regId": "GDN2025-2718",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2718\",\"name\":\"u\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T22:09:22.819Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-2718.pdf",
+    "createdAt": "2025-09-21T22:09:22.823Z",
+    "updatedAt": "2025-09-22T09:12:14.689Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Uday Thanki",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "email": "udaythanki2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d07891fffea8a9bb61b41e",
+    "regId": "GDN2025-1841",
+    "eventId": "68d037ccaf930c013ae1abb3",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1841\",\"name\":\"Uday Thanki \",\"event\":\"Elemental Path to Power (Physiotherapy Fitness Games)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-21T22:13:37.798Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-1841.pdf",
+    "createdAt": "2025-09-21T22:13:37.801Z",
+    "updatedAt": "2025-09-22T09:12:14.769Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "",
+      "collegeName": "Don Bosco",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d10630928f4caf2e5b1b4c",
+    "regId": "GDN2025-5980",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": false,
+    "teamMembers": [],
+    "finalEventDate": "16th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5980\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"Outside\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-22T08:17:52.050Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-5980.pdf",
+    "createdAt": "2025-09-22T08:17:52.061Z",
+    "updatedAt": "2025-09-22T09:12:14.850Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "",
+      "collegeName": "Don Bosco College",
+      "collegeRegisterNumber": "24dbc107",
+      "email": "udaythanki@gmail.in",
+      "phone": "9265738301"
+    },
+    "_id": "68d108101d9221c12990ff32",
+    "regId": "GDN2025-0798",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": false,
+    "teamMembers": [],
+    "finalEventDate": "16th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-0798\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"Outside\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-22T08:25:52.699Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-0798.pdf",
+    "createdAt": "2025-09-22T08:25:52.723Z",
+    "updatedAt": "2025-09-22T09:12:14.927Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "",
+      "collegeName": "abc school",
+      "collegeRegisterNumber": "abc107",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d113b0b7fbe38740d799b8",
+    "regId": "GDN2025-1211",
+    "eventId": "68d037caaf930c013ae1ab6a",
+    "isGardenCityStudent": false,
+    "teamMembers": [],
+    "finalEventDate": "16th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1211\",\"name\":\"uday\",\"event\":\"Sweet Earthly Heritage (Dessert Showcase)\",\"type\":\"Individual\",\"affiliation\":\"Outside\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-22T09:15:28.354Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-1211.pdf",
+    "createdAt": "2025-09-22T09:15:28.357Z",
+    "updatedAt": "2025-09-22T09:19:54.436Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d11a211c6613b944a04867",
+    "regId": "GDN2025-8081",
+    "eventId": "68d037ccaf930c013ae1abd2",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-8081\",\"name\":\"uday \",\"event\":\"Canvas Painting\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-22T09:42:57.857Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-8081.pdf",
+    "createdAt": "2025-09-22T09:42:57.860Z",
+    "updatedAt": "2025-09-22T09:43:07.807Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Bharani kapuveedi",
+      "registerNumber": "24MCAR247",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "kbdheeraj.ng@gmail.com",
+      "phone": "7075570655"
+    },
+    "_id": "68d11c921c6613b944a04c9c",
+    "regId": "GDN2025-9620",
+    "eventId": "68d037ccaf930c013ae1abb3",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-9620\",\"name\":\"Bharani kapuveedi\",\"event\":\"Elemental Path to Power (Physiotherapy Fitness Games)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-22T09:53:22.817Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-9620.pdf",
+    "createdAt": "2025-09-22T09:53:22.818Z",
+    "updatedAt": "2025-09-22T09:53:28.995Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d120261c6613b944a04e16",
+    "regId": "GDN2025-2188",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-2188\",\"name\":\"uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-22T10:08:38.297Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-2188.pdf",
+    "createdAt": "2025-09-22T10:08:38.297Z",
+    "updatedAt": "2025-09-22T10:08:43.395Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Bhargav Modha",
+      "registerNumber": "24MCAR106",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "brgv2826@gmail.com",
+      "phone": "9099582826"
+    },
+    "_id": "68d3b98662bf336274d08058",
+    "regId": "GDN2025-5331",
+    "eventId": "68d037ccaf930c013ae1abd2",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5331\",\"name\":\"Bhargav Modha\",\"event\":\"Canvas Painting\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-24T09:27:34.274Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-5331.pdf",
+    "createdAt": "2025-09-24T09:27:34.277Z",
+    "updatedAt": "2025-09-24T09:27:46.506Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Bhargav Manojbhai Modha",
+      "registerNumber": "24MCAR106",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "brgv2826@gmail.com",
+      "phone": "9099582826"
+    },
+    "_id": "68d3b9cb62bf336274d080d3",
+    "regId": "GDN2025-7529",
+    "eventId": "68d037ccaf930c013ae1abb3",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-7529\",\"name\":\"Bhargav Manojbhai Modha\",\"event\":\"Elemental Path to Power (Physiotherapy Fitness Games)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-24T09:28:43.311Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-7529.pdf",
+    "createdAt": "2025-09-24T09:28:43.312Z",
+    "updatedAt": "2025-09-24T09:28:49.616Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "udaythanki2@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68d3e14b22137350e07166f9",
+    "regId": "GDN2025-8154",
+    "eventId": "68d037cbaf930c013ae1ab97",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-8154\",\"name\":\"Uday\",\"event\":\"Brain Bytes (Puzzle-solving with Digi Coins)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-24T12:17:15.132Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-8154.pdf",
+    "createdAt": "2025-09-24T12:17:15.136Z",
+    "updatedAt": "2025-09-24T12:17:30.142Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68daefab97493d212d3e61db",
+    "regId": "GDN2025-6028",
+    "eventId": "68dadb0128208bf626d1e0fa",
+    "isGardenCityStudent": true,
+    "teamMembers": [
+      {
+        "name": "uday",
+        "registerNumber": "24mcar107",
+        "collegeName": "",
+        "collegeRegisterNumber": "",
+        "_id": "68daefab97493d212d3e61dc"
+      },
+      {
+        "name": "uday",
+        "registerNumber": "24mcar107",
+        "collegeName": "",
+        "collegeRegisterNumber": "",
+        "_id": "68daefab97493d212d3e61dd"
+      },
+      {
+        "name": "uday",
+        "registerNumber": "24mcar107",
+        "collegeName": "",
+        "collegeRegisterNumber": "",
+        "_id": "68daefab97493d212d3e61de"
+      }
+    ],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-6028\",\"name\":\"uday\",\"event\":\"Cell Survivor (Life Sciences Challenge)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-29T20:44:27.060Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-6028.pdf",
+    "createdAt": "2025-09-29T20:44:27.070Z",
+    "updatedAt": "2025-09-29T20:44:43.051Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "uday",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "uday@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68daf0c397493d212d3e6745",
+    "regId": "GDN2025-1132",
+    "eventId": "68dadb0128208bf626d1e104",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-1132\",\"name\":\"uday\",\"event\":\"Elemental Path to Power (Physiotherapy Fitness Games)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-29T20:49:07.691Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-1132.pdf",
+    "createdAt": "2025-09-29T20:49:07.697Z",
+    "updatedAt": "2025-09-29T20:49:17.847Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68daf26ff19fdc507eac9d55",
+    "regId": "GDN2025-3625",
+    "eventId": "68dadb0128208bf626d1e0e5",
+    "isGardenCityStudent": true,
+    "teamMembers": [
+      {
+        "name": "u",
+        "registerNumber": "24mcar107",
+        "collegeName": "",
+        "collegeRegisterNumber": "",
+        "_id": "68daf26ff19fdc507eac9d56"
+      }
+    ],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-3625\",\"name\":\"u\",\"event\":\"Frames of the Elements (Short Film Competition)\",\"type\":\"Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-29T20:56:15.529Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-3625.pdf",
+    "createdAt": "2025-09-29T20:56:15.540Z",
+    "updatedAt": "2025-09-29T20:56:26.604Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "u",
+      "registerNumber": "24mcar107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "u@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68daf37ac929909dabbf1bc9",
+    "regId": "GDN2025-5560",
+    "eventId": "68dadb0128208bf626d1e0c5",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5560\",\"name\":\"u\",\"event\":\"Paper Draping (Fashion Design with Paper)\",\"type\":\"Individual\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-29T21:00:42.701Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-5560.pdf",
+    "createdAt": "2025-09-29T21:00:42.708Z",
+    "updatedAt": "2025-09-29T21:00:53.874Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Uu",
+      "registerNumber": "24MCAR107",
+      "collegeName": "",
+      "collegeRegisterNumber": "",
+      "email": "udearn8@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68dafbfd88405e8e0722ac0d",
+    "regId": "GDN2025-5476",
+    "eventId": "68dadb1db174620cc6c388cd",
+    "isGardenCityStudent": true,
+    "teamMembers": [],
+    "finalEventDate": "8th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5476\",\"name\":\"Uu\",\"event\":\"Badminton (Singles/Doubles)\",\"type\":\"Individual/Group\",\"affiliation\":\"GCU\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-29T21:37:01.666Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-5476.pdf",
+    "createdAt": "2025-09-29T21:37:01.669Z",
+    "updatedAt": "2025-09-29T21:37:15.045Z",
+    "__v": 0
+  },
+  {
+    "leader": {
+      "name": "Bhargav",
+      "registerNumber": "",
+      "collegeName": "DON BOSCO",
+      "collegeRegisterNumber": "Abc",
+      "email": "bhargavmodha@gmail.com",
+      "phone": "9265738301"
+    },
+    "_id": "68db4a9de1e465167f63f548",
+    "regId": "GDN2025-5937",
+    "eventId": "68dadb1db174620cc6c388ca",
+    "isGardenCityStudent": false,
+    "teamMembers": [
+      {
+        "name": "Bhargav",
+        "registerNumber": "",
+        "collegeName": "Don bosco",
+        "collegeRegisterNumber": "Abc",
+        "_id": "68db4a9de1e465167f63f549"
+      },
+      {
+        "name": "Bhargav",
+        "registerNumber": "",
+        "collegeName": "DON BOSCO",
+        "collegeRegisterNumber": "Abc",
+        "_id": "68db4a9de1e465167f63f54a"
+      },
+      {
+        "name": "Bhargav",
+        "registerNumber": "",
+        "collegeName": "DON BOSCO",
+        "collegeRegisterNumber": "Abc",
+        "_id": "68db4a9de1e465167f63f54b"
+      },
+      {
+        "name": "DON BIRJU",
+        "registerNumber": "",
+        "collegeName": "DON BOSCO",
+        "collegeRegisterNumber": "Abc",
+        "_id": "68db4a9de1e465167f63f54c"
+      }
+    ],
+    "finalEventDate": "14th October 2025",
+    "status": "APPROVED",
+    "qrPayload": "{\"regId\":\"GDN2025-5937\",\"name\":\"Bhargav\",\"event\":\"Basketball (5x5)\",\"type\":\"Group\",\"affiliation\":\"Outside\",\"status\":\"APPROVED\",\"timestamp\":\"2025-09-30T03:12:29.258Z\"}",
+    "pdfUrl": "https://gardenia2025-assets.s3.us-east-1.amazonaws.com/tickets/GDN2025-5937.pdf",
+    "createdAt": "2025-09-30T03:12:29.264Z",
+    "updatedAt": "2025-09-30T03:12:40.241Z",
+    "__v": 0
+  }
+]
