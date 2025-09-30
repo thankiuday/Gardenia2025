@@ -4,7 +4,7 @@ module.exports = {
     {
       name: 'gardenia2025-backend',
       script: './backend/server.js',
-      cwd: '/var/www/gardenia2025',
+      cwd: '/var/www/Gardenia2025',
       instances: 1,
       exec_mode: 'fork',
       env: {
