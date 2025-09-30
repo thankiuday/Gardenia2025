@@ -115,6 +115,15 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     const browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
+    
+    // Set viewport for consistent rendering
+    await page.setViewport({ width: 1200, height: 800, deviceScaleFactor: 2 });
+    
+    // Enable network requests for images
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+      request.continue();
+    });
 
     // Create HTML content for the PDF
     const htmlContent = `
@@ -150,11 +159,11 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: #ea580c;
-                color: white;
-                font-size: 36px;
-                font-weight: bold;
+                background: white;
+                border: 2px solid #1e40af;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
                 flex-shrink: 0;
+                overflow: hidden;
             }
             .event-logo img {
                 width: 100%;
@@ -444,7 +453,13 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     <body>
         <div class="header">
             <div class="event-logo">
-                G
+                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" 
+                     alt="Garden City University Logo" 
+                     style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" 
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #ea580c; color: white; font-size: 24px; font-weight: bold; border-radius: 6px;">
+                    GCU
+                </div>
             </div>
             <div class="header-content">
                 <div class="event-title">${eventData.title}</div>
@@ -531,6 +546,19 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
 
     await page.setContent(htmlContent);
 
+    // Wait for images to load
+    await page.waitForTimeout(2000);
+    
+    // Wait for all images to load
+    try {
+      await page.waitForFunction(() => {
+        const images = document.querySelectorAll('img');
+        return Array.from(images).every(img => img.complete);
+      }, { timeout: 10000 });
+    } catch (error) {
+      console.log('Images took too long to load, proceeding with PDF generation');
+    }
+
     // Generate PDF
     const pdfBuffer = await page.pdf({
       format: 'A4',
@@ -540,7 +568,8 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         right: '20px',
         bottom: '20px',
         left: '20px'
-      }
+      },
+      preferCSSPageSize: true
     });
 
     await browser.close();
