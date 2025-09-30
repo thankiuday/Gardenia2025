@@ -124,34 +124,37 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         <meta charset="utf-8">
         <style>
             @page {
-                margin: 15px;
+                margin: 20px;
                 size: A4;
             }
             body {
                 font-family: 'Arial', sans-serif;
                 margin: 0;
-                padding: 0;
+                padding: 20px;
                 background: white;
                 line-height: 1.4;
+                border: 1px solid #e5e7eb;
             }
             .header {
                 display: flex;
-                justify-content: space-between;
                 align-items: flex-start;
-                margin-bottom: 20px;
-                border-bottom: 3px solid #1e40af;
-                padding-bottom: 15px;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #1e40af;
+                padding-bottom: 20px;
+                gap: 20px;
             }
             .event-logo {
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
                 border-radius: 8px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                background: white;
-                border: 2px solid #1e40af;
+                background: #ea580c;
+                color: white;
+                font-size: 36px;
+                font-weight: bold;
+                flex-shrink: 0;
             }
             .event-logo img {
                 width: 100%;
@@ -161,36 +164,28 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
             }
             .header-content {
                 flex: 1;
-                text-align: center;
-                margin: 0 20px;
-            }
-            .festival-logo {
-                margin-bottom: 10px;
-                text-align: center;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            .festival-logo img {
-                max-height: 60px;
-                width: auto;
-                object-fit: contain;
-                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             }
             .event-title {
-                font-size: 20px;
-                font-weight: 600;
-                color: #333;
+                font-size: 28px;
+                font-weight: bold;
+                color: #1e40af;
                 margin-bottom: 8px;
+                line-height: 1.2;
             }
-            .event-category {
-                font-size: 14px;
-                color: #666;
-                background: #f3f4f6;
-                padding: 4px 12px;
-                border-radius: 20px;
+            .university-name {
+                font-size: 16px;
+                color: #059669;
+                margin-bottom: 15px;
+                font-weight: 500;
+            }
+            .registration-id {
+                font-size: 18px;
+                font-weight: bold;
+                color: white;
+                background: #dc2626;
+                padding: 8px 16px;
+                border-radius: 8px;
                 display: inline-block;
-                margin-bottom: 10px;
             }
             .university-logo {
                 width: 100px;
@@ -246,21 +241,39 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 margin-top: 8px;
             }
             .content {
-                margin: 20px 0;
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 40px;
+                margin: 30px 0;
             }
-            .section {
-                margin-bottom: 20px;
+            .registration-details {
+                background: #f8fafc;
+                padding: 25px;
+                border-radius: 8px;
+                border-left: 4px solid #1e40af;
             }
             .section-title {
-                font-size: 16px;
+                font-size: 20px;
                 font-weight: bold;
                 color: #1e40af;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #e5e7eb;
+                padding-bottom: 8px;
+            }
+            .detail-row {
+                display: flex;
                 margin-bottom: 10px;
-                border-left: 4px solid #1e40af;
-                padding-left: 12px;
-                background: #f8fafc;
-                padding: 8px 12px;
-                border-radius: 4px;
+                align-items: center;
+            }
+            .detail-label {
+                font-weight: bold;
+                color: #374151;
+                min-width: 120px;
+                margin-right: 10px;
+            }
+            .detail-value {
+                color: #1f2937;
+                flex: 1;
             }
             .status-section {
                 background: #f8fafc;
@@ -431,146 +444,86 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     <body>
         <div class="header">
             <div class="event-logo">
-                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/elemental-logo.png" alt="Gardenia 2025 Logo" />
+                G
             </div>
             <div class="header-content">
-                <div class="festival-logo">
-                    <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="max-height: 60px; width: auto; object-fit: contain;" />
-                </div>
                 <div class="event-title">${eventData.title}</div>
-                <div class="event-category">${eventData.category}</div>
-                <div style="font-size: 14px; color: #059669; font-weight: 500;">Garden City University</div>
-                <div style="font-size: 12px; color: #666;">Registration Ticket</div>
-            </div>
-            <div class="university-logo">
-                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" />
+                <div class="university-name">Garden City University</div>
+                <div class="registration-id">Registration ID: ${registrationData.regId}</div>
             </div>
         </div>
 
         <div class="content">
-            <div class="status-section">
-                <div class="section-title">Registration Status</div>
-                <div class="status-grid">
-                    <div class="status-item">
-                        <div class="status-label">Registration</div>
-                        <div class="status-badge status-approved">Registered Successfully</div>
-                    </div>
+            <div class="registration-details">
+                <div class="section-title">Registration Details</div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Name:</span>
+                    <span class="detail-value">${registrationData.leader.name}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Register No:</span>
+                    <span class="detail-value">${registrationData.leader.registerNumber || registrationData.leader.collegeRegisterNumber}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value">${registrationData.leader.email}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Phone:</span>
+                    <span class="detail-value">${registrationData.leader.phone}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Registration Date:</span>
+                    <span class="detail-value">${new Date(registrationData.createdAt).toLocaleDateString()}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Category:</span>
+                    <span class="detail-value">${eventData.category}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Type:</span>
+                    <span class="detail-value">${eventData.type || 'Individual'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="detail-value">${eventData.department || 'General'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Date:</span>
+                    <span class="detail-value">${eventData.date || 'TBA'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Event Time:</span>
+                    <span class="detail-value">${eventData.time || 'TBA'}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Location:</span>
+                    <span class="detail-value">${eventData.location || 'Garden City University'}</span>
                 </div>
             </div>
-
+            
             <div class="qr-section">
-                <div class="qr-label">Registration QR Code</div>
-                <div class="qr-code">
-                    <img src="${qrCodeDataURL}" alt="QR Code" />
-                </div>
-                <div class="qr-description">
-                    Scan this QR code for event verification and entry
-                </div>
-            </div>
-
-            <div class="event-info-section">
-                <div class="section-title">Event Information</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">Registration ID</div>
-                        <div class="info-value">${registrationData.regId}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Event Name</div>
-                        <div class="info-value">${eventData.title}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Event Category</div>
-                        <div class="info-value">${eventData.category}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Event Date</div>
-                        <div class="info-value">${registrationData.finalEventDate || eventData.date}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Event Type</div>
-                        <div class="info-value">${eventData.type}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Department</div>
-                        <div class="info-value">${eventData.department}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Time</div>
-                        <div class="info-value">${eventData.time}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Team Size</div>
-                        <div class="info-value">${eventData.teamSize.min}-${eventData.teamSize.max} members</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Location</div>
-                        <div class="info-value">${eventData.location || 'Garden City University'}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="participant-section">
-                <div class="section-title">Participant Information</div>
-                <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">${registrationData.isGardenCityStudent ? 'Register Number' : 'College/School Name'}</div>
-                        <div class="info-value">${registrationData.isGardenCityStudent ? registrationData.leader.registerNumber : registrationData.leader.collegeName}</div>
-                    </div>
-                    ${!registrationData.isGardenCityStudent ? `
-                    <div class="info-item">
-                        <div class="info-label">Registration/Roll Number</div>
-                        <div class="info-value">${registrationData.leader.collegeRegisterNumber || 'N/A'}</div>
-                    </div>
-                    ` : ''}
-                    <div class="info-item">
-                        <div class="info-label">Name</div>
-                        <div class="info-value">${registrationData.leader.name}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Email</div>
-                        <div class="info-value">${registrationData.leader.email}</div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-label">Phone</div>
-                        <div class="info-value">${registrationData.leader.phone}</div>
-                    </div>
-                </div>
-
-                ${eventData.type === 'Group' && registrationData.teamMembers.length > 0 ? `
-                <div class="team-members">
-                    <div style="font-weight: bold; color: #374151; margin-bottom: 8px; font-size: 14px;">Team Members:</div>
-                    ${registrationData.teamMembers.map(member => `
-                        <div class="team-member">
-                            <strong>${member.name}</strong>
-                            ${registrationData.isGardenCityStudent 
-                                ? `<br><small>Register Number: ${member.registerNumber}</small>` 
-                                : `<br><small>College/School: ${member.collegeName}<br>Registration/Roll Number: ${member.collegeRegisterNumber || 'N/A'}</small>`
-                            }
-                        </div>
-                    `).join('')}
-                </div>
-                ` : ''}
-            </div>
-
-            <div class="rules-section">
-                <div class="rules-title">Rules & Regulations</div>
-                <ul class="rules-list">
-                    ${eventData.rules.map(rule => `<li>${rule}</li>`).join('')}
-                </ul>
+                <div class="section-title">QR Code</div>
+                ${qrCodeDataURL ? `<img src="${qrCodeDataURL}" alt="QR Code" class="qr-code">` : '<div style="color: #6b7280;">QR Code not available</div>'}
+                <div class="qr-label">Scan this QR code for verification</div>
             </div>
         </div>
 
         <div class="footer">
-            <div class="footer-logo">
-                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" />
-            </div>
-            <div class="footer-title">Garden City University</div>
-            <div class="footer-text">Gardenia 2025 - Elemental Festival</div>
-            <div class="footer-text">For any queries, contact the event organizers</div>
-            <div class="footer-text" style="font-size: 12px; color: #666; margin-top: 10px;">
-                This is an official registration ticket. Please bring this ticket and valid ID to the event.
-            </div>
+            <p><strong>Gardenia 2025 - Garden City University</strong></p>
+            <p>This is your official registration confirmation. Please keep this document safe.</p>
+            <p>For any queries, contact: gardenia2025@gardencityuniversity.edu</p>
         </div>
     </body>
     </html>
