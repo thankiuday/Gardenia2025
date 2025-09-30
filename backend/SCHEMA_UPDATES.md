@@ -102,3 +102,5 @@ The schema has been tested with:
 - Consider adding participation type selection in registration form
 - Add analytics for participation type preferences
 
+
+

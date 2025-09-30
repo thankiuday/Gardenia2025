@@ -47,7 +47,7 @@ const uploadTicketToS3 = async (pdfBuffer, fileName) => {
   }
 
   try {
-    const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
+    const bucketName = process.env.AWS_S3_BUCKET || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
     const uploadCommand = new PutObjectCommand({
@@ -85,7 +85,7 @@ const deleteTicketFromS3 = async (fileName) => {
   }
 
   try {
-    const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
+    const bucketName = process.env.AWS_S3_BUCKET || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
     const deleteCommand = new DeleteObjectCommand({
@@ -115,7 +115,7 @@ const checkTicketExistsInS3 = async (fileName) => {
   }
 
   try {
-    const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
+    const bucketName = process.env.AWS_S3_BUCKET || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
     const headCommand = new HeadObjectCommand({
@@ -147,7 +147,7 @@ const getSignedDownloadUrl = async (fileName, expiresIn = 3600) => {
   }
 
   try {
-    const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
+    const bucketName = process.env.AWS_S3_BUCKET || 'gardenia2025-assets';
     const key = `tickets/${fileName}`;
 
     const getObjectCommand = new GetObjectCommand({
@@ -170,7 +170,7 @@ const getSignedDownloadUrl = async (fileName, expiresIn = 3600) => {
  * @returns {string} - The public S3 URL
  */
 const getPublicTicketUrl = (fileName) => {
-  const bucketName = process.env.S3_BUCKET_NAME || 'gardenia2025-assets';
+  const bucketName = process.env.AWS_S3_BUCKET || 'gardenia2025-assets';
   const region = process.env.AWS_REGION || 'us-east-1';
   
   return `https://${bucketName}.s3.${region}.amazonaws.com/tickets/${fileName}`;
