@@ -50,14 +50,5 @@ export const shouldEnableFeature = (featureName) => {
   return config.features[featureName] || false;
 };
 
-// Log environment info in development
-if (config.environment.isDevelopment) {
-  console.log('🔧 Environment Configuration:', {
-    mode: config.environment.mode,
-    apiUrl: config.api.baseUrl,
-    isLocal: isLocalEnvironment(),
-    features: config.features
-  });
-}
 
 export default config;

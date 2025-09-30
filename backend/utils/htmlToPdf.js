@@ -1,7 +1,9 @@
 // Alternative PDF generation using html-pdf-node (lighter alternative)
 const generatePDFFromHTML = async (registrationData, eventData, qrCodeDataURL) => {
   try {
-    console.log('Generating PDF using HTML template for registration:', registrationData.registrationId);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('Generating PDF using HTML template for registration:', registrationData.registrationId);
+    }
     
     // Create HTML content
     const htmlContent = `
@@ -139,7 +141,7 @@ const generatePDFFromHTML = async (registrationData, eventData, qrCodeDataURL) =
     <body>
         <div class="header">
             <div class="event-logo">
-                <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" />
+                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" />
             </div>
             <div class="event-info">
                 <div class="event-title">${eventData.title || eventData.name || 'Event Registration'}</div>

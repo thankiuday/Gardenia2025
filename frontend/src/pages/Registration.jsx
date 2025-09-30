@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_ENDPOINTS, getFullUrl } from '../config/api';
-import { downloadTicket, showDownloadInstructions } from '../utils/downloadHelper';
 import useVisitorTracking from '../hooks/useVisitorTracking';
 import RegistrationButton from '../components/RegistrationButton';
+import ErrorMessage from '../components/ErrorMessage';
 import { validatePhoneNumber, validateEmail, validateName } from '../utils/validation';
 
 const Registration = () => {
@@ -67,7 +67,6 @@ const Registration = () => {
           navigate('/events');
         }
       } catch (error) {
-        console.error('Error fetching event:', error);
         navigate('/events');
       }
     };
@@ -283,7 +282,6 @@ const Registration = () => {
             try {
               const registrationId = response.data.data.registrationId;
               if (!registrationId) {
-                console.error('Registration ID is undefined');
                 alert('Your ticket is ready! Please click the download button below to get your ticket.');
                 return;
               }
@@ -302,9 +300,7 @@ const Registration = () => {
               link.click();
               document.body.removeChild(link);
               
-              console.log('✅ Auto-download initiated via direct link');
             } catch (downloadError) {
-              console.error('Auto-download failed:', downloadError);
               // Show user a message
               alert('Your ticket is ready! Please click the download button below to get your ticket.');
             }
@@ -374,7 +370,6 @@ const Registration = () => {
                     try {
                       const registrationId = registrationData.registrationId;
                       if (!registrationId) {
-                        console.error('Registration ID is undefined');
                         alert('Download failed. Registration ID not found.');
                         return;
                       }
@@ -393,9 +388,7 @@ const Registration = () => {
                       link.click();
                       document.body.removeChild(link);
                       
-                      console.log('✅ Manual download initiated via direct link');
                     } catch (error) {
-                      console.error('Manual download failed:', error);
                       alert('Download failed. Please try again.');
                     }
                   }}

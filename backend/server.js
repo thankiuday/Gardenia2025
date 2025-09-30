@@ -45,14 +45,10 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
       'http://127.0.0.1:5173'
     ];
 
-// CORS configuration with better debugging
-console.log('CORS Configuration:');
-console.log('Environment:', process.env.NODE_ENV);
-console.log('Allowed Origins:', allowedOrigins);
+// CORS configuration
 
 // CORS configuration - More permissive for development
 if (process.env.CORS_ALLOW_ALL === 'true' || process.env.NODE_ENV === 'development') {
-  console.log('CORS: Allowing all origins (Development mode or CORS_ALLOW_ALL=true)');
   app.use(cors({
     origin: true,
     credentials: true,
@@ -62,20 +58,14 @@ if (process.env.CORS_ALLOW_ALL === 'true' || process.env.NODE_ENV === 'developme
 } else {
   app.use(cors({
     origin: function (origin, callback) {
-      console.log('CORS Request from origin:', origin);
-      
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) {
-        console.log('CORS: Allowing request with no origin');
         return callback(null, true);
       }
       
       if (allowedOrigins.indexOf(origin) !== -1) {
-        console.log('CORS: Allowing origin:', origin);
         callback(null, true);
       } else {
-        console.log('CORS: Blocking origin:', origin);
-        console.log('CORS: Allowed origins:', allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -87,7 +77,6 @@ if (process.env.CORS_ALLOW_ALL === 'true' || process.env.NODE_ENV === 'developme
 
 // Handle preflight OPTIONS requests
 app.options('*', (req, res) => {
-  console.log('CORS Preflight request for:', req.url);
   res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');

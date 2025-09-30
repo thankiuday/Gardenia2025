@@ -4,34 +4,6 @@ import S3_ASSETS from '../config/s3-assets';
 const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white py-24 sm:py-32 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 rounded-full mb-6 backdrop-blur-sm">
-              <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
-          </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-primary-100 bg-clip-text text-transparent leading-tight">
-            About Gardenia 2025
-          </h1>
-          <p className="text-xl sm:text-2xl lg:text-3xl opacity-90 max-w-4xl mx-auto font-light leading-relaxed">
-            Elements – Live the Essence
-          </p>
-          <div className="mt-12 flex justify-center">
-            <div className="w-24 h-1 bg-gradient-to-r from-primary-200 to-white rounded-full"></div>
-          </div>
-        </div>
-      </section>
 
       {/* Garden City University Section */}
       <section className="py-20 sm:py-24 relative">
@@ -46,7 +18,17 @@ const About = () => {
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
               About Garden City University
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full mx-auto"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 rounded-full mx-auto mb-8"></div>
+            
+            {/* AboutGCU Image */}
+            <div className="max-w-4xl mx-auto mb-8">
+              <img 
+                src={S3_ASSETS.logos.aboutGCU} 
+                alt="Garden City University" 
+                className="w-full h-auto object-contain object-center rounded-lg shadow-lg"
+                style={{ imageRendering: 'high-quality' }}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">

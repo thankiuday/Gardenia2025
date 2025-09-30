@@ -85,7 +85,6 @@ const AdminRegistrations = () => {
         setTotalExternalStudents(response.data.data.outsideRegistrations || 0);
       }
     } catch (error) {
-      console.error('Error fetching statistics:', error);
       // Don't show error to user for stats, just keep existing values
     } finally {
       setStatsLoading(false);

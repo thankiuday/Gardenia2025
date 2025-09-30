@@ -15,7 +15,7 @@ export const API_ENDPOINTS = {
   EVENTS: `${API_BASE_URL}/api/events`,
   REGISTER: `${API_BASE_URL}/api/register`,
   REGISTRATIONS: `${API_BASE_URL}/api/register`,
-  CONTACTS: `${API_BASE_URL}/api/contacts`,
+  CONTACTS: `${API_BASE_URL}/api/contact`,
   ADMIN: {
     LOGIN: `${API_BASE_URL}/api/admin/login`,
     STATS: `${API_BASE_URL}/api/admin/stats`,

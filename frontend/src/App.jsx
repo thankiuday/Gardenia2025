@@ -5,6 +5,11 @@ import AdminNavbar from './components/AdminNavbar';
 import Footer from './components/Footer';
 import PageTransition from './components/PageTransition';
 import WelcomeModal from './components/WelcomeModal';
+import ErrorBoundary from './components/ErrorBoundary';
+import NetworkError from './components/NetworkError';
+import Maintenance from './pages/Maintenance';
+import MaintenanceToggle from './components/MaintenanceToggle';
+import { isMaintenanceActive } from './utils/maintenance';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import Brochure from './pages/Brochure';
@@ -15,8 +20,6 @@ import About from './pages/About';
 import Admin from './pages/Admin';
 import EventDetails from './pages/EventDetails';
 import QRScanner from './pages/QRScanner';
-import './utils/globalErrorHandler'; // Load global error handler for S3 CORS tracking
-// import './utils/environmentTest'; // Load environment test utilities
 
 // Component to conditionally render navbar and footer
 const AppLayout = ({ children }) => {
@@ -59,11 +62,15 @@ const AppLayout = ({ children }) => {
       <div className="min-h-screen bg-gray-50">
         {isAdminLoggedIn && <AdminNavbar />}
         <main className="flex-1">
-          <PageTransition>
-            {children}
-          </PageTransition>
+          <ErrorBoundary>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </ErrorBoundary>
         </main>
+        <NetworkError onRetry={() => window.location.reload()} />
         <WelcomeModal />
+        <MaintenanceToggle />
       </div>
     );
   }
@@ -73,17 +80,26 @@ const AppLayout = ({ children }) => {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <main className="flex-1">
-        <PageTransition>
-          {children}
-        </PageTransition>
+        <ErrorBoundary>
+          <PageTransition>
+            {children}
+          </PageTransition>
+        </ErrorBoundary>
       </main>
       <Footer />
+      <NetworkError onRetry={() => window.location.reload()} />
       <WelcomeModal />
+      <MaintenanceToggle />
     </div>
   );
 };
 
 function App() {
+  // Check if maintenance mode is active
+  if (isMaintenanceActive()) {
+    return <Maintenance />;
+  }
+
   return (
     <HashRouter>
       <AppLayout>

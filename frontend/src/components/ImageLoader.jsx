@@ -1,5 +1,4 @@
 import { useState, useCallback, memo } from 'react';
-import s3Tracker from '../utils/s3ImageTracker';
 
 const ImageLoader = memo(({ 
   src, 
@@ -15,49 +14,23 @@ const ImageLoader = memo(({
   const [currentSrc, setCurrentSrc] = useState(src);
 
   const handleLoad = useCallback(() => {
-    console.log('✅ Image loaded successfully:', currentSrc);
-    console.log('📊 S3 Image Status: SUCCESS');
-    
-    // Track successful S3 image load
-    if (currentSrc.includes('gardenia2025-assets.s3.us-east-1.amazonaws.com')) {
-      s3Tracker.logRequest(currentSrc, 'success');
-    }
-    
     setIsLoading(false);
-  }, [currentSrc]);
+  }, []);
 
   const handleError = useCallback((error) => {
-    console.log('❌ Image failed to load:', currentSrc);
-    console.log('📊 S3 Image Status: FAILED');
-    
-    // Check if it's a CORS error by examining the error
+    // Check if it's an S3 URL and try alternative extensions
     const isS3Url = currentSrc.includes('gardenia2025-assets.s3.us-east-1.amazonaws.com');
-    if (isS3Url) {
-      console.log('🚫 CORS Policy Error Detected for S3 URL');
-      console.log('🔍 S3 URL Analysis:', {
-        url: currentSrc,
-        domain: 'gardenia2025-assets.s3.us-east-1.amazonaws.com',
-        path: currentSrc.split('/').pop(),
-        isCORSBlocked: true
-      });
-      
-      // Track S3 CORS error
-      s3Tracker.logRequest(currentSrc, 'error', error);
-    }
     
-    // Try alternative extensions if it's an S3 URL
     if (isS3Url) {
       if (currentSrc.includes('.png') && !currentSrc.includes('fallback')) {
         // Try JPG version
         const jpgUrl = currentSrc.replace('.png', '.jpg');
-        console.log('🔄 Trying JPG version (CORS retry):', jpgUrl);
         setCurrentSrc(jpgUrl);
         setHasError(false);
         return;
       } else if (currentSrc.includes('.jpg') && !currentSrc.includes('fallback')) {
         // Try PNG version
         const pngUrl = currentSrc.replace('.jpg', '.png');
-        console.log('🔄 Trying PNG version (CORS retry):', pngUrl);
         setCurrentSrc(pngUrl);
         setHasError(false);
         return;
@@ -66,15 +39,10 @@ const ImageLoader = memo(({
     
     if (fallbackSrc && currentSrc !== fallbackSrc) {
       // Try fallback image
-      console.log('🔄 Trying fallback image:', fallbackSrc);
-      console.log('📊 S3 Image Status: FALLBACK_TO_DEFAULT');
       setCurrentSrc(fallbackSrc);
       setHasError(false);
     } else {
-      // Show error state with helpful message
-      console.log('💥 No fallback available, showing error state');
-      console.log('💡 CORS Error: Configure S3 bucket CORS policy to allow localhost:5173');
-      console.log('📊 S3 Image Status: ERROR_NO_FALLBACK');
+      // Show error state
       setIsLoading(false);
       setHasError(true);
       if (onError) {

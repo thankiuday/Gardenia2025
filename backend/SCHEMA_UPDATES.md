@@ -101,3 +101,4 @@ The schema has been tested with:
 - Add more events that support flexible participation
 - Consider adding participation type selection in registration form
 - Add analytics for participation type preferences
+

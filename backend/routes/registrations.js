@@ -95,17 +95,13 @@ router.post('/', [
         // Try custom PDF generation with Puppeteer first (your preferred method)
         const pdfData = { ...registration.toObject(), registrationId: regId };
         pdfBuffer = await generatePDF(pdfData, event, qrCodeDataURL);
-        console.log('PDF generated successfully with custom Puppeteer');
       } catch (puppeteerError) {
-        console.log('Custom Puppeteer PDF generation failed, trying html-pdf-node:', puppeteerError.message);
         try {
           // Try proper PDF generation with html-pdf-node
           const { generateProperPDF } = require('../utils/properPdfGen');
           const pdfData = { ...registration.toObject(), registrationId: regId };
           pdfBuffer = await generateProperPDF(pdfData, event, qrCodeDataURL);
-          console.log('PDF generated successfully with html-pdf-node');
         } catch (properPdfError) {
-          console.log('html-pdf-node generation failed, using HTML fallback:', properPdfError.message);
           // Fallback to HTML generation
           const { generatePDFFromHTML } = require('../utils/htmlToPdf');
           const pdfData = { ...registration.toObject(), registrationId: regId };
@@ -124,12 +120,10 @@ router.post('/', [
         // Check if S3 is configured and available
         if (isS3Available()) {
           fileUrl = await uploadTicketToS3(pdfBuffer, fileName);
-          console.log('✅ File uploaded to S3:', fileUrl);
         } else {
           throw new Error('S3 not configured, falling back to local storage');
         }
       } catch (s3Error) {
-        console.log('⚠️ S3 upload failed, using local storage:', s3Error.message);
         
         // Fallback to local storage
         const uploadsDir = path.join(__dirname, '../uploads');
@@ -140,7 +134,6 @@ router.post('/', [
         const filePath = path.join(uploadsDir, fileName);
         fs.writeFileSync(filePath, pdfBuffer);
         fileUrl = `/uploads/${fileName}`;
-        console.log('✅ File saved locally:', fileUrl);
       }
 
       // Update registration with file URL
@@ -467,7 +460,6 @@ router.get('/:id/pdf', async (req, res) => {
               });
               res.end(pdfBuffer);
               
-              console.log(`✅ PDF served successfully: ${registration.regId} (${pdfBuffer.length} bytes)`);
             } catch (error) {
               console.error('Error serving PDF buffer:', error);
               if (!res.headersSent) {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import SkeletonLoader from '../components/SkeletonLoader';
+import ErrorMessage from '../components/ErrorMessage';
 import useVisitorTracking from '../hooks/useVisitorTracking';
 import useScrollToTop from '../hooks/useScrollToTop';
 import { validatePhoneNumber, validateEmail, validateName } from '../utils/validation';
@@ -25,6 +26,7 @@ const Contact = () => {
   useVisitorTracking('Contact');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   // Scroll to top on component mount and when submitted state changes
   useScrollToTop();
@@ -95,6 +97,7 @@ const Contact = () => {
     }
 
     setLoading(true);
+    setSubmitError(null);
 
     try {
       const response = await axios.post(API_ENDPOINTS.CONTACTS, formData);
@@ -104,10 +107,22 @@ const Contact = () => {
         setFormData({ name: '', email: '', phone: '', message: '' });
         setValidationErrors({ name: '', email: '', phone: '' });
       } else {
-        alert('We couldn\'t send your message right now. Please try again.');
+        throw new Error('Server returned an error');
       }
     } catch (error) {
-      alert('We encountered an issue while sending your message. Please check your internet connection and try again.');
+      let errorMessage = 'We encountered an issue while sending your message.';
+      
+      if (!navigator.onLine) {
+        errorMessage = 'No internet connection. Please check your network and try again.';
+      } else if (error.response?.status === 429) {
+        errorMessage = 'Too many requests. Please wait a moment and try again.';
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server is temporarily unavailable. Please try again in a few moments.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      setSubmitError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -163,6 +178,17 @@ const Contact = () => {
               Send us a Message
             </h2>
             
+            {submitError && (
+              <ErrorMessage
+                title="Failed to Send Message"
+                message={submitError}
+                type="error"
+                onRetry={() => setSubmitError(null)}
+                showRetry={true}
+                className="mb-6"
+              />
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">

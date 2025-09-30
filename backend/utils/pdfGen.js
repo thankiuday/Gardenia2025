@@ -5,7 +5,9 @@ const fs = require('fs');
 const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
   let browser;
   try {
-    console.log('Starting PDF generation for registration:', registrationData.registrationId);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('Starting PDF generation for registration:', registrationData.registrationId);
+    }
     
     // Configure Puppeteer for Render environment
     const launchOptions = {
@@ -90,7 +92,9 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
               break;
             }
           } catch (error) {
-            console.log('Glob error for path:', chromiumPath, error.message);
+            if (process.env.NODE_ENV === 'development') {
+                console.log('Glob error for path:', chromiumPath, error.message);
+            }
           }
         }
       }
@@ -98,9 +102,13 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     
     if (executablePath && require('fs').existsSync(executablePath)) {
       launchOptions.executablePath = executablePath;
-      console.log('Using Chrome executable:', executablePath);
+      if (process.env.NODE_ENV === 'development') {
+          console.log('Using Chrome executable:', executablePath);
+      }
     } else {
-      console.log('No Chrome executable found, using bundled Chromium');
+      if (process.env.NODE_ENV === 'development') {
+          console.log('No Chrome executable found, using bundled Chromium');
+      }
       // Don't set executablePath, let Puppeteer use its bundled Chromium
     }
 
@@ -423,11 +431,11 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     <body>
         <div class="header">
             <div class="event-logo">
-                <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/elemental-logo.png" alt="Gardenia 2025 Logo" />
+                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/elemental-logo.png" alt="Gardenia 2025 Logo" />
             </div>
             <div class="header-content">
                 <div class="festival-logo">
-                    <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="max-height: 60px; width: auto; object-fit: contain;" />
+                    <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="max-height: 60px; width: auto; object-fit: contain;" />
                 </div>
                 <div class="event-title">${eventData.title}</div>
                 <div class="event-category">${eventData.category}</div>
@@ -435,7 +443,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 <div style="font-size: 12px; color: #666;">Registration Ticket</div>
             </div>
             <div class="university-logo">
-                <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" />
+                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" />
             </div>
         </div>
 
@@ -555,7 +563,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
 
         <div class="footer">
             <div class="footer-logo">
-                <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" />
+                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" />
             </div>
             <div class="footer-title">Garden City University</div>
             <div class="footer-text">Gardenia 2025 - Elemental Festival</div>
@@ -583,7 +591,9 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     });
 
     await browser.close();
-    console.log('PDF generated successfully for registration:', registrationData.registrationId);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('PDF generated successfully for registration:', registrationData.registrationId);
+    }
     return pdfBuffer;
 
   } catch (error) {
@@ -592,7 +602,9 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
       try {
         await browser.close();
       } catch (closeError) {
-        console.error('Error closing browser:', closeError);
+        if (process.env.NODE_ENV === 'development') {
+            console.error('Error closing browser:', closeError);
+        }
       }
     }
     throw new Error(`Failed to generate PDF: ${error.message}`);

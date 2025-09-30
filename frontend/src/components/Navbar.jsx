@@ -216,7 +216,7 @@ const Navbar = () => {
                         href="https://www.instagram.com/gardencityuniversity" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="group p-3 text-gray-600 hover:text-[#E4405F] transition-all duration-200 hover:bg-gradient-to-br hover:from-[#E4405F] hover:to-[#C13584] hover:text-white rounded-lg hover:scale-105"
+                        className="group p-3 text-[#E4405F] hover:text-white transition-all duration-200 hover:bg-gradient-to-br hover:from-[#E4405F] hover:to-[#C13584] rounded-lg hover:scale-105 shadow-sm"
                         aria-label="Follow us on Instagram"
                       >
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -228,7 +228,7 @@ const Navbar = () => {
                         href="https://www.facebook.com/gardencityuniversity" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="group p-3 text-gray-600 hover:text-[#1877F2] transition-all duration-200 hover:bg-[#1877F2] hover:text-white rounded-lg hover:scale-105"
+                        className="group p-3 text-[#1877F2] hover:text-white transition-all duration-200 hover:bg-[#1877F2] rounded-lg hover:scale-105 shadow-sm"
                         aria-label="Follow us on Facebook"
                       >
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -240,7 +240,7 @@ const Navbar = () => {
                         href="https://www.youtube.com/@gardencityuniversity" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="group p-3 text-gray-600 hover:text-[#FF0000] transition-all duration-200 hover:bg-[#FF0000] hover:text-white rounded-lg hover:scale-105"
+                        className="group p-3 text-[#FF0000] hover:text-white transition-all duration-200 hover:bg-[#FF0000] rounded-lg hover:scale-105 shadow-sm"
                         aria-label="Subscribe to our YouTube channel"
                       >
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@ const Navbar = () => {
                         href="https://www.linkedin.com/company/gardencityuniversity" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="group p-3 text-gray-600 hover:text-[#0A66C2] transition-all duration-200 hover:bg-[#0A66C2] hover:text-white rounded-lg hover:scale-105"
+                        className="group p-3 text-[#0A66C2] hover:text-white transition-all duration-200 hover:bg-[#0A66C2] rounded-lg hover:scale-105 shadow-sm"
                         aria-label="Connect with us on LinkedIn"
                       >
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">

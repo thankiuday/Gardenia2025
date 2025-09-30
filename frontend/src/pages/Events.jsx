@@ -4,8 +4,7 @@ import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import SkeletonLoader from '../components/SkeletonLoader';
 import EventCard from '../components/EventCard';
-import DirectImageTest from '../components/DirectImageTest';
-import s3Tracker from '../utils/s3ImageTracker';
+import ErrorMessage from '../components/ErrorMessage';
 import S3_ASSETS from '../config/s3-assets';
 
 const Events = () => {
@@ -14,6 +13,7 @@ const Events = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   const categories = [
     { key: 'All', label: 'All Events' },
@@ -199,49 +199,6 @@ const Events = () => {
         </div>
 
         {/* Debug Section - Remove this after testing */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mb-8 space-y-4">
-            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <h3 className="font-bold text-yellow-800 mb-2">Debug Info (Development Only)</h3>
-              {filteredEvents.length > 0 && (
-                <p className="text-sm text-yellow-700">
-                  First event: "{filteredEvents[0]?.title}" → 
-                  Generated URL: {S3_ASSETS.events.getEventImage(filteredEvents[0]?.title)}
-                </p>
-              )}
-            </div>
-            
-            {/* S3 Image Tracking Debug Panel */}
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <h3 className="font-bold text-red-800 mb-2">S3 Image Tracking</h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="font-semibold text-red-700">CORS Blocked Images:</p>
-                  <p className="text-red-600">
-                    {s3Tracker.getCORSBlockedImages().length} images blocked by CORS
-                  </p>
-                </div>
-                <div>
-                  <p className="font-semibold text-red-700">Failed Images:</p>
-                  <p className="text-red-600">
-                    {s3Tracker.getFailedImages().length} images failed to load
-                  </p>
-                </div>
-              </div>
-              <button 
-                onClick={() => {
-                  console.log('🔍 CORS Blocked Images:', s3Tracker.getCORSBlockedImages());
-                  console.log('❌ Failed Images:', s3Tracker.getFailedImages());
-                }}
-                className="mt-2 bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-              >
-                Log S3 Errors to Console
-              </button>
-            </div>
-            
-            <DirectImageTest />
-          </div>
-        )}
 
         {/* Events Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

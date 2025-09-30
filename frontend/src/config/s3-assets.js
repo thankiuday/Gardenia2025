@@ -22,7 +22,8 @@ const S3_ASSETS = {
   },
   logos: {
     elemental: `${getS3BaseUrl()}/logos/elemental-logo.png`,
-    university: `${getS3BaseUrl()}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg`
+    university: `${getS3BaseUrl()}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg`,
+    aboutGCU: `${getS3BaseUrl()}/logos/AboutGCU.jpg`
   },
   documents: {
     brochure: `${getS3BaseUrl()}/documents/gardenia-2025-brochure.pdf`
@@ -50,7 +51,6 @@ const S3_ASSETS = {
       
       const finalId = specialCases[cleanId] || cleanId;
       const url = `${S3_ASSETS.events.baseUrl}/${finalId}.png?v=${Date.now()}`;
-      console.log('🔍 S3 Image URL Generated:', { eventId, cleanId, finalId, url });
       return url;
     },
     // Fallback image for events without specific images (using local for now)

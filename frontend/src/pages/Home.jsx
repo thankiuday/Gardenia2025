@@ -5,6 +5,7 @@ import { API_ENDPOINTS } from '../config/api';
 import S3_ASSETS from '../config/s3-assets';
 import SkeletonLoader from '../components/SkeletonLoader';
 import EventCard from '../components/EventCard';
+import ErrorMessage from '../components/ErrorMessage';
 import useVisitorTracking from '../hooks/useVisitorTracking';
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
   
   // Track visitor
   useVisitorTracking('Home');
@@ -21,6 +23,7 @@ const Home = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
+        setError(null);
         const response = await axios.get(API_ENDPOINTS.EVENTS);
         if (response.data.success) {
           // Map customId to id for frontend compatibility
@@ -29,12 +32,26 @@ const Home = () => {
             id: event.customId
           }));
           setEvents(eventsWithId);
+          setRetryCount(0); // Reset retry count on success
         } else {
-          setError('Failed to load events');
+          throw new Error('Server returned invalid data');
         }
       } catch (err) {
-        console.error('Home: Error fetching events:', err);
-        setError('Failed to load events');
+        let errorMessage = 'Unable to load events';
+        
+        if (err.code === 'NETWORK_ERROR' || !navigator.onLine) {
+          errorMessage = 'No internet connection. Please check your network and try again.';
+        } else if (err.response?.status === 404) {
+          errorMessage = 'Events not found. Please try again later.';
+        } else if (err.response?.status >= 500) {
+          errorMessage = 'Server is temporarily unavailable. Please try again in a few moments.';
+        } else if (err.response?.status === 403) {
+          errorMessage = 'Access denied. Please refresh the page and try again.';
+        } else if (err.message?.includes('timeout')) {
+          errorMessage = 'Request timed out. Please check your connection and try again.';
+        }
+        
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -42,6 +59,11 @@ const Home = () => {
 
     fetchEvents();
   }, []);
+
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1);
+    fetchEvents();
+  };
 
   const filteredEvents = useMemo(() => {
     let filtered = events;
@@ -74,30 +96,47 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-primary-700 to-primary-900 text-white overflow-hidden hero-mobile">
+      <section className="relative bg-gradient-to-br from-gray-900 via-primary-800 to-primary-900 text-white overflow-hidden min-h-screen flex items-center hero-section-mobile">
         {/* Background Video */}
-        <div className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0 w-full h-full z-0">
           <video
-            className="w-full h-full object-cover hero-video"
+            className="w-full h-full object-cover absolute inset-0 hero-video"
             autoPlay
             muted
             loop
             playsInline
             preload="metadata"
+            style={{ 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
           >
             <source src={S3_ASSETS.video.hero} type="video/mp4" />
             {/* Fallback for browsers that don't support video */}
             Your browser does not support the video tag.
           </video>
-          {/* Video Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/30 via-primary-700/20 to-primary-900/30"></div>
+          
+          {/* Enhanced Video Overlay for Better Contrast */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-gray-900/70 to-black/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30"></div>
+          
+          {/* Subtle Pattern Overlay */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            }}></div>
+          </div>
         </div>
         
-        <div className="relative container-responsive py-8 sm:py-12 lg:py-16" id="main-content">
+        <div className="relative z-10 container-responsive py-8 sm:py-12 lg:py-16" id="main-content">
           <div className="text-center">
-            <div className="inline-block px-4 sm:px-6 py-2 sm:py-3 bg-white/10 backdrop-blur-sm rounded-full border-2 border-emerald-400/30 mb-6 sm:mb-8 fade-in relative overflow-hidden group">
+            <div className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-black/30 backdrop-blur-md rounded-full border-2 border-emerald-400/50 mb-6 sm:mb-8 fade-in relative overflow-hidden group shadow-2xl">
               <div 
-                className="absolute inset-0 border-2 border-transparent rounded-full opacity-30"
+                className="absolute inset-0 border-2 border-transparent rounded-full opacity-40"
                 style={{
                   background: 'linear-gradient(45deg, #10b981, #059669, #047857, #10b981)',
                   backgroundSize: '300% 300%',
@@ -108,30 +147,36 @@ const Home = () => {
                   WebkitMaskComposite: 'xor'
                 }}
               ></div>
-              <span className="relative z-10 text-xs sm:text-sm font-bold text-white/90">October 15th, 16th & 17th 2025</span>
+              <span className="relative z-10 text-sm sm:text-base font-bold text-white drop-shadow-lg">October 15th, 16th & 17th 2025</span>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white via-green-200 to-primary-200 bg-clip-text text-transparent leading-tight fade-in animate-delay-100">
-              Gardenia 2025
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 sm:mb-8 leading-tight fade-in animate-delay-100">
+              <span className="bg-gradient-to-r from-white via-emerald-100 to-emerald-300 bg-clip-text text-transparent drop-shadow-2xl">
+                Gardenia 2025
+              </span>
             </h1>
             
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl mb-4 sm:mb-6 font-bold text-white/95 fade-in animate-delay-200">
-              Elements – Live the Essence
+            <p className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl mb-6 sm:mb-8 font-bold text-white drop-shadow-xl fade-in animate-delay-200">
+              <span className="bg-gradient-to-r from-emerald-200 to-emerald-400 bg-clip-text text-transparent">
+                Elements – Live the Essence
+              </span>
             </p>
             
-            <p className="text-responsive mb-8 sm:mb-12 max-w-4xl mx-auto text-white/85 leading-relaxed fade-in animate-delay-300 font-bold">
-              Join us for an extraordinary celebration of creativity, talent, and innovation. 
-              Experience the five elements through our diverse range of events that will inspire, 
-              challenge, and transform you.
-            </p>
+            <div className="bg-black/20 backdrop-blur-sm rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 max-w-5xl mx-auto border border-white/10 fade-in animate-delay-300">
+              <p className="text-base sm:text-lg lg:text-xl text-white leading-relaxed font-medium drop-shadow-lg">
+                Join us for an extraordinary celebration of creativity, talent, and innovation. 
+                Experience the five elements through our diverse range of events that will inspire, 
+                challenge, and transform you.
+              </p>
+            </div>
             
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center items-center fade-in animate-delay-400">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 justify-center items-center fade-in animate-delay-400">
               <Link 
                 to="/events" 
-                className="group relative px-6 sm:px-8 lg:px-10 py-3 sm:py-4 bg-emerald-500 text-white font-semibold text-sm sm:text-base lg:text-lg rounded-xl shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 hover:bg-emerald-600 w-full sm:w-auto text-center min-h-[44px] flex items-center justify-center border-2 border-emerald-400/30 overflow-hidden"
+                className="group relative px-8 sm:px-10 lg:px-12 py-4 sm:py-5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold text-sm sm:text-base lg:text-lg rounded-2xl shadow-2xl hover:shadow-emerald-500/30 transition-all duration-300 hover:scale-105 hover:from-emerald-600 hover:to-emerald-700 w-full sm:w-auto text-center min-h-[52px] flex items-center justify-center border-2 border-emerald-300/50 overflow-hidden"
               >
                 <div 
-                  className="absolute inset-0 border-2 border-transparent rounded-xl opacity-30"
+                  className="absolute inset-0 border-2 border-transparent rounded-2xl opacity-40"
                   style={{
                     background: 'linear-gradient(45deg, #10b981, #059669, #047857, #10b981)',
                     backgroundSize: '300% 300%',
@@ -142,16 +187,16 @@ const Home = () => {
                     WebkitMaskComposite: 'xor'
                   }}
                 ></div>
-                <span className="relative z-10 font-bold">Explore Events</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                <span className="relative z-10 font-extrabold drop-shadow-lg">Explore Events</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-2xl opacity-0 group-hover:opacity-25 transition-opacity duration-300"></div>
               </Link>
               
               <Link 
                 to="/about" 
-                className="group relative px-6 sm:px-8 lg:px-10 py-3 sm:py-4 border-2 border-white/40 text-white font-semibold text-sm sm:text-base lg:text-lg rounded-xl backdrop-blur-sm hover:bg-white/15 hover:border-white/60 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-center min-h-[44px] flex items-center justify-center overflow-hidden"
+                className="group relative px-8 sm:px-10 lg:px-12 py-4 sm:py-5 border-2 border-white/60 text-white font-bold text-sm sm:text-base lg:text-lg rounded-2xl backdrop-blur-md hover:bg-white/20 hover:border-white/80 transition-all duration-300 hover:scale-105 w-full sm:w-auto text-center min-h-[52px] flex items-center justify-center overflow-hidden bg-black/20"
               >
                 <div 
-                  className="absolute inset-0 border-2 border-transparent rounded-xl opacity-30"
+                  className="absolute inset-0 border-2 border-transparent rounded-2xl opacity-40"
                   style={{
                     background: 'linear-gradient(45deg, #ffffff, #e5e7eb, #d1d5db, #ffffff)',
                     backgroundSize: '300% 300%',
@@ -162,7 +207,8 @@ const Home = () => {
                     WebkitMaskComposite: 'xor'
                   }}
                 ></div>
-                <span className="relative z-10 font-bold">Learn More</span>
+                <span className="relative z-10 font-extrabold drop-shadow-lg">Learn More</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
             </div>
             
@@ -508,20 +554,36 @@ const Home = () => {
               ))}
             </div>
           ) : error ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-600 mb-2">Failed to load events</h3>
-              <p className="text-gray-500 mb-4">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-              >
-                Try Again
-              </button>
+            <div className="max-w-md mx-auto py-12">
+              <ErrorMessage
+                title="Unable to Load Events"
+                message={error}
+                type="error"
+                onRetry={handleRetry}
+                showRetry={true}
+                className="mb-4"
+              />
+              {retryCount > 2 && (
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-3">
+                    Still having trouble? You can try:
+                  </p>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="block w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                    >
+                      Refresh Page
+                    </button>
+                    <Link
+                      to="/contact"
+                      className="block w-full px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg hover:bg-emerald-200 transition-colors text-sm"
+                    >
+                      Contact Support
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           ) : filteredEvents.length === 0 ? (
             <div className="text-center py-12">

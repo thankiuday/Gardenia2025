@@ -3,7 +3,9 @@ const htmlPdf = require('html-pdf-node');
 
 const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => {
   try {
-    console.log('Generating proper PDF for registration:', registrationData.registrationId);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('Generating proper PDF for registration:', registrationData.registrationId);
+    }
     
     // Create HTML content
     const htmlContent = `
@@ -141,7 +143,7 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
     <body>
         <div class="header">
             <div class="event-logo">
-                <img src="https://gardenia2025-assets.s3.us-east-1.amazonaws.com/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" />
+                <img src="${process.env.S3_BASE_URL || 'https://gardenia2025-assets.s3.us-east-1.amazonaws.com'}/logos/garden_city_college_of_sc_and_mgt_studies_logo.jpeg" alt="Garden City University Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;" />
             </div>
             <div class="event-info">
                 <div class="event-title">${eventData.title || eventData.name || 'Event Registration'}</div>
@@ -271,7 +273,9 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
     const file = { content: htmlContent };
     const pdfBuffer = await htmlPdf.generatePdf(file, options);
     
-    console.log('Proper PDF generated successfully for registration:', registrationData.registrationId);
+    if (process.env.NODE_ENV === 'development') {
+        console.log('Proper PDF generated successfully for registration:', registrationData.registrationId);
+    }
     return pdfBuffer;
     
   } catch (error) {
