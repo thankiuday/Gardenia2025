@@ -1,16 +1,10 @@
 // Alternative PDF generation using html-pdf-node (lighter alternative)
 const generatePDFFromHTML = async (registrationData, eventData, qrCodeDataURL) => {
   try {
-    if (process.env.NODE_ENV === 'development') {
-        console.log('Generating PDF using HTML template for registration:', registrationData.registrationId);
-    }
     
     // Clear PUPPETEER_EXECUTABLE_PATH on Windows to force bundled Chromium
     if (process.platform === 'win32') {
       delete process.env.PUPPETEER_EXECUTABLE_PATH;
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Cleared PUPPETEER_EXECUTABLE_PATH for Windows in htmlToPdf');
-      }
     }
     
     // Create HTML content

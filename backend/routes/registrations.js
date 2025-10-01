@@ -105,13 +105,7 @@ router.post('/', [
           status: registrationData.status,
           createdAt: new Date()
         };
-        console.log('Generating PDF with data:', {
-          regId: pdfData.regId,
-          leaderName: pdfData.leader?.name,
-          eventTitle: event.title
-        });
         pdfBuffer = await generatePDF(pdfData, event, qrCodeDataURL);
-        console.log('PDF generated successfully, buffer size:', pdfBuffer.length);
       } catch (puppeteerError) {
         try {
           // Try proper PDF generation with html-pdf-node

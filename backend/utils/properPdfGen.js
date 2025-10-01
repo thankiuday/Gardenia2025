@@ -3,16 +3,10 @@ const htmlPdf = require('html-pdf-node');
 
 const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => {
   try {
-    if (process.env.NODE_ENV === 'development') {
-        console.log('Generating proper PDF for registration:', registrationData.registrationId);
-    }
     
     // Clear PUPPETEER_EXECUTABLE_PATH on Windows to force bundled Chromium
     if (process.platform === 'win32') {
       delete process.env.PUPPETEER_EXECUTABLE_PATH;
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Cleared PUPPETEER_EXECUTABLE_PATH for Windows in properPdfGen');
-      }
     }
     
     // Create HTML content
@@ -302,9 +296,6 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
     const file = { content: htmlContent };
     const pdfBuffer = await htmlPdf.generatePdf(file, options);
     
-    if (process.env.NODE_ENV === 'development') {
-        console.log('Proper PDF generated successfully for registration:', registrationData.registrationId);
-    }
     return pdfBuffer;
     
   } catch (error) {

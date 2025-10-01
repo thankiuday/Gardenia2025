@@ -5,18 +5,10 @@ const fs = require('fs');
 const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
   let browser;
   try {
-    if (process.env.NODE_ENV === 'development') {
-        console.log('Starting PDF generation for registration:', registrationData.regId || registrationData.registrationId);
-        console.log('Registration data keys:', Object.keys(registrationData));
-        console.log('Event data keys:', Object.keys(eventData));
-    }
     
     // Clear PUPPETEER_EXECUTABLE_PATH on Windows to force bundled Chromium
     if (process.platform === 'win32') {
       delete process.env.PUPPETEER_EXECUTABLE_PATH;
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Cleared PUPPETEER_EXECUTABLE_PATH for Windows');
-      }
     }
     
     // Configure Puppeteer for both Windows and Ubuntu VPS
@@ -93,14 +85,6 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     
     if (executablePath && require('fs').existsSync(executablePath)) {
       launchOptions.executablePath = executablePath;
-      if (process.env.NODE_ENV === 'development') {
-          console.log('Using Chrome executable:', executablePath);
-      }
-    } else {
-      if (process.env.NODE_ENV === 'development') {
-          console.log('Using bundled Chromium for PDF generation');
-      }
-      // Don't set executablePath, let Puppeteer use its bundled Chromium
     }
 
     const browser = await puppeteer.launch(launchOptions);
@@ -552,7 +536,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         return Array.from(images).every(img => img.complete);
       }, { timeout: 10000 });
     } catch (error) {
-      console.log('Images took too long to load, proceeding with PDF generation');
+      // Images took too long to load, proceeding with PDF generation
     }
 
     // Generate PDF
@@ -568,17 +552,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
       preferCSSPageSize: true
     });
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('PDF buffer generated, size:', pdfBuffer.length);
-      console.log('PDF buffer type:', typeof pdfBuffer);
-      console.log('PDF buffer is Buffer:', Buffer.isBuffer(pdfBuffer));
-    }
-
     await browser.close();
-    if (process.env.NODE_ENV === 'development') {
-        console.log('PDF generated successfully for registration:', registrationData.regId || registrationData.registrationId);
-        console.log('PDF buffer size:', pdfBuffer.length, 'bytes');
-    }
     return pdfBuffer;
 
   } catch (error) {

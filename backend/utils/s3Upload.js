@@ -27,12 +27,12 @@ try {
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       },
     });
-    console.log('✅ AWS S3 client configured successfully');
+    // AWS S3 client configured successfully
   } else {
-    console.log('⚠️ AWS S3 not configured - will use local storage fallback');
+    // AWS S3 not configured - will use local storage fallback
   }
 } catch (error) {
-  console.log('⚠️ AWS SDK not available - will use local storage fallback');
+  // AWS SDK not available - will use local storage fallback
 }
 
 /**
@@ -64,7 +64,6 @@ const uploadTicketToS3 = async (pdfBuffer, fileName) => {
     await s3Client.send(uploadCommand);
     
     const publicUrl = `https://${bucketName}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`;
-    console.log(`Ticket uploaded successfully: ${publicUrl}`);
     return publicUrl;
     
   } catch (error) {
@@ -80,7 +79,6 @@ const uploadTicketToS3 = async (pdfBuffer, fileName) => {
  */
 const deleteTicketFromS3 = async (fileName) => {
   if (!s3Client) {
-    console.log('S3 client not configured. Cannot delete from S3.');
     return false;
   }
 
@@ -94,7 +92,6 @@ const deleteTicketFromS3 = async (fileName) => {
     });
 
     await s3Client.send(deleteCommand);
-    console.log(`Ticket deleted successfully: ${key}`);
     return true;
     
   } catch (error) {
@@ -110,7 +107,6 @@ const deleteTicketFromS3 = async (fileName) => {
  */
 const checkTicketExistsInS3 = async (fileName) => {
   if (!s3Client) {
-    console.log('S3 client not configured. Cannot check S3.');
     return false;
   }
 

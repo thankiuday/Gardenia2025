@@ -1,7 +1,6 @@
 // Simple PDF generation fallback without Puppeteer
 const generateSimplePDF = async (registrationData, eventData) => {
   try {
-    console.log('Generating simple PDF for registration:', registrationData.registrationId);
     
     // Create a simple HTML content that can be converted to PDF
     const htmlContent = `
