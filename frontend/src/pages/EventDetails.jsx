@@ -140,7 +140,7 @@ const EventDetails = () => {
           <div className="mb-6 sm:mb-8">
             <div className={`relative w-full bg-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg group ${
               event.title === 'Gardenia 2K25: The Rap Arena' 
-                ? 'rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg lg:rap-arena-container-xl' 
+                ? 'rap-arena-details-container' 
                 : 'h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[28rem]'
             }`}>
               <ImageLoader 

@@ -336,7 +336,7 @@ const Home = () => {
                 {/* Event Poster */}
                 <div className="mb-8">
                   {rapArenaImageLoading && (
-                    <div className="w-full rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg lg:rap-arena-container-xl xl:rap-arena-container-2xl bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl shadow-lg border-2 border-purple-200 animate-pulse flex items-center justify-center">
+                    <div className="w-full rap-arena-home-container bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl shadow-lg border-2 border-purple-200 animate-pulse flex items-center justify-center">
                       <div className="text-center">
                         <div className="w-20 h-20 bg-purple-300 rounded-full mx-auto mb-4 animate-pulse"></div>
                         <div className="h-6 bg-purple-300 rounded w-48 mx-auto mb-3 animate-pulse"></div>
@@ -344,7 +344,7 @@ const Home = () => {
                       </div>
                     </div>
                   )}
-                  <div className={`rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg lg:rap-arena-container-xl xl:rap-arena-container-2xl rounded-xl shadow-lg border-2 border-purple-200 overflow-hidden ${rapArenaImageLoading ? 'opacity-0 absolute' : 'opacity-100'}`}>
+                  <div className={`rap-arena-home-container rounded-xl shadow-lg border-2 border-purple-200 overflow-hidden ${rapArenaImageLoading ? 'opacity-0 absolute' : 'opacity-100'}`}>
                     <img
                       src={S3_ASSETS.posters.rapArena}
                       alt="Gardenia 2K25 - The Rap Arena Poster"

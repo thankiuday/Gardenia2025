@@ -196,19 +196,19 @@
   
   .card {
     @apply bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300;
-    min-height: 450px; /* Base minimum height */
+    min-height: 20rem; /* Natural minimum height */
   }
   
-  /* Responsive card heights */
+  /* Responsive card heights - allow natural growth */
   @media (min-width: 640px) {
     .card {
-      min-height: 480px;
+      min-height: 22rem;
     }
   }
   
   @media (min-width: 1024px) {
     .card {
-      min-height: 520px;
+      min-height: 24rem;
     }
   }
   
@@ -673,6 +673,101 @@
   .event-card-image[alt*="Rap Arena"] {
     object-fit: cover;
     object-position: center top;
+  }
+  
+  /* Reduce Rap Arena poster height specifically in event cards only */
+  .card .rap-arena-container {
+    max-height: 12rem !important; /* 192px - Reduced height for event cards */
+  }
+  
+  @media (min-width: 640px) {
+    .card .rap-arena-container {
+      max-height: 14rem !important; /* 224px - Reduced height for event cards */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .card .rap-arena-container {
+      max-height: 16rem !important; /* 256px - Reduced height for event cards */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .card .rap-arena-container {
+      max-height: 18rem !important; /* 288px - Reduced height for event cards */
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .card .rap-arena-container {
+      max-height: 20rem !important; /* 320px - Reduced height for event cards */
+    }
+  }
+  
+  /* Full-size Rap Arena container for details page */
+  .rap-arena-details-container {
+    aspect-ratio: 3/4;
+    width: 100%;
+    max-width: 100%;
+    background-color: #f8fafc;
+    height: 24rem; /* 384px - Good size for details page */
+  }
+  
+  @media (min-width: 640px) {
+    .rap-arena-details-container {
+      height: 28rem; /* 448px */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .rap-arena-details-container {
+      height: 32rem; /* 512px */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .rap-arena-details-container {
+      height: 36rem; /* 576px */
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .rap-arena-details-container {
+      height: 40rem; /* 640px */
+    }
+  }
+  
+  /* Full-size Rap Arena container for home page */
+  .rap-arena-home-container {
+    aspect-ratio: 3/4;
+    width: 100%;
+    max-width: 100%;
+    background-color: #f8fafc;
+    height: 20rem; /* 320px - Good size for home page */
+  }
+  
+  @media (min-width: 640px) {
+    .rap-arena-home-container {
+      height: 24rem; /* 384px */
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .rap-arena-home-container {
+      height: 28rem; /* 448px */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .rap-arena-home-container {
+      height: 32rem; /* 512px */
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .rap-arena-home-container {
+      height: 36rem; /* 576px */
+    }
   }
   
   /* Mobile-specific Rap Arena poster adjustments for cards */
