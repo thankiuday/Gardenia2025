@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import S3_ASSETS from '../config/s3-assets';
 
 const WelcomeModal = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const closeModal = () => {
     setIsOpen(false);
@@ -60,20 +62,126 @@ const WelcomeModal = () => {
 
         {/* Content */}
         <div className="p-4 sm:p-6 lg:p-8 flex-1 overflow-y-auto">
-          {/* YouTube Video Section */}
+          {/* Gardenia 2K25 - The Rap Arena Special Event */}
           <div className="mb-6 sm:mb-8">
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
-              Previous Year Highlights
+              🎤 Special Event - Gardenia 2K25: The Rap Arena
             </h3>
-            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-lg"
-                src="https://www.youtube.com/embed/vVq0Q2Y6WzE"
-                title="Gardenia Previous Year Highlights"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+            <div className="bg-gradient-to-br from-purple-50 via-pink-50 to-red-50 rounded-xl p-6 border-2 border-purple-200">
+              {/* Event Poster */}
+              <div className="mb-6">
+                {imageLoading && (
+                  <div className="w-full h-64 sm:h-80 bg-gradient-to-r from-purple-200 to-pink-200 rounded-lg shadow-lg border-2 border-purple-200 animate-pulse flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-purple-300 rounded-full mx-auto mb-4 animate-pulse"></div>
+                      <div className="h-4 bg-purple-300 rounded w-32 mx-auto mb-2 animate-pulse"></div>
+                      <div className="h-3 bg-purple-300 rounded w-24 mx-auto animate-pulse"></div>
+                    </div>
+                  </div>
+                )}
+                <img
+                  src={S3_ASSETS.posters.rapArena}
+                  alt="Gardenia 2K25 - The Rap Arena Poster"
+                  className={`w-full h-auto rounded-lg shadow-lg border-2 border-purple-200 transition-opacity duration-300 ${imageLoading ? 'opacity-0 absolute' : 'opacity-100'}`}
+                  onLoad={() => setImageLoading(false)}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    setImageLoading(false);
+                  }}
+                />
+              </div>
+              
+              <div className="text-center mb-6">
+                <h4 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                  Garden City University Presents
+                </h4>
+                <h5 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+                  GARDENIA 2K25 – The Rap Arena
+                </h5>
+                <p className="text-lg font-semibold text-gray-700 mb-2">
+                  The Signature Showdown of Gardenia
+                </p>
+                <p className="text-base text-gray-600 mb-4">
+                  An elemental clash of words, rhythm, and power.
+                </p>
+              </div>
+              
+              {/* Prize Information */}
+              <div className="bg-white rounded-lg p-4 mb-4 border border-purple-200">
+                <h6 className="text-lg font-bold text-gray-900 mb-3 text-center">🏆 Prizes Worth ₹50,000</h6>
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div className="bg-yellow-100 rounded-lg p-3">
+                    <div className="text-lg font-bold text-yellow-800">1st</div>
+                    <div className="text-sm font-semibold text-yellow-700">₹25,000</div>
+                  </div>
+                  <div className="bg-gray-100 rounded-lg p-3">
+                    <div className="text-lg font-bold text-gray-800">2nd</div>
+                    <div className="text-sm font-semibold text-gray-700">₹15,000</div>
+                  </div>
+                  <div className="bg-orange-100 rounded-lg p-3">
+                    <div className="text-lg font-bold text-orange-800">3rd</div>
+                    <div className="text-sm font-semibold text-orange-700">₹10,000</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Special Guest */}
+              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-4 mb-4 border border-purple-200">
+                <h6 className="text-lg font-bold text-gray-900 mb-2 text-center">🌟 Special Guest</h6>
+                <p className="text-center font-semibold text-purple-800 text-lg">GUBBI – The Face of Kannada Rap</p>
+              </div>
+              
+              {/* Event Details */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                <div className="bg-white rounded-lg p-3 border border-purple-200">
+                  <div className="text-sm font-semibold text-gray-600 mb-1">📅 Date</div>
+                  <div className="font-bold text-gray-900">16th October 2025</div>
+                </div>
+                <div className="bg-white rounded-lg p-3 border border-purple-200">
+                  <div className="text-sm font-semibold text-gray-600 mb-1">📍 Venue</div>
+                  <div className="font-bold text-gray-900">Garden City University, OMR Campus</div>
+                </div>
+              </div>
+              
+              {/* Rules Section */}
+              <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg p-4 mb-4 border-2 border-gray-200">
+                <h6 className="text-lg font-bold text-gray-900 mb-3 text-center">📋 Competition Rules</h6>
+                <div className="space-y-3 text-sm">
+                  <div className="bg-white rounded-lg p-3 border border-gray-200">
+                    <p className="font-semibold text-red-600 mb-1">⚠️ Important Guidelines:</p>
+                    <ul className="text-gray-700 space-y-1">
+                      <li>• No profanity or diss on opponent's family/relatives</li>
+                      <li>• Direct disqualification for inappropriate content</li>
+                      <li>• Respect Garden City University decorum</li>
+                      <li>• Judge's decision is final</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-white rounded-lg p-3 border border-gray-200">
+                    <p className="font-semibold text-purple-600 mb-2">🎤 4 Rounds Competition:</p>
+                    <div className="space-y-2 text-xs">
+                      <div><strong>Round 1:</strong> Showcase (90s max) - Original/Cover</div>
+                      <div><strong>Round 2:</strong> Freestyle (60s max) - Random beat</div>
+                      <div><strong>Round 3:</strong> Rap Battle (60s each) - 2 rounds</div>
+                      <div><strong>Round 4:</strong> Final Battle (45s each) - 2 rounds</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="mt-4 text-center">
+                <p className="text-lg font-bold text-purple-800 mb-2">
+                  Gardenia- The Rap Arena – Claim the Crown. Own the Sound.
+                </p>
+            <Link
+              to="/register/68dd4dce04b7580301ca3537"
+              onClick={closeModal}
+              className="inline-block px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-200 hover:scale-105"
+            >
+              🎵 Register Now! 🎵
+            </Link>
+              </div>
             </div>
           </div>
 

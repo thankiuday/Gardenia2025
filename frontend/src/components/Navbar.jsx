@@ -110,7 +110,7 @@ const Navbar = () => {
               {/* Social Media Links */}
               <div className="flex items-center justify-center space-x-3">
                 <a 
-                  href="https://www.instagram.com/gardencityuniversity" 
+                  href="https://www.instagram.com/garden_city_university?igsh=MWl4eTZ6Y3J6YmZtOQ==" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="group p-2 text-[#E4405F] hover:text-white transition-all duration-200 hover:bg-gradient-to-br hover:from-[#E4405F] hover:to-[#C13584] rounded-lg hover:scale-110 shadow-sm"
@@ -146,7 +146,7 @@ const Navbar = () => {
                 </a>
                 
                 <a 
-                  href="https://www.linkedin.com/company/gardencityuniversity" 
+                  href="https://www.linkedin.com/school/garden-city-college-of-sc-and-mgt.-studies/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="group p-2 text-[#0A66C2] hover:text-white transition-all duration-200 hover:bg-[#0A66C2] rounded-lg hover:scale-110 shadow-sm"
@@ -213,7 +213,7 @@ const Navbar = () => {
                     {/* Mobile Social Links */}
                     <div className="flex items-center justify-center space-x-2">
                       <a 
-                        href="https://www.instagram.com/gardencityuniversity" 
+                        href="https://www.instagram.com/garden_city_university?igsh=MWl4eTZ6Y3J6YmZtOQ==" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="group p-3 text-[#E4405F] hover:text-white transition-all duration-200 hover:bg-gradient-to-br hover:from-[#E4405F] hover:to-[#C13584] rounded-lg hover:scale-105 shadow-sm"
@@ -249,7 +249,7 @@ const Navbar = () => {
                       </a>
                       
                       <a 
-                        href="https://www.linkedin.com/company/gardencityuniversity" 
+                        href="https://www.linkedin.com/school/garden-city-college-of-sc-and-mgt.-studies/" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="group p-3 text-[#0A66C2] hover:text-white transition-all duration-200 hover:bg-[#0A66C2] rounded-lg hover:scale-105 shadow-sm"

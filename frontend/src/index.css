@@ -196,6 +196,20 @@
   
   .card {
     @apply bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300;
+    min-height: 450px; /* Base minimum height */
+  }
+  
+  /* Responsive card heights */
+  @media (min-width: 640px) {
+    .card {
+      min-height: 480px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .card {
+      min-height: 520px;
+    }
   }
   
   .input-field {
@@ -232,7 +246,8 @@
   }
   
   .grid-responsive {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8;
+    align-items: stretch; /* Ensure all grid items have equal height */
   }
   
   .text-responsive {
@@ -571,6 +586,7 @@
     /* Improve mobile grid spacing */
     .grid-responsive {
       gap: 1rem;
+      grid-template-columns: 1fr;
     }
   }
   
@@ -649,8 +665,92 @@
   .event-card-image {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     background-color: #f3f4f6; /* Light gray background */
+  }
+  
+  /* Special handling for Rap Arena poster in cards - use cover for better card appearance */
+  .event-card-image[alt*="Rap Arena"] {
+    object-fit: cover;
+    object-position: center top;
+  }
+  
+  /* Mobile-specific Rap Arena poster adjustments for cards */
+  @media (max-width: 640px) {
+    .event-card-image[alt*="Rap Arena"] {
+      object-fit: cover;
+      object-position: center top;
+    }
+  }
+  
+  /* Special Rap Arena container with proper aspect ratio */
+  .rap-arena-container {
+    aspect-ratio: 3/4; /* Portrait aspect ratio for Rap Arena poster */
+    width: 100%;
+    max-width: 100%;
+    background-color: #f8fafc; /* Light background for better contrast */
+  }
+  
+  /* Responsive Rap Arena container heights */
+  .rap-arena-container-sm {
+    aspect-ratio: 3/4;
+    max-height: 20rem; /* 320px */
+  }
+  
+  .rap-arena-container-md {
+    aspect-ratio: 3/4;
+    max-height: 24rem; /* 384px */
+  }
+  
+  .rap-arena-container-lg {
+    aspect-ratio: 3/4;
+    max-height: 28rem; /* 448px */
+  }
+  
+  .rap-arena-container-xl {
+    aspect-ratio: 3/4;
+    max-height: 32rem; /* 512px */
+  }
+  
+  .rap-arena-container-2xl {
+    aspect-ratio: 3/4;
+    max-height: 40rem; /* 640px for large desktop */
+  }
+  
+  /* Ensure Rap Arena containers work well on all devices */
+  @media (max-width: 640px) {
+    .rap-arena-container {
+      aspect-ratio: 3/4;
+      max-height: 18rem; /* 288px on mobile */
+    }
+  }
+  
+  @media (min-width: 641px) and (max-width: 768px) {
+    .rap-arena-container {
+      aspect-ratio: 3/4;
+      max-height: 20rem; /* 320px on small tablets */
+    }
+  }
+  
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .rap-arena-container {
+      aspect-ratio: 3/4;
+      max-height: 24rem; /* 384px on tablets */
+    }
+  }
+  
+  @media (min-width: 1025px) and (max-width: 1280px) {
+    .rap-arena-container {
+      aspect-ratio: 3/4;
+      max-height: 32rem; /* 512px on desktop */
+    }
+  }
+  
+  @media (min-width: 1281px) {
+    .rap-arena-container {
+      aspect-ratio: 3/4;
+      max-height: 40rem; /* 640px on large desktop */
+    }
   }
   
   /* Event details page image improvements */
@@ -663,6 +763,31 @@
   
   .event-details-image:hover {
     transform: scale(1.02);
+  }
+  
+  /* Special handling for Rap Arena poster in details page - use contain for full visibility */
+  .event-details-image[alt*="Rap Arena"] {
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  /* Special handling for Rap Arena poster in Home page - use contain for full visibility */
+  .rap-arena-container img[alt*="Rap Arena"] {
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  /* Mobile-specific Rap Arena poster adjustments for details page */
+  @media (max-width: 640px) {
+    .event-details-image[alt*="Rap Arena"] {
+      object-fit: contain;
+      object-position: center;
+    }
+    
+    .rap-arena-container img[alt*="Rap Arena"] {
+      object-fit: contain;
+      object-position: center;
+    }
   }
   
   /* Logo image improvements */

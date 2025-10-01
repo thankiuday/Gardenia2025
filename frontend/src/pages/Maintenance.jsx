@@ -118,7 +118,7 @@ const Maintenance = () => {
               <p className="text-sm text-gray-500 mb-4">Follow us for updates</p>
               <div className="flex justify-center space-x-4">
                 <a
-                  href="https://www.instagram.com/gardencityuniversity"
+                  href="https://www.instagram.com/garden_city_university?igsh=MWl4eTZ6Y3J6YmZtOQ=="
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 bg-gradient-to-br from-[#E4405F] to-[#C13584] rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-200"

@@ -284,29 +284,29 @@ const RulesAndRegulations = () => {
         </div>
         
         {filteredContent.map((item, index) => (
-          <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100">
             <div className="flex items-start justify-between mb-3">
-              <div className="flex items-center">
-                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+              <div className="flex items-start sm:items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0">
                   {index + 1}
                 </span>
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-800">{item.title}</h4>
-                  <span className="text-sm text-primary-600 bg-primary-50 px-2 py-1 rounded-full">
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-base sm:text-lg font-semibold text-gray-800 leading-tight">{item.title}</h4>
+                  <span className="inline-block text-xs sm:text-sm text-primary-600 bg-primary-50 px-2 py-1 rounded-full mt-1">
                     {item.sectionLabel}
                   </span>
                 </div>
               </div>
             </div>
             {item.content && (
-              <p className="text-gray-700 leading-relaxed ml-11">{item.content}</p>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed ml-8 sm:ml-11">{item.content}</p>
             )}
             {item.subItems && (
-              <ul className="mt-4 space-y-2 ml-11">
+              <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2 ml-8 sm:ml-11">
                 {item.subItems.map((subItem, idx) => (
                   <li key={idx} className="flex items-start">
-                    <span className="text-primary-500 mr-2">•</span>
-                    <span className="text-gray-700">{subItem}</span>
+                    <span className="text-primary-500 mr-2 text-xs sm:text-sm">•</span>
+                    <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{subItem}</span>
                   </li>
                 ))}
               </ul>
@@ -328,20 +328,20 @@ const RulesAndRegulations = () => {
       switch (category) {
         case 'General':
           return generalRules.map((rule, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <h3 className="text-xl font-semibold text-primary-700 mb-3 flex items-center">
-                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100">
+              <h3 className="text-lg sm:text-xl font-semibold text-primary-700 mb-3 flex items-start sm:items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0">
                   {index + 1}
                 </span>
-                {rule.title}
+                <span className="leading-tight">{rule.title}</span>
               </h3>
-              <p className="text-gray-700 leading-relaxed">{rule.content}</p>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed ml-8 sm:ml-11">{rule.content}</p>
               {rule.subItems && (
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2 ml-8 sm:ml-11">
                   {rule.subItems.map((item, idx) => (
                     <li key={idx} className="flex items-start">
-                      <span className="text-primary-500 mr-2">•</span>
-                      <span className="text-gray-700">{item}</span>
+                      <span className="text-primary-500 mr-2 text-xs sm:text-sm">•</span>
+                      <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -351,68 +351,68 @@ const RulesAndRegulations = () => {
         
         case 'Performance':
           return performanceGuidelines.map((guideline, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100">
               <div className="flex items-start">
-                <span className="bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                <span className="bg-green-100 text-green-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-4 flex-shrink-0">
                   {index + 1}
                 </span>
-                <p className="text-gray-700 leading-relaxed">{guideline}</p>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{guideline}</p>
               </div>
             </div>
           ));
         
         case 'Evaluation':
           return scoringCriteria.map((criterion, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100">
               <div className="flex items-center">
-                <span className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">
+                <span className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-4 flex-shrink-0">
                   {index + 1}
                 </span>
-                <h3 className="text-lg font-semibold text-gray-800">{criterion}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 leading-tight">{criterion}</h3>
               </div>
             </div>
           ));
         
         case 'Penalties':
           return disqualificationGrounds.map((ground, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-red-100">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-red-100">
               <div className="flex items-start">
-                <span className="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                <span className="bg-red-100 text-red-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-4 flex-shrink-0">
                   {index + 1}
                 </span>
-                <p className="text-gray-700 leading-relaxed">{ground}</p>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{ground}</p>
               </div>
             </div>
           ));
         
         case 'Sports':
           return sportsRules.map((rule, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100">
               <div className="flex items-start">
-                <span className="bg-orange-100 text-orange-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 flex-shrink-0">
+                <span className="bg-orange-100 text-orange-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-4 flex-shrink-0">
                   {index + 1}
                 </span>
-                <p className="text-gray-700 leading-relaxed">{rule}</p>
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{rule}</p>
               </div>
             </div>
           ));
         
         case 'Conduct':
           return codeOfConduct.map((rule, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <h3 className="text-xl font-semibold text-primary-700 mb-3 flex items-center">
-                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-gray-100">
+              <h3 className="text-lg sm:text-xl font-semibold text-primary-700 mb-3 flex items-start sm:items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0">
                   {index + 1}
                 </span>
-                {rule.title}
+                <span className="leading-tight">{rule.title}</span>
               </h3>
-              <p className="text-gray-700 leading-relaxed">{rule.content}</p>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed ml-8 sm:ml-11">{rule.content}</p>
               {rule.subItems && (
-                <ul className="mt-4 space-y-2">
+                <ul className="mt-3 sm:mt-4 space-y-1 sm:space-y-2 ml-8 sm:ml-11">
                   {rule.subItems.map((item, idx) => (
                     <li key={idx} className="flex items-start">
-                      <span className="text-primary-500 mr-2">•</span>
-                      <span className="text-gray-700">{item}</span>
+                      <span className="text-primary-500 mr-2 text-xs sm:text-sm">•</span>
+                      <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -422,14 +422,14 @@ const RulesAndRegulations = () => {
         
         case 'Legal':
           return disclaimer.map((rule, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-red-100">
-              <h3 className="text-xl font-semibold text-red-700 mb-3 flex items-center">
-                <span className="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+            <div key={index} className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-red-100">
+              <h3 className="text-lg sm:text-xl font-semibold text-red-700 mb-3 flex items-start sm:items-center">
+                <span className="bg-red-100 text-red-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0">
                   {index + 1}
                 </span>
-                {rule.title}
+                <span className="leading-tight">{rule.title}</span>
               </h3>
-              <p className="text-gray-700 leading-relaxed">{rule.content}</p>
+              <p className="text-sm sm:text-base text-gray-700 leading-relaxed ml-8 sm:ml-11">{rule.content}</p>
             </div>
           ));
         
@@ -441,16 +441,16 @@ const RulesAndRegulations = () => {
     if (selectedCategory === 'All') {
       // Show all content organized by category
       return (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {categories.filter(cat => cat.key !== 'All').map(category => (
             <div key={category.key}>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <span className="bg-primary-100 text-primary-600 rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4 flex items-center">
+                <span className="bg-primary-100 text-primary-600 rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs sm:text-sm font-bold mr-2 sm:mr-3 flex-shrink-0">
                   {sections.find(s => s.category === category.key)?.icon || '📋'}
                 </span>
-                {category.label}
+                <span className="leading-tight">{category.label}</span>
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {getContentForCategory(category.key)}
               </div>
             </div>
@@ -460,7 +460,7 @@ const RulesAndRegulations = () => {
     } else {
       // Show content for selected category
       return (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {getContentForCategory(selectedCategory)}
         </div>
       );
@@ -468,31 +468,31 @@ const RulesAndRegulations = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-4 sm:py-8 lg:py-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 lg:mb-6 leading-tight px-2">
             Gardenia 2025 – General Rules & Regulations
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-2 leading-relaxed">
             Comprehensive guidelines, code of conduct, and regulations for all participants
           </p>
-          <div className="mt-6 flex justify-center space-x-4 text-sm text-gray-500">
-            <span className="bg-primary-50 text-primary-700 px-3 py-1 rounded-full">General Rules</span>
-            <span className="bg-green-50 text-green-700 px-3 py-1 rounded-full">Performance Guidelines</span>
-            <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full">Code of Conduct</span>
-            <span className="bg-red-50 text-red-700 px-3 py-1 rounded-full">Legal Disclaimer</span>
+          <div className="mt-4 sm:mt-6 flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 text-xs sm:text-sm text-gray-500">
+            <span className="bg-primary-50 text-primary-700 px-2 sm:px-3 py-1 rounded-full">General Rules</span>
+            <span className="bg-green-50 text-green-700 px-2 sm:px-3 py-1 rounded-full">Performance Guidelines</span>
+            <span className="bg-blue-50 text-blue-700 px-2 sm:px-3 py-1 rounded-full">Code of Conduct</span>
+            <span className="bg-red-50 text-red-700 px-2 sm:px-3 py-1 rounded-full">Legal Disclaimer</span>
           </div>
         </div>
 
         {/* Search and Filter Controls */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
             {/* Search Bar */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
@@ -501,14 +501,14 @@ const RulesAndRegulations = () => {
                 placeholder="Search rules, guidelines, criteria..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="block w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -520,7 +520,7 @@ const RulesAndRegulations = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors appearance-none bg-white"
+                className="block w-full px-3 py-2.5 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors appearance-none bg-white"
               >
                 {categories.map((category) => (
                   <option key={category.key} value={category.key}>
@@ -529,19 +529,18 @@ const RulesAndRegulations = () => {
                 ))}
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
             </div>
           </div>
-
         </div>
 
         {/* Content */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 lg:p-8">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 leading-tight">
               {searchTerm !== '' 
                 ? `Search Results for "${searchTerm}"`
                 : selectedCategory === 'All' 
@@ -549,9 +548,9 @@ const RulesAndRegulations = () => {
                   : `${selectedCategory} Rules & Guidelines`
               }
             </h2>
-            <div className="w-20 h-1 bg-primary-600 rounded-full"></div>
+            <div className="w-16 sm:w-20 h-1 bg-primary-600 rounded-full"></div>
             {searchTerm !== '' && (
-              <p className="text-gray-600 mt-2">
+              <p className="text-sm sm:text-base text-gray-600 mt-2">
                 Found {filteredContent.length} result{filteredContent.length !== 1 ? 's' : ''} across all sections
               </p>
             )}
@@ -561,30 +560,30 @@ const RulesAndRegulations = () => {
         </div>
 
         {/* Point of Contact - Sports Department */}
-        <div className="mt-12 bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-8 text-white">
+        <div className="mt-8 sm:mt-12 bg-gradient-to-r from-green-600 to-green-800 rounded-xl p-4 sm:p-6 lg:p-8 text-white">
           <div className="flex items-start">
-            <div className="bg-white/20 rounded-full p-3 mr-4 flex-shrink-0">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <div className="bg-white/20 rounded-full p-2 sm:p-3 mr-3 sm:mr-4 flex-shrink-0">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
               </svg>
             </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold mb-4">Point of Contact - Sports Department</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-white/10 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">Dr Shinde</h4>
-                  <p className="text-white/90">8618690169</p>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 leading-tight">Point of Contact - Sports Department</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                <div className="bg-white/10 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">Dr Shinde</h4>
+                  <p className="text-white/90 text-sm sm:text-base">8618690169</p>
                 </div>
-                <div className="bg-white/10 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">Faroq Siddiqi</h4>
-                  <p className="text-white/90">9964159772</p>
+                <div className="bg-white/10 rounded-lg p-3 sm:p-4">
+                  <h4 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">Faroq Siddiqi</h4>
+                  <p className="text-white/90 text-sm sm:text-base">9964159772</p>
                 </div>
-                <div className="bg-white/10 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">M Karthikeyan</h4>
-                  <p className="text-white/90">8951510374</p>
+                <div className="bg-white/10 rounded-lg p-3 sm:p-4 sm:col-span-2 lg:col-span-1">
+                  <h4 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">M Karthikeyan</h4>
+                  <p className="text-white/90 text-sm sm:text-base">8951510374</p>
                 </div>
               </div>
-              <p className="text-white/90 mt-4 text-sm">
+              <p className="text-white/90 mt-3 sm:mt-4 text-xs sm:text-sm leading-relaxed">
                 For sports-related queries, registration, and clarifications, please contact the Sports Department.
               </p>
             </div>
@@ -592,16 +591,16 @@ const RulesAndRegulations = () => {
         </div>
 
         {/* Important Notice */}
-        <div className="mt-8 bg-gradient-to-r from-primary-600 to-primary-800 rounded-xl p-8 text-white">
+        <div className="mt-6 sm:mt-8 bg-gradient-to-r from-primary-600 to-primary-800 rounded-xl p-4 sm:p-6 lg:p-8 text-white">
           <div className="flex items-start">
-            <div className="bg-white/20 rounded-full p-3 mr-4 flex-shrink-0">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <div className="bg-white/20 rounded-full p-2 sm:p-3 mr-3 sm:mr-4 flex-shrink-0">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
             </div>
-            <div>
-              <h3 className="text-xl font-bold mb-2">Important Notice</h3>
-              <p className="text-white/90 leading-relaxed">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 leading-tight">Important Notice</h3>
+              <p className="text-white/90 text-sm sm:text-base leading-relaxed">
                 All participants are required to read and understand these rules and regulations before participating in any event. 
                 Violation of any rule may result in disqualification. For any clarifications, please contact the event coordinators.
               </p>

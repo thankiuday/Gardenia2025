@@ -22,6 +22,7 @@ const EventDetails = () => {
           return;
         }
         
+        
         const response = await axios.get(`${API_ENDPOINTS.EVENTS}/${id}`);
         if (response.data.success) {
           // Map customId to id for frontend compatibility
@@ -137,9 +138,13 @@ const EventDetails = () => {
 
           {/* Event Image */}
           <div className="mb-6 sm:mb-8">
-            <div className="relative w-full h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[28rem] bg-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg group">
+            <div className={`relative w-full bg-gray-200 rounded-lg sm:rounded-xl overflow-hidden shadow-lg group ${
+              event.title === 'Gardenia 2K25: The Rap Arena' 
+                ? 'rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg lg:rap-arena-container-xl' 
+                : 'h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[28rem]'
+            }`}>
               <ImageLoader 
-                src={S3_ASSETS.events.getEventImage(event.title)} 
+                src={event.title === 'Gardenia 2K25: The Rap Arena' ? S3_ASSETS.posters.rapArena : S3_ASSETS.events.getEventImage(event.title)} 
                 alt={event.title}
                 className="w-full h-full event-details-image object-cover"
                 fallbackSrc={S3_ASSETS.events.default}
@@ -177,14 +182,23 @@ const EventDetails = () => {
             <div>
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Event Dates</h3>
               <div className="bg-gray-50 rounded-lg p-3 sm:p-4 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
-                  <span className="font-medium text-gray-700 text-sm sm:text-base">GCU Students:</span>
-                  <span className="text-gray-900 text-sm sm:text-base font-medium">{event.dates.inhouse}</span>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
-                  <span className="font-medium text-gray-700 text-sm sm:text-base">Outside Students:</span>
-                  <span className="text-gray-900 text-sm sm:text-base font-medium">{event.dates.outside}</span>
-                </div>
+                {event.title === 'Gardenia 2K25: The Rap Arena' ? (
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                    <span className="font-medium text-gray-700 text-sm sm:text-base">Event Date:</span>
+                    <span className="text-gray-900 text-sm sm:text-base font-medium">16th October 2025</span>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base">GCU Students:</span>
+                      <span className="text-gray-900 text-sm sm:text-base font-medium">{event.dates.inhouse}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base">External Participants:</span>
+                      <span className="text-gray-900 text-sm sm:text-base font-medium">{event.dates.outside}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -205,31 +219,33 @@ const EventDetails = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="mb-6 sm:mb-8">
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Contact Information</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              {event.contacts.map((contact, index) => (
-                <div key={index} className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 sm:mb-3 gap-2">
-                    <h4 className="font-medium text-gray-900 text-sm sm:text-base">{contact.name}</h4>
-                    <span className="px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded self-start sm:self-auto">
-                      {contact.role}
-                    </span>
-                  </div>
-                  {contact.phone && (
-                    <div className="flex items-start text-gray-600">
-                      <svg className="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      <a href={`tel:${contact.phone}`} className="hover:text-emerald-600 text-sm sm:text-base transition-colors duration-200 leading-tight">
-                        {contact.phone}
-                      </a>
+          {event.title !== 'Gardenia 2K25: The Rap Arena' && (
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Contact Information</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                {event.contacts.map((contact, index) => (
+                  <div key={index} className="bg-gray-50 rounded-lg p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 sm:mb-3 gap-2">
+                      <h4 className="font-medium text-gray-900 text-sm sm:text-base">{contact.name}</h4>
+                      <span className="px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-medium rounded self-start sm:self-auto">
+                        {contact.role}
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
+                    {contact.phone && (
+                      <div className="flex items-start text-gray-600">
+                        <svg className="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        <a href={`tel:${contact.phone}`} className="hover:text-emerald-600 text-sm sm:text-base transition-colors duration-200 leading-tight">
+                          {contact.phone}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-gray-200">

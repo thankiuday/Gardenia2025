@@ -121,7 +121,7 @@ This will start:
 1. **Student Type Selection**: User selects if they're a GCU student or from outside
 2. **Event Date Assignment**: 
    - GCU students: 8th October 2025
-   - Outside students: 16-17 October 2025
+   - External Participants: 16-17 October 2025
 3. **Form Completion**: Fill in leader/participant details
 4. **Team Management**: For group events, add team members dynamically
 5. **Registration Submission**: Creates registration with unique ID

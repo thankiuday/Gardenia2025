@@ -156,11 +156,11 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* External Students */}
+          {/* External Participants */}
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">External Students</p>
+                <p className="text-sm font-medium text-gray-600 mb-1">External Participants</p>
                 <p className="text-3xl font-bold text-gray-900">{stats?.outsideRegistrations || 0}</p>
                 <p className="text-xs text-emerald-600 mt-1">Other Institutions</p>
               </div>
@@ -230,7 +230,7 @@ const AdminDashboard = () => {
             <div className="p-6 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">Recent Registrations</h3>
-                <a href="/admin/registrations" className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+                <a href="#/admin/registrations" className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
                   View All
                 </a>
               </div>
@@ -271,7 +271,7 @@ const AdminDashboard = () => {
             <div className="p-6 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">Recent Contacts</h3>
-                <a href="/admin/contacts" className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
+                <a href="#/admin/contacts" className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">
                   View All
                 </a>
               </div>
@@ -307,7 +307,7 @@ const AdminDashboard = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <a
-              href="/admin/registrations"
+              href="#/admin/registrations"
               className="flex items-center p-4 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors group"
             >
               <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-emerald-200 transition-colors">
@@ -322,7 +322,7 @@ const AdminDashboard = () => {
             </a>
 
             <a
-              href="/admin/contacts"
+              href="#/admin/contacts"
               className="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors group"
             >
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-blue-200 transition-colors">
@@ -337,7 +337,7 @@ const AdminDashboard = () => {
             </a>
 
             <a
-              href="/scanner"
+              href="#/scanner"
               className="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors group"
             >
               <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-purple-200 transition-colors">

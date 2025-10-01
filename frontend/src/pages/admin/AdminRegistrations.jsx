@@ -158,7 +158,7 @@ const AdminRegistrations = () => {
           'Event Type': registration.eventId?.type || 'N/A',
           'Registration Date': new Date(registration.createdAt).toLocaleDateString(),
           'Registration Time': new Date(registration.createdAt).toLocaleTimeString(),
-          'Student Type': registration.isGardenCityStudent ? 'GCU Student' : 'External Student',
+          'Student Type': registration.isGardenCityStudent ? 'GCU Student' : 'External Participant',
           'Team Size': registration.teamMembers ? registration.teamMembers.length + 1 : 1,
           'Leader Name': registration.leader.name,
           'Leader Email': registration.leader.email,
@@ -334,7 +334,7 @@ const AdminRegistrations = () => {
           <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">External Students</p>
+                <p className="text-sm font-medium text-gray-600">External Participants</p>
                 {statsLoading ? (
                   <div className="animate-pulse">
                     <div className="h-8 w-16 bg-gray-200 rounded"></div>
@@ -408,7 +408,7 @@ const AdminRegistrations = () => {
               >
                 <option value="ALL">All Types</option>
                 <option value="GCU">GCU Students</option>
-                <option value="EXTERNAL">External Students</option>
+                <option value="EXTERNAL">External Participants</option>
               </select>
             </div>
           </div>
@@ -607,7 +607,7 @@ const AdminRegistrations = () => {
                             ? 'bg-emerald-100 text-emerald-800' 
                             : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {selectedRegistration.isGardenCityStudent ? 'GCU Student' : 'External Student'}
+                          {selectedRegistration.isGardenCityStudent ? 'GCU Student' : 'External Participant'}
                         </span>
                       </div>
                       <div className="space-y-1">

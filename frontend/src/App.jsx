@@ -70,7 +70,7 @@ const AppLayout = ({ children }) => {
         </main>
         <NetworkError onRetry={() => window.location.reload()} />
         <WelcomeModal />
-        <MaintenanceToggle />
+        {/* <MaintenanceToggle /> */}
       </div>
     );
   }

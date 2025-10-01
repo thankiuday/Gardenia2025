@@ -15,6 +15,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [rapArenaImageLoading, setRapArenaImageLoading] = useState(true);
   
   // Track visitor
   useVisitorTracking('Home');
@@ -298,6 +299,213 @@ const Home = () => {
         <div className="absolute top-20 left-10 w-20 h-20 bg-green-400/15 rounded-full blur-xl"></div>
         <div className="absolute bottom-20 right-10 w-32 h-32 bg-red-400/10 rounded-full blur-2xl"></div>
         <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-primary-400/20 rounded-full blur-lg"></div>
+      </section>
+
+      {/* Gardenia 2K25 - The Rap Arena Special Event Section */}
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-purple-50 via-pink-50 to-red-50 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-purple-200/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-10 w-24 h-24 bg-pink-200/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-red-200/20 rounded-full blur-xl"></div>
+          <div className="absolute bottom-10 right-1/3 w-28 h-28 bg-purple-200/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container-responsive relative z-10">
+          <div className="max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center mb-12 sm:mb-16">
+              <div className="inline-block px-6 py-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full border-2 border-purple-200/50 mb-6 fade-in">
+                <span className="text-sm font-bold text-purple-700">🎤 Special Event</span>
+              </div>
+              
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 fade-in animate-delay-100">
+                <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 bg-clip-text text-transparent">
+                  Gardenia 2K25: The Rap Arena
+                </span>
+              </h2>
+              
+              <p className="text-lg sm:text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed fade-in animate-delay-200">
+                The Signature Showdown of Gardenia - An elemental clash of words, rhythm, and power.
+              </p>
+            </div>
+
+            {/* Main Event Card */}
+            <div className="bg-white rounded-2xl shadow-2xl border-2 border-purple-200 overflow-hidden fade-in animate-delay-300">
+              <div className="p-8 sm:p-12">
+                {/* Event Poster */}
+                <div className="mb-8">
+                  {rapArenaImageLoading && (
+                    <div className="w-full rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg lg:rap-arena-container-xl xl:rap-arena-container-2xl bg-gradient-to-r from-purple-200 to-pink-200 rounded-xl shadow-lg border-2 border-purple-200 animate-pulse flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="w-20 h-20 bg-purple-300 rounded-full mx-auto mb-4 animate-pulse"></div>
+                        <div className="h-6 bg-purple-300 rounded w-48 mx-auto mb-3 animate-pulse"></div>
+                        <div className="h-4 bg-purple-300 rounded w-32 mx-auto animate-pulse"></div>
+                      </div>
+                    </div>
+                  )}
+                  <div className={`rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg lg:rap-arena-container-xl xl:rap-arena-container-2xl rounded-xl shadow-lg border-2 border-purple-200 overflow-hidden ${rapArenaImageLoading ? 'opacity-0 absolute' : 'opacity-100'}`}>
+                    <img
+                      src={S3_ASSETS.posters.rapArena}
+                      alt="Gardenia 2K25 - The Rap Arena Poster"
+                      className="w-full h-full transition-opacity duration-500"
+                      onLoad={() => setRapArenaImageLoading(false)}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        setRapArenaImageLoading(false);
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                    Garden City University Presents
+                  </h3>
+                  <h4 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+                    GARDENIA 2K25 – The Rap Arena
+                  </h4>
+                  <p className="text-xl font-semibold text-gray-700 mb-2">
+                    The Signature Showdown of Gardenia
+                  </p>
+                  <p className="text-lg text-gray-600">
+                    An elemental clash of words, rhythm, and power.
+                  </p>
+                </div>
+                
+                {/* Prize Information */}
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 mb-8 border-2 border-yellow-200">
+                  <h5 className="text-2xl font-bold text-gray-900 mb-6 text-center">🏆 Prizes Worth ₹50,000</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="bg-yellow-100 rounded-xl p-4 text-center border-2 border-yellow-300">
+                      <div className="text-2xl font-bold text-yellow-800 mb-2">1st Place</div>
+                      <div className="text-xl font-bold text-yellow-700">₹25,000</div>
+                    </div>
+                    <div className="bg-gray-100 rounded-xl p-4 text-center border-2 border-gray-300">
+                      <div className="text-2xl font-bold text-gray-800 mb-2">2nd Place</div>
+                      <div className="text-xl font-bold text-gray-700">₹15,000</div>
+                    </div>
+                    <div className="bg-orange-100 rounded-xl p-4 text-center border-2 border-orange-300">
+                      <div className="text-2xl font-bold text-orange-800 mb-2">3rd Place</div>
+                      <div className="text-xl font-bold text-orange-700">₹10,000</div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Special Guest */}
+                <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-6 mb-8 border-2 border-purple-200">
+                  <h5 className="text-2xl font-bold text-gray-900 mb-4 text-center">🌟 Special Guest</h5>
+                  <p className="text-center font-bold text-purple-800 text-2xl">GUBBI – The Face of Kannada Rap</p>
+                </div>
+                
+                {/* Event Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-white rounded-xl p-6 border-2 border-purple-200 text-center">
+                    <div className="text-lg font-semibold text-gray-600 mb-2">📅 Date</div>
+                    <div className="text-2xl font-bold text-gray-900">16th October 2025</div>
+                  </div>
+                  <div className="bg-white rounded-xl p-6 border-2 border-purple-200 text-center">
+                    <div className="text-lg font-semibold text-gray-600 mb-2">📍 Venue</div>
+                    <div className="text-xl font-bold text-gray-900">Garden City University, OMR Campus</div>
+                  </div>
+                </div>
+                
+                {/* Competition Rules */}
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-6 mb-8 border-2 border-gray-200">
+                  <h5 className="text-2xl font-bold text-gray-900 mb-6 text-center">📋 Competition Rules</h5>
+                  
+                  {/* Important Guidelines */}
+                  <div className="bg-white rounded-lg p-4 mb-6 border-2 border-red-200">
+                    <h6 className="text-lg font-bold text-red-600 mb-3">⚠️ Important Guidelines:</h6>
+                    <ul className="text-gray-700 space-y-2">
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2">•</span>
+                        <span>No profanity or diss on opponent's family/relatives - Direct disqualification</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2">•</span>
+                        <span>Respect Garden City University decorum at all times</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-500 mr-2">•</span>
+                        <span>Judge's decision is final - No discrepancies will be encouraged</span>
+                      </li>
+                    </ul>
+                  </div>
+                  
+                  {/* 4 Rounds Competition */}
+                  <div className="bg-white rounded-lg p-4 border-2 border-purple-200">
+                    <h6 className="text-lg font-bold text-purple-600 mb-4">🎤 4 Rounds Competition:</h6>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-purple-50 rounded-lg p-3 border border-purple-200">
+                        <h6 className="font-bold text-purple-800 mb-2">Round 1: Showcase</h6>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• 90 seconds maximum</li>
+                          <li>• Original rap or cover</li>
+                          <li>• Bring your own beat (pen-drive)</li>
+                          <li>• Original content encouraged</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                        <h6 className="font-bold text-blue-800 mb-2">Round 2: Freestyle</h6>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• 60 seconds maximum</li>
+                          <li>• Random beat provided</li>
+                          <li>• Freestyle or pre-written</li>
+                          <li>• Freestyle encouraged</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                        <h6 className="font-bold text-red-800 mb-2">Round 3: Rap Battle</h6>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• 60 seconds each (2 rounds)</li>
+                          <li>• Random beat for each</li>
+                          <li>• Tie-breaker: 30s acapella</li>
+                          <li>• Head-to-head competition</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-orange-50 rounded-lg p-3 border border-orange-200">
+                        <h6 className="font-bold text-orange-800 mb-2">Round 4: Final Battle</h6>
+                        <ul className="text-sm text-gray-700 space-y-1">
+                          <li>• 45 seconds each (2 rounds)</li>
+                          <li>• Random beat for each</li>
+                          <li>• Tie-breaker: 30s with beat</li>
+                          <li>• Championship round</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Call to Action */}
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-800 mb-6">
+                    Gardenia- The Rap Arena – Claim the Crown. Own the Sound.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link 
+                      to="/register/68dd4dce04b7580301ca3537"
+                      className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg rounded-xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                      <span className="relative z-10">🎵 Register Now! 🎵</span>
+                    </Link>
+                    
+                    <Link 
+                      to="/about" 
+                      className="group relative px-8 py-4 border-2 border-purple-600 text-purple-600 font-bold text-lg rounded-xl hover:bg-purple-600 hover:text-white transition-all duration-300 hover:scale-105"
+                    >
+                      <span className="relative z-10">Learn More</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* The Essence of Gardenia 2K25 Section */}

@@ -541,8 +541,16 @@ const Registration = () => {
                   transition={{ delay: 0.3, duration: 0.4 }}
                 >
                   <p className="text-xs sm:text-sm text-gray-500">
-                    <strong>GCU Students:</strong> Event on 8th October 2025<br />
-                    <strong>External Students:</strong> Event on 16-17 October 2025
+                    {event.title === 'Gardenia 2K25: The Rap Arena' ? (
+                      <>
+                        <strong>All Participants:</strong> Event on 16th October 2025
+                      </>
+                    ) : (
+                      <>
+                        <strong>GCU Students:</strong> Event on {event.dates.inhouse}<br />
+                        <strong>External Participants:</strong> Event on {event.dates.outside}
+                      </>
+                    )}
                   </p>
                 </motion.div>
               </div>
@@ -823,7 +831,10 @@ const Registration = () => {
             <div className="bg-gray-50 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2">Event Date</h4>
               <p className="text-sm text-gray-600">
-                {isGardenCityStudent ? event.dates.inhouse : event.dates.outside}
+                {event.title === 'Gardenia 2K25: The Rap Arena' 
+                  ? '16th October 2025' 
+                  : (isGardenCityStudent ? event.dates.inhouse : event.dates.outside)
+                }
               </p>
             </div>
 

@@ -55,6 +55,10 @@ const S3_ASSETS = {
     },
     // Fallback image for events without specific images (using local for now)
     default: '/default-event.jpg'
+  },
+  // Special event posters
+  posters: {
+    rapArena: `${getS3BaseUrl()}/event-images/RapArena.jpg`
   }
 };
 

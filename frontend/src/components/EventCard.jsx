@@ -6,15 +6,23 @@ import S3_ASSETS from '../config/s3-assets';
 const EventCard = memo(({ event, index = 0 }) => {
   return (
     <div 
-      className="card hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col"
+      className={`card hover:shadow-xl transition-all duration-300 group overflow-hidden flex flex-col h-full ${
+        event.isSpecial 
+          ? 'ring-2 ring-purple-200 hover:ring-purple-300 bg-gradient-to-br from-purple-50 to-pink-50' 
+          : ''
+      }`}
       style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Event Image */}
-      <div className="relative h-48 bg-gray-200 overflow-hidden flex-shrink-0 image-container">
+      <div className={`relative bg-gray-200 overflow-hidden flex-shrink-0 image-container ${
+        event.isSpecial 
+          ? 'rap-arena-container rap-arena-container-sm sm:rap-arena-container-md md:rap-arena-container-lg' 
+          : 'h-40 sm:h-44 md:h-48'
+      }`}>
         <ImageLoader 
-          src={S3_ASSETS.events.getEventImage(event.title)} 
+          src={event.isSpecial ? S3_ASSETS.posters.rapArena : S3_ASSETS.events.getEventImage(event.title)} 
           alt={event.title}
-          className="w-full h-full group-hover:scale-105 transition-transform duration-300 event-card-image"
+          className="w-full h-full group-hover:scale-105 transition-transform duration-300 event-card-image object-cover"
           fallbackSrc={S3_ASSETS.events.default}
           lazy={true}
         />
@@ -30,15 +38,21 @@ const EventCard = memo(({ event, index = 0 }) => {
           </span>
         </div>
         <div className="absolute top-3 right-3">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-            event.category === 'Department Flagship Events' 
-              ? 'bg-emerald-100 text-emerald-800' 
-              : event.category === 'Signature Events'
-              ? 'bg-gold-100 text-gold-800'
-              : 'bg-green-100 text-green-800'
-          }`}>
-            {event.category.split(' ')[0]}
-          </span>
+          {event.isSpecial ? (
+            <span className="px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border border-purple-200">
+              🎤 Special Event
+            </span>
+          ) : (
+            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+              event.category === 'Department Flagship Events' 
+                ? 'bg-emerald-100 text-emerald-800' 
+                : event.category === 'Signature Events'
+                ? 'bg-gold-100 text-gold-800'
+                : 'bg-green-100 text-green-800'
+            }`}>
+              {event.category.split(' ')[0]}
+            </span>
+          )}
         </div>
       </div>
 
@@ -49,8 +63,31 @@ const EventCard = memo(({ event, index = 0 }) => {
           {event.title}
         </h3>
 
-        {/* Event Details - Fixed height */}
-        <div className="space-y-2 mb-6 min-h-[8rem]">
+        {/* Special Prizes Section for Rap Arena */}
+        {event.isSpecial && (
+          <div className="mb-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+            <div className="text-center">
+              <div className="text-sm font-bold text-yellow-800 mb-2">🏆 Prizes Worth ₹50,000</div>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div className="bg-yellow-100 rounded p-1">
+                  <div className="font-bold text-yellow-800">1st</div>
+                  <div className="text-yellow-700">₹25,000</div>
+                </div>
+                <div className="bg-gray-100 rounded p-1">
+                  <div className="font-bold text-gray-800">2nd</div>
+                  <div className="text-gray-700">₹15,000</div>
+                </div>
+                <div className="bg-orange-100 rounded p-1">
+                  <div className="font-bold text-orange-800">3rd</div>
+                  <div className="text-orange-700">₹10,000</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Event Details - Flexible height */}
+        <div className="space-y-2 mb-6 flex-1">
           <div className="flex items-center text-sm text-gray-600">
             <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -70,6 +107,16 @@ const EventCard = memo(({ event, index = 0 }) => {
                 : `${event.teamSize.min}-${event.teamSize.max} members`
             }</span>
           </div>
+          
+          {/* Special Guest for Rap Arena */}
+          {event.isSpecial && (
+            <div className="flex items-center text-sm text-purple-600 font-medium">
+              <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
+              <span>Special Guest: GUBBI</span>
+            </div>
+          )}
 
           <div className="flex items-center text-sm text-gray-600">
             <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +126,7 @@ const EventCard = memo(({ event, index = 0 }) => {
           </div>
 
           {/* Contact Information */}
-          {event.contacts && event.contacts.length > 0 && (
+          {event.contacts && event.contacts.length > 0 && !event.isSpecial && (
             <div className="space-y-1">
               {event.contacts.slice(0, 2).map((contact, index) => (
                 <div key={index} className="flex items-center text-sm text-gray-600">
@@ -119,7 +166,7 @@ const EventCard = memo(({ event, index = 0 }) => {
             View Details
           </Link>
           <Link
-            to={`/register/${event.id}`}
+            to={`/register/${event.isSpecial ? '68dd4dce04b7580301ca3537' : event.id}`}
             className="flex-1 btn-primary text-center text-sm sm:text-base"
           >
             Register Now

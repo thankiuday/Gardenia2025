@@ -15,6 +15,38 @@ const Events = () => {
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
 
+  // Special Rap Arena event data
+  const rapArenaEvent = {
+    id: 'rap-arena-2025',
+    customId: 'rap-arena-2025',
+    title: 'Gardenia 2K25: The Rap Arena',
+    category: 'Signature Events',
+    type: 'Individual',
+    teamSize: { min: 1, max: 1 },
+    department: 'Student Affairs',
+    club: 'Music & Arts Club',
+    time: '16th October 2025 | 10.00 AM onwards',
+    dates: {
+      inhouse: '8th October 2025',
+      outside: '16th October 2025'
+    },
+    description: 'Garden City University Presents GARDENIA 2K25 – The Rap Arena. The Signature Showdown of Gardenia. An elemental clash of words, rhythm, and power. Prizes Worth ₹50,000 (1st – ₹25,000 | 2nd – ₹15,000 | 3rd – ₹10,000). Special Guest: GUBBI – The Face of Kannada Rap. Date: 16th October 2025. Venue: Garden City University, OMR Campus. Gardenia- The Rap Arena – Claim the Crown. Own the Sound.',
+    rules: [
+      'No profanity or diss on the opponent\'s family or relative. Doing so will lead to a direct disqualification. The participants are expected to respect the decorum of Garden City University.',
+      'The judge\'s decision is final and no discrepancies by the contestant will be encouraged.',
+      'The Rap Arena competition will consist of 4 rounds:',
+      '1. Round 1: Showcase round - Each participant will have a time duration of a maximum of 90 seconds to showcase what they got. They can perform an original rap or a cover. Original is encouraged. The participant should get their own beat for this round on a pen-drive or should mail it prior to the event.',
+      '2. Round 2: Freestyle round - The participant is given a random beat and will have to perform for a maximum time duration of 60 seconds. They can either freestyle or perform a pre-written verse. Freestyle is encouraged.',
+      '3. Round 3: Rap battle - The participants are paired and will have to battle each other for 2 rounds and the time duration is 60 seconds each. A random beat will be played for each participant. If there is a tie, they will have to go for another round of 30 seconds without the beat (acapella).',
+      '4. Round 4: Final battle - The participants are paired and will have to battle each other for 2 rounds and the time duration is 45 seconds each. A random beat will be played for each participant. If there is a tie, they will have to go for another round of 30 seconds with the beat.'
+    ],
+    eligibility: 'Open to 9th, 10th, PU (11th & 12th), UG, and PG students.',
+    contacts: [
+      { name: 'Event Coordinator', phone: '9876543210', role: 'SPOC' }
+    ],
+    isSpecial: true // Flag to identify this as the special event
+  };
+
   const categories = [
     { key: 'All', label: 'All Events' },
     { key: 'Department Flagship Events', label: 'Department Flagship Events' },
@@ -64,6 +96,19 @@ const Events = () => {
       );
     }
 
+    // Always add Rap Arena event at the beginning if it matches the filters
+    const shouldShowRapArena = (
+      (selectedCategory === 'All' || selectedCategory === 'Signature Events') &&
+      (searchTerm.trim() === '' || 
+       rapArenaEvent.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       rapArenaEvent.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       rapArenaEvent.category.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+
+    if (shouldShowRapArena) {
+      return [rapArenaEvent, ...filtered];
+    }
+
     return filtered;
   }, [events, selectedCategory, searchTerm]);
 
@@ -89,7 +134,7 @@ const Events = () => {
           </div>
           
           {/* Events Grid Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid-responsive">
             <SkeletonLoader type="event-card" count={6} />
           </div>
         </div>
@@ -128,6 +173,7 @@ const Events = () => {
             Find your passion and join the excitement!
           </p>
         </div>
+
 
         {/* Mobile-Friendly Search and Filter */}
         <div className="mb-8 sm:mb-12 space-y-4">
@@ -201,7 +247,7 @@ const Events = () => {
         {/* Debug Section - Remove this after testing */}
 
         {/* Events Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid-responsive">
           {filteredEvents.map((event, index) => (
             <EventCard 
               key={event.id} 
