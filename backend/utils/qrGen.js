@@ -17,10 +17,33 @@ const generateQRCode = async (data) => {
   }
 };
 
-const generateRegistrationId = () => {
+const generateRegistrationId = async () => {
+  const Registration = require('../models/Registration');
   const year = new Date().getFullYear();
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  return `GDN${year}-${random}`;
+  let regId;
+  let isUnique = false;
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  while (!isUnique && attempts < maxAttempts) {
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    regId = `GDN${year}-${random}`;
+    
+    // Check if this ID already exists
+    const existingRegistration = await Registration.findOne({ regId });
+    if (!existingRegistration) {
+      isUnique = true;
+    }
+    attempts++;
+  }
+  
+  if (!isUnique) {
+    // Fallback: use timestamp to ensure uniqueness
+    const timestamp = Date.now().toString().slice(-6);
+    regId = `GDN${year}-${timestamp}`;
+  }
+  
+  return regId;
 };
 
 const createQRPayload = (registrationData, eventData) => {

@@ -7,6 +7,14 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
         console.log('Generating proper PDF for registration:', registrationData.registrationId);
     }
     
+    // Clear PUPPETEER_EXECUTABLE_PATH on Windows to force bundled Chromium
+    if (process.platform === 'win32') {
+      delete process.env.PUPPETEER_EXECUTABLE_PATH;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Cleared PUPPETEER_EXECUTABLE_PATH for Windows in properPdfGen');
+      }
+    }
+    
     // Create HTML content
     const htmlContent = `
     <!DOCTYPE html>
@@ -268,6 +276,27 @@ const generateProperPDF = async (registrationData, eventData, qrCodeDataURL) => 
         '--disable-gpu'
       ]
     };
+    
+    // For Windows, don't set executable path to force bundled Chromium
+    if (process.platform === 'win32') {
+      // Don't set executablePath, let it use bundled Chromium
+    } else {
+      // For Linux, try to use system Chrome if available
+      const possiblePaths = [
+        '/usr/bin/google-chrome',
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium'
+      ];
+      
+      const fs = require('fs');
+      for (const path of possiblePaths) {
+        if (fs.existsSync(path)) {
+          options.executablePath = path;
+          break;
+        }
+      }
+    }
     
     // Generate PDF
     const file = { content: htmlContent };

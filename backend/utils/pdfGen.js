@@ -6,10 +6,20 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
   let browser;
   try {
     if (process.env.NODE_ENV === 'development') {
-        console.log('Starting PDF generation for registration:', registrationData.registrationId);
+        console.log('Starting PDF generation for registration:', registrationData.regId || registrationData.registrationId);
+        console.log('Registration data keys:', Object.keys(registrationData));
+        console.log('Event data keys:', Object.keys(eventData));
     }
     
-    // Configure Puppeteer for Render environment
+    // Clear PUPPETEER_EXECUTABLE_PATH on Windows to force bundled Chromium
+    if (process.platform === 'win32') {
+      delete process.env.PUPPETEER_EXECUTABLE_PATH;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Cleared PUPPETEER_EXECUTABLE_PATH for Windows');
+      }
+    }
+    
+    // Configure Puppeteer for both Windows and Ubuntu VPS
     const launchOptions = {
       headless: 'new',
       args: [
@@ -18,12 +28,9 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         '--disable-dev-shm-usage',
         '--disable-accelerated-2d-canvas',
         '--no-first-run',
-        '--no-zygote',
-        '--single-process',
         '--disable-gpu',
         '--disable-web-security',
         '--disable-features=VizDisplayCompositor',
-        '--memory-pressure-off',
         '--disable-background-timer-throttling',
         '--disable-backgrounding-occluded-windows',
         '--disable-renderer-backgrounding',
@@ -47,58 +54,42 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
         '--disable-notifications',
         '--disable-popup-blocking'
       ],
-      timeout: 90000,
-      protocolTimeout: 90000
+      timeout: 60000,
+      protocolTimeout: 60000
     };
 
-    // Try to find Chrome executable
-    let executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    // Detect operating system and configure accordingly
+    const isWindows = process.platform === 'win32';
+    const isLinux = process.platform === 'linux';
     
-    if (!executablePath) {
-      // Try common Chrome paths on Linux
-      const possiblePaths = [
-        '/usr/bin/google-chrome',
-        '/usr/bin/google-chrome-stable',
-        '/usr/bin/chromium-browser',
-        '/usr/bin/chromium',
-        '/opt/google/chrome/chrome'
-      ];
+    let executablePath = null;
+    
+    if (isLinux) {
+      // For Linux (Ubuntu VPS), try to find Chrome
+      executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
       
-      const fs = require('fs');
-      const path = require('path');
-      const glob = require('glob');
-      
-      // First try static paths
-      for (const staticPath of possiblePaths) {
-        if (fs.existsSync(staticPath)) {
-          executablePath = staticPath;
-          break;
-        }
-      }
-      
-      // If no static path found, try to find bundled Chromium
       if (!executablePath) {
-        const chromiumPaths = [
-          '/opt/render/project/src/backend/.local-chromium/linux-*/chrome-linux*/chrome',
-          '/opt/render/project/src/backend/.local-chromium/linux-*/chrome-linux*/chrome',
-          '/opt/render/project/src/backend/node_modules/puppeteer/.local-chromium/linux-*/chrome-linux*/chrome'
+        // Try common Chrome paths on Ubuntu
+        const possiblePaths = [
+          '/usr/bin/google-chrome',
+          '/usr/bin/google-chrome-stable',
+          '/usr/bin/chromium-browser',
+          '/usr/bin/chromium',
+          '/opt/google/chrome/chrome'
         ];
         
-        for (const chromiumPath of chromiumPaths) {
-          try {
-            const matches = glob.sync(chromiumPath);
-            if (matches.length > 0 && fs.existsSync(matches[0])) {
-              executablePath = matches[0];
-              break;
-            }
-          } catch (error) {
-            if (process.env.NODE_ENV === 'development') {
-                console.log('Glob error for path:', chromiumPath, error.message);
-            }
+        const fs = require('fs');
+        
+        // First try static paths
+        for (const staticPath of possiblePaths) {
+          if (fs.existsSync(staticPath)) {
+            executablePath = staticPath;
+            break;
           }
         }
       }
     }
+    // For Windows, always use bundled Chromium (don't set executablePath)
     
     if (executablePath && require('fs').existsSync(executablePath)) {
       launchOptions.executablePath = executablePath;
@@ -107,7 +98,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
       }
     } else {
       if (process.env.NODE_ENV === 'development') {
-          console.log('No Chrome executable found, using bundled Chromium');
+          console.log('Using bundled Chromium for PDF generation');
       }
       // Don't set executablePath, let Puppeteer use its bundled Chromium
     }
@@ -126,12 +117,13 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     });
 
     // Create HTML content for the PDF
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset="utf-8">
-        <style>
+    try {
+      const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="utf-8">
+          <style>
             @page {
                 margin: 20px;
                 size: A4;
@@ -464,7 +456,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
             <div class="header-content">
                 <div class="event-title">${eventData.title}</div>
                 <div class="university-name">Garden City University</div>
-                <div class="registration-id">Registration ID: ${registrationData.regId}</div>
+                <div class="registration-id">Registration ID: ${registrationData.regId || registrationData.registrationId}</div>
             </div>
         </div>
 
@@ -514,7 +506,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 
                 <div class="detail-row">
                     <span class="detail-label">Event Date:</span>
-                    <span class="detail-value">${eventData.date || 'TBA'}</span>
+                    <span class="detail-value">${registrationData.finalEventDate || eventData.dates?.outside || 'TBA'}</span>
                 </div>
                 
                 <div class="detail-row">
@@ -524,7 +516,7 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
                 
                 <div class="detail-row">
                     <span class="detail-label">Location:</span>
-                    <span class="detail-value">${eventData.location || 'Garden City University'}</span>
+                    <span class="detail-value">Garden City University, OMR Campus</span>
                 </div>
             </div>
             
@@ -544,7 +536,11 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
     </html>
     `;
 
-    await page.setContent(htmlContent);
+      await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    } catch (htmlError) {
+      console.error('HTML template generation error:', htmlError);
+      throw new Error(`Failed to generate HTML template: ${htmlError.message}`);
+    }
 
     // Wait for images to load
     await page.waitForTimeout(2000);
@@ -572,9 +568,16 @@ const generatePDF = async (registrationData, eventData, qrCodeDataURL) => {
       preferCSSPageSize: true
     });
 
+    if (process.env.NODE_ENV === 'development') {
+      console.log('PDF buffer generated, size:', pdfBuffer.length);
+      console.log('PDF buffer type:', typeof pdfBuffer);
+      console.log('PDF buffer is Buffer:', Buffer.isBuffer(pdfBuffer));
+    }
+
     await browser.close();
     if (process.env.NODE_ENV === 'development') {
-        console.log('PDF generated successfully for registration:', registrationData.registrationId);
+        console.log('PDF generated successfully for registration:', registrationData.regId || registrationData.registrationId);
+        console.log('PDF buffer size:', pdfBuffer.length, 'bytes');
     }
     return pdfBuffer;
 

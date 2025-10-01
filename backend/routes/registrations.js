@@ -60,10 +60,13 @@ router.post('/', [
     }
 
     // Generate registration ID
-    const regId = generateRegistrationId();
+    const regId = await generateRegistrationId();
 
     // Determine event date based on student type
-    const finalEventDate = isGardenCityStudent ? event.dates.inhouse : event.dates.outside;
+    // Special handling for Rap Arena event - fixed date for all students
+    const finalEventDate = event.title === 'Gardenia 2K25: The Rap Arena' 
+      ? '16th October 2025' 
+      : (isGardenCityStudent ? event.dates.inhouse : event.dates.outside);
 
     // Create registration data
     const registrationData = {
@@ -93,8 +96,22 @@ router.post('/', [
       
       try {
         // Try custom PDF generation with Puppeteer first (your preferred method)
-        const pdfData = { ...registration.toObject(), registrationId: regId };
+        const pdfData = { 
+          ...registration.toObject(), 
+          regId: regId,
+          leader: registrationData.leader,
+          teamMembers: registrationData.teamMembers,
+          finalEventDate: registrationData.finalEventDate,
+          status: registrationData.status,
+          createdAt: new Date()
+        };
+        console.log('Generating PDF with data:', {
+          regId: pdfData.regId,
+          leaderName: pdfData.leader?.name,
+          eventTitle: event.title
+        });
         pdfBuffer = await generatePDF(pdfData, event, qrCodeDataURL);
+        console.log('PDF generated successfully, buffer size:', pdfBuffer.length);
       } catch (puppeteerError) {
         try {
           // Try proper PDF generation with html-pdf-node
