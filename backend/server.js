@@ -88,6 +88,26 @@ app.options('*', (req, res) => {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Timeout middleware for long-running operations like Excel export
+app.use((req, res, next) => {
+  // Set timeout for Excel export operations
+  if (req.path.includes('/export')) {
+    res.setTimeout(300000); // 5 minutes timeout for export operations
+  } else {
+    res.setTimeout(30000); // 30 seconds for other operations
+  }
+  next();
+});
+
+// Memory optimization middleware
+app.use((req, res, next) => {
+  // Force garbage collection before memory-intensive operations
+  if (req.path.includes('/export') && global.gc) {
+    global.gc();
+  }
+  next();
+});
+
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

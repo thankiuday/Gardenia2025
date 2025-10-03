@@ -454,19 +454,13 @@ router.get('/:id/pdf', async (req, res) => {
               // Combine all chunks into a buffer
               const pdfBuffer = Buffer.concat(chunks);
               
-              // Set headers to force download
-              res.setHeader('Content-Type', 'application/pdf');
-              res.setHeader('Content-Disposition', `attachment; filename="Gardenia2025-Ticket-${registration.regId}.pdf"`);
-              res.setHeader('Cache-Control', 'no-cache');
-              res.setHeader('Content-Length', pdfBuffer.length);
-              res.setHeader('Accept-Ranges', 'bytes');
-              
-              // Send the PDF buffer as binary data
+              // Send the PDF buffer as binary data with proper headers
               res.writeHead(200, {
-                'Content-Type': 'application/octet-stream',
+                'Content-Type': 'application/pdf',
                 'Content-Disposition': `attachment; filename="Gardenia2025-Ticket-${registration.regId}.pdf"`,
                 'Content-Length': pdfBuffer.length,
                 'Cache-Control': 'no-cache',
+                'Accept-Ranges': 'bytes',
                 'X-Content-Type-Options': 'nosniff'
               });
               res.end(pdfBuffer);

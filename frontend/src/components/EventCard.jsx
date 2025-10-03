@@ -65,21 +65,21 @@ const EventCard = memo(({ event, index = 0 }) => {
 
         {/* Special Prizes Section for Rap Arena */}
         {event.isSpecial && (
-          <div className="mb-4 p-3 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+          <div className="mb-4 p-2 sm:p-3 bg-gradient-to-r from-emerald-50 to-green-50 rounded-lg border border-emerald-200">
             <div className="text-center">
-              <div className="text-sm font-bold text-yellow-800 mb-2">🏆 Prizes Worth ₹50,000</div>
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="bg-yellow-100 rounded p-1">
-                  <div className="font-bold text-yellow-800">1st</div>
-                  <div className="text-yellow-700">₹25,000</div>
+              <div className="text-xs sm:text-sm font-bold text-emerald-800 mb-2">🏆 Prizes Worth ₹50,000</div>
+              <div className="grid grid-cols-3 gap-1 sm:gap-2 text-xs">
+                <div className="bg-yellow-100 rounded p-1 sm:p-2">
+                  <div className="font-bold text-yellow-800 text-xs sm:text-sm">1st</div>
+                  <div className="text-yellow-700 text-xs">₹25,000</div>
                 </div>
-                <div className="bg-gray-100 rounded p-1">
-                  <div className="font-bold text-gray-800">2nd</div>
-                  <div className="text-gray-700">₹15,000</div>
+                <div className="bg-gray-100 rounded p-1 sm:p-2">
+                  <div className="font-bold text-gray-800 text-xs sm:text-sm">2nd</div>
+                  <div className="text-gray-700 text-xs">₹15,000</div>
                 </div>
-                <div className="bg-orange-100 rounded p-1">
-                  <div className="font-bold text-orange-800">3rd</div>
-                  <div className="text-orange-700">₹10,000</div>
+                <div className="bg-orange-100 rounded p-1 sm:p-2">
+                  <div className="font-bold text-orange-800 text-xs sm:text-sm">3rd</div>
+                  <div className="text-orange-700 text-xs">₹10,000</div>
                 </div>
               </div>
             </div>

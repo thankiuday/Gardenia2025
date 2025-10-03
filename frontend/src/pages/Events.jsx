@@ -82,6 +82,11 @@ const Events = () => {
   const filteredEvents = useMemo(() => {
     let filtered = events;
 
+    // Remove Rap Arena event from regular events section since it has its own dedicated section
+    filtered = filtered.filter(event => 
+      event.title !== 'Gardenia 2K25: The Rap Arena'
+    );
+
     // Filter by category
     if (selectedCategory !== 'All') {
       filtered = filtered.filter(event => event.category === selectedCategory);

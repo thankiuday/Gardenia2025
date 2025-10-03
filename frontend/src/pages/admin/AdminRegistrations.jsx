@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import * as XLSX from 'xlsx';
 import { API_ENDPOINTS } from '../../config/api';
 import SkeletonLoader from '../../components/SkeletonLoader';
 import useScrollToTop from '../../hooks/useScrollToTop';
@@ -135,94 +134,79 @@ const AdminRegistrations = () => {
     document.body.classList.remove('modal-open');
   };
 
-  const exportToExcel = async () => {
+  const exportToExcel = async (studentType = 'ALL') => {
     try {
       setExportLoading(true);
       const token = localStorage.getItem('adminToken');
       
-      // Fetch all registrations for export (without pagination)
-      const response = await axios.get(`${API_ENDPOINTS.ADMIN.REGISTRATIONS}?limit=10000`, {
-        headers: { Authorization: `Bearer ${token}` }
+      // Build query parameters for export
+      const params = new URLSearchParams();
+      if (searchTerm) params.append('search', searchTerm);
+      
+      // Override filterType with the specific studentType for export
+      if (studentType !== 'ALL') {
+        params.append('studentType', studentType);
+      } else if (filterType !== 'ALL') {
+        params.append('studentType', filterType);
+      }
+      
+      // Use the new backend Excel export endpoint
+      const response = await axios.get(`${API_ENDPOINTS.ADMIN.REGISTRATIONS}/export?${params}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob' // Important: specify response type as blob for file download
       });
 
-      const allRegistrations = response.data.data.registrations || [];
+      // Create a blob URL and trigger download
+      const blob = new Blob([response.data], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+      });
+      const url = window.URL.createObjectURL(blob);
       
-      // Prepare data for Excel export
-      const excelData = [];
+      // Create temporary link element and trigger download
+      const link = document.createElement('a');
+      link.href = url;
       
-      allRegistrations.forEach((registration, index) => {
-        const baseData = {
-          'S.No': index + 1,
-          'Registration ID': registration.regId,
-          'Event Title': registration.eventId?.title || 'N/A',
-          'Event Type': registration.eventId?.type || 'N/A',
-          'Registration Date': new Date(registration.createdAt).toLocaleDateString(),
-          'Registration Time': new Date(registration.createdAt).toLocaleTimeString(),
-          'Student Type': registration.isGardenCityStudent ? 'GCU Student' : 'External Participant',
-          'Team Size': registration.teamMembers ? registration.teamMembers.length + 1 : 1,
-          'Leader Name': registration.leader.name,
-          'Leader Email': registration.leader.email,
-          'Leader Phone': registration.leader.phone,
-          'Leader Roll Number': registration.leader.registerNumber || registration.leader.collegeRegisterNumber || 'N/A'
-        };
-
-        // For individual registrations
-        if (!registration.teamMembers || registration.teamMembers.length === 0) {
-          excelData.push({
-            ...baseData,
-            'Team Member Names': '',
-            'Team Member Roll Numbers': ''
-          });
-        } else {
-          // For group registrations, combine all team members with comma separation
-          const teamMemberNames = registration.teamMembers.map(member => member.name).join(', ');
-          const teamMemberRollNumbers = registration.teamMembers.map(member => 
-            member.registerNumber || member.collegeRegisterNumber || 'N/A'
-          ).join(', ');
-
-          excelData.push({
-            ...baseData,
-            'Team Member Names': teamMemberNames,
-            'Team Member Roll Numbers': teamMemberRollNumbers
-          });
+      // Extract filename from response headers or use default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = `Gardenia2025_Registrations_${studentType === 'GCU' ? 'GCU_Students' : studentType === 'EXTERNAL' ? 'External_Students' : 'All_Students'}_${new Date().toISOString().split('T')[0]}.xlsx`;
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
         }
-      });
-
-      // Create workbook and worksheet
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.json_to_sheet(excelData);
-
-      // Set column widths for the new structure
-      const colWidths = [
-        { wch: 8 },   // S.No
-        { wch: 15 },  // Registration ID
-        { wch: 25 },  // Event Title
-        { wch: 12 },  // Event Type
-        { wch: 12 },  // Registration Date
-        { wch: 12 },  // Registration Time
-        { wch: 15 },  // Student Type
-        { wch: 10 },  // Team Size
-        { wch: 20 },  // Leader Name
-        { wch: 25 },  // Leader Email
-        { wch: 15 },  // Leader Phone
-        { wch: 15 },  // Leader Roll Number
-        { wch: 30 },  // Team Member Names (wider for comma-separated names)
-        { wch: 30 }   // Team Member Roll Numbers (wider for comma-separated roll numbers)
-      ];
-      ws['!cols'] = colWidths;
-
-      // Add worksheet to workbook
-      XLSX.utils.book_append_sheet(wb, ws, 'Registrations');
-
-      // Generate filename with current date
-      const currentDate = new Date().toISOString().split('T')[0];
-      const filename = `Gardenia2025_Registrations_${currentDate}.xlsx`;
-
-      // Save file
-      XLSX.writeFile(wb, filename);
+      }
+      
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
 
     } catch (error) {
-      alert('We couldn\'t export the data right now. Please try again in a few moments.');
+      console.error('Export error:', error);
+      
+      let errorMessage = 'We couldn\'t export the data right now. Please try again in a few moments.';
+      
+      if (error.response?.status === 413) {
+        errorMessage = 'The data is too large to export. Please try with more specific filters or contact support.';
+      } else if (error.response?.status === 408) {
+        errorMessage = 'Export timed out. Please try with a smaller dataset or contact support.';
+      } else if (error.response?.status === 503) {
+        errorMessage = 'Service temporarily unavailable. Please try again in a few moments.';
+      } else if (error.response?.status === 422) {
+        errorMessage = 'Data processing error. Some registrations may be corrupted. Please contact support.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Request timed out. Please try again with a smaller dataset.';
+      } else if (error.message.includes('Network Error')) {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      }
+      
+      alert(errorMessage);
     } finally {
       setExportLoading(false);
     }
@@ -261,25 +245,53 @@ const AdminRegistrations = () => {
                 Manage and track all event registrations
               </p>
             </div>
-            <div className="flex gap-3 justify-center sm:justify-end">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center sm:justify-end">
+              {/* Export GCU Students Button */}
               <button
-                onClick={exportToExcel}
+                onClick={() => exportToExcel('GCU')}
                 disabled={exportLoading}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm lg:text-base w-full sm:w-auto min-h-[44px] sm:min-h-auto"
               >
                 {exportLoading ? (
                   <>
-                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
-                    Exporting...
+                    <span className="hidden sm:inline">Exporting...</span>
+                    <span className="sm:hidden">Exporting...</span>
                   </>
                 ) : (
                   <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    Export to Excel
+                    <span className="hidden sm:inline">Export GCU Students</span>
+                    <span className="sm:hidden">Export GCU</span>
+                  </>
+                )}
+              </button>
+
+              {/* Export External Students Button */}
+              <button
+                onClick={() => exportToExcel('EXTERNAL')}
+                disabled={exportLoading}
+                className="flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm lg:text-base w-full sm:w-auto min-h-[44px] sm:min-h-auto"
+              >
+                {exportLoading ? (
+                  <>
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span className="hidden sm:inline">Exporting...</span>
+                    <span className="sm:hidden">Exporting...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span className="hidden sm:inline">Export External Students</span>
+                    <span className="sm:hidden">Export External</span>
                   </>
                 )}
               </button>

@@ -776,6 +776,18 @@
       object-fit: cover;
       object-position: center top;
     }
+    
+    /* Better mobile responsiveness for Rap Arena cards */
+    .card .rap-arena-container {
+      max-height: 10rem !important; /* 160px - More compact on mobile */
+      aspect-ratio: 3/4;
+    }
+    
+    /* Ensure text is readable on mobile */
+    .card .rap-arena-container + .p-6 h3 {
+      font-size: 0.875rem; /* text-sm */
+      line-height: 1.25rem;
+    }
   }
   
   /* Special Rap Arena container with proper aspect ratio */
