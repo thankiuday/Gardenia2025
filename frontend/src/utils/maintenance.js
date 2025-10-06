@@ -2,7 +2,7 @@
 
 export const MAINTENANCE_CONFIG = {
   // Set to true to enable maintenance mode
-  isMaintenanceMode: true,
+  isMaintenanceMode: false,
   
   // Maintenance mode settings
   settings: {
