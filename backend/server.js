@@ -21,13 +21,26 @@ app.set('trust proxy', 1);
 // Security middleware
 app.use(helmet());
 
-// Rate limiting
+// Rate limiting - More permissive in development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // 1000 requests in dev, 100 in production
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for health checks
+    return req.path === '/api/health';
+  }
 });
-app.use('/api/', limiter);
+
+// Only apply rate limiting in production or if explicitly enabled
+if (process.env.NODE_ENV === 'production' || process.env.ENABLE_RATE_LIMIT === 'true') {
+  app.use('/api/', limiter);
+  console.log('Rate limiting enabled');
+} else {
+  console.log('Rate limiting disabled for development');
+}
 
 // CORS configuration
 const allowedOrigins = process.env.NODE_ENV === 'production' 

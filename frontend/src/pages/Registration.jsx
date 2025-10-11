@@ -55,6 +55,12 @@ const Registration = () => {
           };
           setEvent(eventWithId);
           
+          // If registration is closed, skip the modal and show closed message directly
+          if (eventWithId.registrationOpen === false) {
+            setShowStudentTypeModal(false);
+            setIsGardenCityStudent(false); // Set a default value to prevent issues
+          }
+          
           // Scroll to top when page loads and modal should appear
           setTimeout(() => {
             window.scrollTo({
@@ -427,7 +433,7 @@ const Registration = () => {
       <div className="container-responsive max-w-4xl">
         {/* Student Type Modal */}
         <AnimatePresence>
-          {showStudentTypeModal && (
+          {showStudentTypeModal && event && event.registrationOpen !== false && (
             <motion.div 
               className="fixed inset-0 bg-gradient-to-br from-gray-50 to-emerald-50 bg-opacity-95 flex items-start justify-center z-50 p-2 sm:p-4 pt-4 sm:pt-8"
               initial={{ opacity: 0 }}
@@ -559,21 +565,57 @@ const Registration = () => {
           )}
         </AnimatePresence>
 
-        {/* Registration Form */}
-        <div className="card p-4 sm:p-6 lg:p-8">
-          <div className="mb-6 sm:mb-8">
-            <h1 className="heading-responsive text-gray-900 mb-3 sm:mb-4">
-              Register for {event.title}
-            </h1>
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
-              <span className="px-2 sm:px-3 py-1 bg-primary-100 text-primary-800 rounded-full">
-                {event.category}
-              </span>
-              <span className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-800 rounded-full">
-                {event.type}
-              </span>
+        {/* Check if registration is closed */}
+        {event.registrationOpen === false ? (
+          <div className="card p-4 sm:p-6 lg:p-8">
+            <div className="text-center py-8 sm:py-12">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-600 mb-3 sm:mb-4">
+                REGISTRATION CLOSED
+              </h2>
+              <p className="text-base sm:text-lg lg:text-xl text-gray-800 font-semibold mb-2 sm:mb-3 max-w-md mx-auto">
+                Registration for <strong>{event.title}</strong> is closed.
+              </p>
+              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto">
+                No new registrations are being accepted for this event.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <button
+                  onClick={() => navigate('/events')}
+                  className="btn-primary w-full sm:w-auto min-h-[44px] sm:min-h-[48px] text-sm sm:text-base font-semibold px-4 sm:px-6"
+                >
+                  Browse Other Events
+                </button>
+                <button
+                  onClick={() => navigate('/')}
+                  className="btn-secondary w-full sm:w-auto min-h-[44px] sm:min-h-[48px] text-sm sm:text-base font-semibold px-4 sm:px-6"
+                >
+                  Go Home
+                </button>
+              </div>
             </div>
           </div>
+        ) : (
+          <>
+            {/* Registration Form */}
+            <div className="card p-4 sm:p-6 lg:p-8">
+              <div className="mb-6 sm:mb-8">
+                <h1 className="heading-responsive text-gray-900 mb-3 sm:mb-4">
+                  Register for {event.title}
+                </h1>
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600">
+                  <span className="px-2 sm:px-3 py-1 bg-primary-100 text-primary-800 rounded-full">
+                    {event.category}
+                  </span>
+                  <span className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-800 rounded-full">
+                    {event.type}
+                  </span>
+                </div>
+              </div>
 
           <form className="space-y-6 sm:space-y-8">
             {/* Leader Information */}
@@ -855,6 +897,8 @@ const Registration = () => {
             </div>
           </form>
         </div>
+          </>
+        )}
       </div>
     </div>
   );

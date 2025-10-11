@@ -48,6 +48,14 @@ router.post('/', [
       });
     }
 
+    // Check if registration is open for this event
+    if (event.registrationOpen === false) {
+      return res.status(403).json({
+        success: false,
+        message: 'Registration for this event is currently closed'
+      });
+    }
+
     // Validate team size for group events and individual/group events
     if (event.type === 'Group' || event.type === 'Individual/Group') {
       const totalMembers = 1 + teamMembers.length; // leader + team members

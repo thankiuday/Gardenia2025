@@ -249,12 +249,21 @@ const EventDetails = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-gray-200">
-            <Link
-              to={`/register/${event.id}`}
-              className="flex-1 btn-primary text-center min-h-[48px] sm:min-h-[52px] flex items-center justify-center text-sm sm:text-base font-semibold"
-            >
-              Register Now
-            </Link>
+            {event.registrationOpen === false ? (
+              <div className="flex-1 bg-red-100 border border-red-300 text-red-700 text-center min-h-[48px] sm:min-h-[52px] flex items-center justify-center text-sm sm:text-base font-semibold rounded-lg cursor-not-allowed">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Registration Closed
+              </div>
+            ) : (
+              <Link
+                to={`/register/${event.id}`}
+                className="flex-1 btn-primary text-center min-h-[48px] sm:min-h-[52px] flex items-center justify-center text-sm sm:text-base font-semibold"
+              >
+                Register Now
+              </Link>
+            )}
             <Link
               to="/events"
               className="flex-1 btn-secondary text-center min-h-[48px] sm:min-h-[52px] flex items-center justify-center text-sm sm:text-base font-semibold"

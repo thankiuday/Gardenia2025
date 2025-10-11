@@ -95,6 +95,10 @@ const eventSchema = new mongoose.Schema({
   time: {
     type: String,
     required: true
+  },
+  registrationOpen: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
