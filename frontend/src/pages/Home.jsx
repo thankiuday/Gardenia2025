@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
@@ -21,53 +21,56 @@ const Home = () => {
   // Track visitor
   useVisitorTracking('Home');
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await axios.get(API_ENDPOINTS.EVENTS);
-        if (response.data.success) {
-          // Map customId to id for frontend compatibility
-          const eventsWithId = response.data.data.map(event => ({
-            ...event,
-            id: event.customId
-          }));
-          setEvents(eventsWithId);
-          
-          // Find and store the Rap Arena event for checking registration status
-          const rapArena = eventsWithId.find(event => event.title === 'Gardenia 2K25: The Rap Arena');
-          if (rapArena) {
-            setRapArenaEvent(rapArena);
-          }
-          
-          setRetryCount(0); // Reset retry count on success
-        } else {
-          throw new Error('Server returned invalid data');
-        }
-      } catch (err) {
-        let errorMessage = 'Unable to load events';
+  // Move fetchEvents outside useEffect and wrap in useCallback
+  const fetchEvents = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.get(API_ENDPOINTS.EVENTS);
+      if (response.data.success) {
+        // Map customId to id for frontend compatibility
+        const eventsWithId = response.data.data.map(event => ({
+          ...event,
+          id: event.customId
+        }));
+        setEvents(eventsWithId);
         
-        if (err.code === 'NETWORK_ERROR' || !navigator.onLine) {
-          errorMessage = 'No internet connection. Please check your network and try again.';
-        } else if (err.response?.status === 404) {
-          errorMessage = 'Events not found. Please try again later.';
-        } else if (err.response?.status >= 500) {
-          errorMessage = 'Server is temporarily unavailable. Please try again in a few moments.';
-        } else if (err.response?.status === 403) {
-          errorMessage = 'Access denied. Please refresh the page and try again.';
-        } else if (err.message?.includes('timeout')) {
-          errorMessage = 'Request timed out. Please check your connection and try again.';
+        // Find and store the Rap Arena event for checking registration status
+        const rapArena = eventsWithId.find(event => event.title === 'Gardenia 2K25: The Rap Arena');
+        if (rapArena) {
+          setRapArenaEvent(rapArena);
         }
         
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
+        setRetryCount(0); // Reset retry count on success
+      } else {
+        throw new Error('Server returned invalid data');
       }
-    };
+    } catch (err) {
+      let errorMessage = 'Unable to load events';
+      
+      if (err.code === 'NETWORK_ERROR' || !navigator.onLine) {
+        errorMessage = 'No internet connection. Please check your network and try again.';
+      } else if (err.response?.status === 429) {
+        errorMessage = 'Too many requests. Please wait a moment and try again.';
+      } else if (err.response?.status === 404) {
+        errorMessage = 'Events not found. Please try again later.';
+      } else if (err.response?.status >= 500) {
+        errorMessage = 'Server is temporarily unavailable. Please try again in a few moments.';
+      } else if (err.response?.status === 403) {
+        errorMessage = 'Access denied. Please refresh the page and try again.';
+      } else if (err.message?.includes('timeout')) {
+        errorMessage = 'Request timed out. Please check your connection and try again.';
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, []); // No dependencies needed
 
+  useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   const handleRetry = () => {
     setRetryCount(prev => prev + 1);

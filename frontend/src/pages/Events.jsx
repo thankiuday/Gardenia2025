@@ -70,7 +70,17 @@ const Events = () => {
           setError('We couldn\'t load the events right now. Please refresh the page to try again.');
         }
       } catch (err) {
-        setError('We\'re having trouble loading the events. Please check your internet connection and try again.');
+        let errorMessage = 'We\'re having trouble loading the events. Please check your internet connection and try again.';
+        
+        if (err.response?.status === 429) {
+          errorMessage = 'Too many requests. Please wait a moment and refresh the page.';
+        } else if (err.response?.status >= 500) {
+          errorMessage = 'Server is temporarily unavailable. Please try again in a few moments.';
+        } else if (!navigator.onLine) {
+          errorMessage = 'No internet connection. Please check your network and try again.';
+        }
+        
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
