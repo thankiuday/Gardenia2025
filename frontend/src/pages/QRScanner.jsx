@@ -478,35 +478,35 @@ const QRScanner = () => {
           </div>
         )}
 
-        {/* Entry Action Loading Overlay */}
-        {(allowEntryLoading || denyEntryLoading) && (
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-4 sm:mb-6">
-            <div className="bg-emerald-600 text-white p-3 sm:p-4">
-              <h2 className="text-base sm:text-lg font-semibold">Processing Entry Action</h2>
-              <p className="text-emerald-100 text-xs sm:text-sm">Please wait while we log your decision</p>
-            </div>
-            <div className="p-6 sm:p-8 text-center">
-              <div 
-                className="rounded-full h-12 w-12 sm:h-16 sm:w-16 border-3 sm:border-4 border-emerald-200 border-t-emerald-600 mx-auto mb-3 sm:mb-4"
-                style={{
-                  animation: 'spin 1s linear infinite'
-                }}
-              ></div>
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                {allowEntryLoading ? 'Allowing Entry...' : 'Denying Entry...'}
-              </h3>
-              <p className="text-gray-600 text-sm sm:text-base">
-                {allowEntryLoading 
-                  ? 'Logging entry approval and updating records...' 
-                  : 'Logging entry denial and updating records...'
-                }
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Participant Information */}
-        {participantInfo && !allowEntryLoading && !denyEntryLoading && (
+        {/* Participant Information - Wrapped in relative container for overlay */}
+        {participantInfo && (
+          <div className="relative">
+            {/* Entry Action Loading Overlay - Absolute positioned */}
+            {(allowEntryLoading || denyEntryLoading) && (
+              <div className="absolute inset-0 z-50 bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="bg-emerald-600 text-white p-3 sm:p-4">
+                  <h2 className="text-base sm:text-lg font-semibold">Processing Entry Action</h2>
+                  <p className="text-emerald-100 text-xs sm:text-sm">Please wait while we log your decision</p>
+                </div>
+                <div className="p-6 sm:p-8 text-center">
+                  <div 
+                    className="rounded-full h-12 w-12 sm:h-16 sm:w-16 border-3 sm:border-4 border-emerald-200 border-t-emerald-600 mx-auto mb-3 sm:mb-4"
+                    style={{
+                      animation: 'spin 1s linear infinite'
+                    }}
+                  ></div>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                    {allowEntryLoading ? 'Allowing Entry...' : 'Denying Entry...'}
+                  </h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    {allowEntryLoading 
+                      ? 'Logging entry approval and updating records...' 
+                      : 'Logging entry denial and updating records...'
+                    }
+                  </p>
+                </div>
+              </div>
+            )}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="bg-emerald-600 text-white p-3 sm:p-4">
               <h2 className="text-base sm:text-lg font-semibold">Participant Verified</h2>
@@ -657,6 +657,7 @@ const QRScanner = () => {
                 </button>
               </div>
             </div>
+          </div>
           </div>
         )}
 

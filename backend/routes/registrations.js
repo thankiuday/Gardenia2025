@@ -2,6 +2,8 @@ const express = require('express');
 const Registration = require('../models/Registration');
 const Event = require('../models/Event');
 const TicketDownload = require('../models/TicketDownload');
+const AllowedEntry = require('../models/AllowedEntry');
+const DeclineEntry = require('../models/DeclineEntry');
 const { body, validationResult } = require('express-validator');
 const { generatePDF } = require('../utils/pdfGen');
 const { generateQRCode, generateRegistrationId, createQRPayload } = require('../utils/qrGen');
@@ -356,7 +358,7 @@ router.get('/validate/:regId', async (req, res) => {
 // POST /api/registrations/entry-log - Log entry/exit actions
 router.post('/entry-log', async (req, res) => {
   try {
-    const { registrationId, eventId, action, timestamp } = req.body;
+    const { registrationId, eventId, action, timestamp, reason } = req.body;
     
     // Validate required fields
     if (!registrationId || !eventId || !action || !timestamp) {
@@ -375,28 +377,112 @@ router.post('/entry-log', async (req, res) => {
       });
     }
     
-    // Create entry log entry
-    const entryLog = {
-      registrationId,
-      eventId,
-      action,
-      timestamp: new Date(timestamp),
+    // Fetch the complete registration data
+    const registration = await Registration.findOne({ regId: registrationId })
+      .populate('eventId', 'title category department type time dates description')
+      .lean();
+    
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Registration not found'
+      });
+    }
+    
+    // Check for duplicate entry based on action (silently ignore duplicates)
+    if (action === 'ENTRY_ALLOWED') {
+      const existingAllowedEntry = await AllowedEntry.findOne({ registrationId: registrationId });
+      if (existingAllowedEntry) {
+        // Return success without saving (silently ignore duplicate)
+        return res.json({
+          success: true,
+          message: 'Entry allowed and logged successfully',
+          data: {
+            id: existingAllowedEntry._id,
+            registrationId: existingAllowedEntry.registrationId,
+            action: existingAllowedEntry.action,
+            timestamp: existingAllowedEntry.scannedAt,
+            isDuplicate: true // Internal flag (not shown to user)
+          }
+        });
+      }
+    } else if (action === 'ENTRY_DENIED') {
+      const existingDeclinedEntry = await DeclineEntry.findOne({ registrationId: registrationId });
+      if (existingDeclinedEntry) {
+        // Return success without saving (silently ignore duplicate)
+        return res.json({
+          success: true,
+          message: 'Entry denied and logged successfully',
+          data: {
+            id: existingDeclinedEntry._id,
+            registrationId: existingDeclinedEntry.registrationId,
+            action: existingDeclinedEntry.action,
+            timestamp: existingDeclinedEntry.scannedAt,
+            isDuplicate: true // Internal flag (not shown to user)
+          }
+        });
+      }
+    }
+    
+    // Prepare the entry log data with all participant information
+    const entryLogData = {
+      registrationId: registrationId,
+      regId: registration.regId,
+      eventId: registration.eventId._id,
+      eventDetails: {
+        title: registration.eventId?.title || 'Event',
+        category: registration.eventId?.category || 'General',
+        department: registration.eventId?.department || 'General',
+        type: registration.eventId?.type || 'Competition',
+        time: registration.eventId?.time || 'TBA',
+        location: 'Garden City University',
+        date: registration.finalEventDate || 'TBA'
+      },
+      isGardenCityStudent: registration.isGardenCityStudent,
+      leader: {
+        name: registration.leader?.name || 'N/A',
+        registerNumber: registration.leader?.registerNumber || '',
+        collegeName: registration.leader?.collegeName || '',
+        collegeRegisterNumber: registration.leader?.collegeRegisterNumber || '',
+        email: registration.leader?.email || 'N/A',
+        phone: registration.leader?.phone || 'N/A'
+      },
+      teamMembers: registration.teamMembers || [],
+      finalEventDate: registration.finalEventDate || 'TBA',
+      status: registration.status || 'APPROVED',
+      action: action,
+      scannedAt: new Date(timestamp),
       loggedAt: new Date()
     };
     
-    // In a real application, you would save this to a database
-    // Entry logged successfully
+    // Save to appropriate schema based on action
+    let savedEntry;
+    if (action === 'ENTRY_ALLOWED') {
+      const allowedEntry = new AllowedEntry(entryLogData);
+      savedEntry = await allowedEntry.save();
+    } else if (action === 'ENTRY_DENIED') {
+      entryLogData.reason = reason || 'No reason provided';
+      const declineEntry = new DeclineEntry(entryLogData);
+      savedEntry = await declineEntry.save();
+    }
     
     res.json({
       success: true,
-      message: 'Entry logged successfully',
-      data: entryLog
+      message: `Entry ${action === 'ENTRY_ALLOWED' ? 'allowed' : 'denied'} and logged successfully`,
+      data: {
+        id: savedEntry._id,
+        registrationId: savedEntry.registrationId,
+        action: savedEntry.action,
+        timestamp: savedEntry.scannedAt
+      }
     });
     
   } catch (error) {
+    console.error('Entry log error:', error);
     res.status(500).json({
       success: false,
-      message: 'Unable to log entry. Please try again.'
+      message: 'Unable to log entry. Please try again.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });
@@ -564,6 +650,162 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Unable to load registration details. Please try again.'
+    });
+  }
+});
+
+// GET /api/register/allowed-entries - Get all allowed entries
+router.get('/entries/allowed', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
+
+    const allowedEntries = await AllowedEntry.find()
+      .populate('eventId', 'title category department')
+      .sort({ scannedAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const total = await AllowedEntry.countDocuments();
+
+    res.json({
+      success: true,
+      data: {
+        entries: allowedEntries,
+        pagination: {
+          page,
+          limit,
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching allowed entries:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to load allowed entries. Please try again.'
+    });
+  }
+});
+
+// GET /api/register/declined-entries - Get all declined entries
+router.get('/entries/declined', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
+
+    const declinedEntries = await DeclineEntry.find()
+      .populate('eventId', 'title category department')
+      .sort({ scannedAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const total = await DeclineEntry.countDocuments();
+
+    res.json({
+      success: true,
+      data: {
+        entries: declinedEntries,
+        pagination: {
+          page,
+          limit,
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching declined entries:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to load declined entries. Please try again.'
+    });
+  }
+});
+
+// GET /api/register/entries/stats - Get entry statistics
+router.get('/entries/stats', async (req, res) => {
+  try {
+    const allowedCount = await AllowedEntry.countDocuments();
+    const declinedCount = await DeclineEntry.countDocuments();
+    
+    // Get stats by event
+    const allowedByEvent = await AllowedEntry.aggregate([
+      {
+        $group: {
+          _id: '$eventId',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'events',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'event'
+        }
+      },
+      {
+        $unwind: '$event'
+      },
+      {
+        $project: {
+          eventTitle: '$event.title',
+          count: 1
+        }
+      }
+    ]);
+
+    const declinedByEvent = await DeclineEntry.aggregate([
+      {
+        $group: {
+          _id: '$eventId',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'events',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'event'
+        }
+      },
+      {
+        $unwind: '$event'
+      },
+      {
+        $project: {
+          eventTitle: '$event.title',
+          count: 1
+        }
+      }
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        total: {
+          allowed: allowedCount,
+          declined: declinedCount,
+          total: allowedCount + declinedCount
+        },
+        byEvent: {
+          allowed: allowedByEvent,
+          declined: declinedByEvent
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching entry stats:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Unable to load entry statistics. Please try again.'
     });
   }
 });

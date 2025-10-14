@@ -5,6 +5,8 @@ const Registration = require('../models/Registration');
 const Contact = require('../models/Contact');
 const Visitor = require('../models/Visitor');
 const TicketDownload = require('../models/TicketDownload');
+const AllowedEntry = require('../models/AllowedEntry');
+const DeclineEntry = require('../models/DeclineEntry');
 const { body, validationResult } = require('express-validator');
 const config = require('../config');
 const XLSX = require('xlsx');
@@ -177,6 +179,76 @@ router.get('/stats', authenticateToken, async (req, res) => {
     const manualDownloads = await TicketDownload.countDocuments({ downloadType: 'manual' });
     const autoDownloads = await TicketDownload.countDocuments({ downloadType: 'auto' });
 
+    // Get entry statistics
+    const totalAllowedEntries = await AllowedEntry.countDocuments();
+    const totalDeclinedEntries = await DeclineEntry.countDocuments();
+    const totalEntries = totalAllowedEntries + totalDeclinedEntries;
+    
+    // Get entry statistics per event
+    const allowedEntriesPerEvent = await AllowedEntry.aggregate([
+      {
+        $group: {
+          _id: '$eventId',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'events',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'event'
+        }
+      },
+      {
+        $unwind: {
+          path: '$event',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          eventTitle: { $ifNull: ['$event.title', 'Unknown Event'] },
+          count: 1
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+
+    const declinedEntriesPerEvent = await DeclineEntry.aggregate([
+      {
+        $group: {
+          _id: '$eventId',
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: 'events',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'event'
+        }
+      },
+      {
+        $unwind: {
+          path: '$event',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          eventTitle: { $ifNull: ['$event.title', 'Unknown Event'] },
+          count: 1
+        }
+      },
+      {
+        $sort: { count: -1 }
+      }
+    ]);
+
     res.json({
       success: true,
       data: {
@@ -192,11 +264,18 @@ router.get('/stats', authenticateToken, async (req, res) => {
         totalTicketDownloads,
         uniqueTicketDownloads,
         manualDownloads,
-        autoDownloads
+        autoDownloads,
+        // Entry statistics
+        totalAllowedEntries,
+        totalDeclinedEntries,
+        totalEntries,
+        allowedEntriesPerEvent,
+        declinedEntriesPerEvent
       }
     });
 
   } catch (error) {
+    console.error('Dashboard stats error:', error);
     res.status(500).json({
       success: false,
       message: 'Unable to load dashboard statistics. Please try again.'
@@ -701,6 +780,474 @@ router.get('/contacts', authenticateToken, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Unable to load contact messages. Please try again.'
+    });
+  }
+});
+
+// GET /api/admin/entries/allowed/export - Export allowed entries to Excel (Protected)
+router.get('/entries/allowed/export', authenticateToken, async (req, res) => {
+  let startTime = Date.now();
+  console.log('Allowed entries Excel export started at:', new Date().toISOString());
+  
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  
+  try {
+    const { eventId, search } = req.query;
+    
+    // Build filter object
+    let filter = {};
+    
+    if (eventId) {
+      filter.eventId = eventId;
+    }
+    
+    if (search) {
+      filter.$or = [
+        { 'leader.name': { $regex: search, $options: 'i' } },
+        { 'leader.email': { $regex: search, $options: 'i' } },
+        { 'leader.phone': { $regex: search, $options: 'i' } },
+        { regId: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    console.log('Fetching allowed entries with filter:', JSON.stringify(filter));
+    
+    const allowedEntries = await AllowedEntry.find(filter)
+      .populate({
+        path: 'eventId',
+        select: 'title category type department',
+        options: { strictPopulate: false }
+      })
+      .sort({ scannedAt: -1 })
+      .lean();
+
+    console.log(`Found ${allowedEntries.length} allowed entries for export`);
+    
+    if (allowedEntries.length > 50000) {
+      return res.status(413).json({
+        success: false,
+        message: 'Dataset too large for export. Please use filters to reduce the data size.',
+        recordCount: allowedEntries.length,
+        maxAllowed: 50000,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    if (allowedEntries.length > 10000 && global.gc) {
+      console.warn(`Large dataset detected: ${allowedEntries.length} entries.`);
+      global.gc();
+    }
+
+    // Prepare data for Excel export
+    const excelData = [];
+    
+    console.log('Processing allowed entries for Excel export...');
+    
+    allowedEntries.forEach((entry, index) => {
+      try {
+        if (!entry || !entry.regId) {
+          console.warn(`Skipping invalid entry at index ${index}`);
+          return;
+        }
+
+        const baseData = {
+          'S.No': index + 1,
+          'Registration ID': entry.regId || 'N/A',
+          'Event Title': entry.eventDetails?.title || entry.eventId?.title || 'N/A',
+          'Event Category': entry.eventDetails?.category || entry.eventId?.category || 'N/A',
+          'Event Department': entry.eventDetails?.department || entry.eventId?.department || 'N/A',
+          'Event Type': entry.eventDetails?.type || entry.eventId?.type || 'N/A',
+          'Event Date': entry.finalEventDate || 'N/A',
+          'Event Time': entry.eventDetails?.time || 'N/A',
+          'Event Location': entry.eventDetails?.location || 'Garden City University',
+          'Student Type': entry.isGardenCityStudent ? 'GCU Student' : 'External Participant',
+          'Team Size': entry.teamMembers ? entry.teamMembers.length + 1 : 1,
+          'Leader Name': entry.leader?.name || 'N/A',
+          'Leader Email': entry.leader?.email || 'N/A',
+          'Leader Phone': entry.leader?.phone || 'N/A',
+          'Entry Scanned At': entry.scannedAt ? new Date(entry.scannedAt).toLocaleString() : 'N/A',
+          'Entry Logged At': entry.loggedAt ? new Date(entry.loggedAt).toLocaleString() : 'N/A',
+          'Status': entry.status || 'N/A'
+        };
+
+        // Add student-specific fields
+        if (entry.isGardenCityStudent) {
+          baseData['Leader Register Number'] = entry.leader?.registerNumber || 'N/A';
+        } else {
+          baseData['Leader College/School Name'] = entry.leader?.collegeName || 'N/A';
+          baseData['Leader College/School Registration Number'] = entry.leader?.collegeRegisterNumber || 'N/A';
+        }
+
+        // Handle team members
+        if (!entry.teamMembers || entry.teamMembers.length === 0) {
+          if (entry.isGardenCityStudent) {
+            baseData['Team Member Names'] = '';
+            baseData['Team Member Register Numbers'] = '';
+          } else {
+            baseData['Team Member Names'] = '';
+            baseData['Team Member College/School Names'] = '';
+            baseData['Team Member College/School Registration Numbers'] = '';
+          }
+          excelData.push(baseData);
+        } else {
+          const teamMemberNames = entry.teamMembers.map(member => member?.name || 'N/A').join(', ');
+          
+          if (entry.isGardenCityStudent) {
+            const teamMemberRegisterNumbers = entry.teamMembers.map(member => 
+              member?.registerNumber || 'N/A'
+            ).join(', ');
+            
+            baseData['Team Member Names'] = teamMemberNames;
+            baseData['Team Member Register Numbers'] = teamMemberRegisterNumbers;
+          } else {
+            const teamMemberCollegeNames = entry.teamMembers.map(member => 
+              member?.collegeName || 'N/A'
+            ).join(', ');
+            const teamMemberCollegeRegNumbers = entry.teamMembers.map(member => 
+              member?.collegeRegisterNumber || 'N/A'
+            ).join(', ');
+            
+            baseData['Team Member Names'] = teamMemberNames;
+            baseData['Team Member College/School Names'] = teamMemberCollegeNames;
+            baseData['Team Member College/School Registration Numbers'] = teamMemberCollegeRegNumbers;
+          }
+
+          excelData.push(baseData);
+        }
+      } catch (rowError) {
+        console.error(`Error processing entry at index ${index}:`, rowError);
+      }
+    });
+    
+    console.log(`Processed ${excelData.length} rows for Excel export`);
+
+    // Create workbook and worksheet
+    console.log('Creating Excel workbook...');
+    
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    
+    // Set column widths
+    const colWidths = [
+      { wch: 8 },   // S.No
+      { wch: 15 },  // Registration ID
+      { wch: 25 },  // Event Title
+      { wch: 15 },  // Event Category
+      { wch: 15 },  // Event Department
+      { wch: 12 },  // Event Type
+      { wch: 15 },  // Event Date
+      { wch: 12 },  // Event Time
+      { wch: 25 },  // Event Location
+      { wch: 15 },  // Student Type
+      { wch: 10 },  // Team Size
+      { wch: 20 },  // Leader Name
+      { wch: 25 },  // Leader Email
+      { wch: 15 },  // Leader Phone
+      { wch: 20 },  // Entry Scanned At
+      { wch: 20 },  // Entry Logged At
+      { wch: 10 },  // Status
+      { wch: 20 },  // Leader info (varies by type)
+      { wch: 25 },  // Additional leader info
+      { wch: 30 },  // Team Member Names
+      { wch: 30 },  // Team Member info
+      { wch: 30 }   // Additional team info
+    ];
+    ws['!cols'] = colWidths;
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Allowed Entries');
+    
+    console.log('Generating Excel buffer...');
+    
+    const writeOptions = {
+      type: 'buffer',
+      bookType: 'xlsx',
+      compression: true,
+      cellStyles: false,
+      Props: {
+        Title: 'Gardenia 2025 - Allowed Entries',
+        Subject: 'Allowed Entry Logs Export',
+        Author: 'Gardenia 2025 System',
+        CreatedDate: new Date(),
+        Company: 'Garden City University'
+      }
+    };
+    
+    const excelBuffer = XLSX.write(wb, writeOptions);
+    
+    console.log(`Excel buffer generated successfully. Size: ${excelBuffer.length} bytes`);
+
+    const currentDate = new Date().toISOString().split('T')[0];
+    const filename = `Gardenia2025_Allowed_Entries_${currentDate}.xlsx`;
+    
+    console.log(`Sending Excel file: ${filename}`);
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', excelBuffer.length);
+    res.setHeader('X-Export-Timestamp', new Date().toISOString());
+    res.setHeader('X-Export-Record-Count', excelData.length.toString());
+    res.setHeader('Accept-Ranges', 'none');
+    
+    res.status(200).end(excelBuffer, 'binary');
+    
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`Allowed entries export completed in ${duration}ms. Records: ${excelData.length}`);
+
+  } catch (error) {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    
+    console.error('Allowed entries export error:', {
+      error: error.message,
+      stack: error.stack,
+      duration: `${duration}ms`,
+      timestamp: new Date().toISOString()
+    });
+    
+    res.status(500).json({
+      success: false,
+      message: 'Unable to export allowed entries. Please try again.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      timestamp: new Date().toISOString(),
+      duration: `${duration}ms`
+    });
+  }
+});
+
+// GET /api/admin/entries/declined/export - Export declined entries to Excel (Protected)
+router.get('/entries/declined/export', authenticateToken, async (req, res) => {
+  let startTime = Date.now();
+  console.log('Declined entries Excel export started at:', new Date().toISOString());
+  
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  
+  try {
+    const { eventId, search } = req.query;
+    
+    // Build filter object
+    let filter = {};
+    
+    if (eventId) {
+      filter.eventId = eventId;
+    }
+    
+    if (search) {
+      filter.$or = [
+        { 'leader.name': { $regex: search, $options: 'i' } },
+        { 'leader.email': { $regex: search, $options: 'i' } },
+        { 'leader.phone': { $regex: search, $options: 'i' } },
+        { regId: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    console.log('Fetching declined entries with filter:', JSON.stringify(filter));
+    
+    const declinedEntries = await DeclineEntry.find(filter)
+      .populate({
+        path: 'eventId',
+        select: 'title category type department',
+        options: { strictPopulate: false }
+      })
+      .sort({ scannedAt: -1 })
+      .lean();
+
+    console.log(`Found ${declinedEntries.length} declined entries for export`);
+    
+    if (declinedEntries.length > 50000) {
+      return res.status(413).json({
+        success: false,
+        message: 'Dataset too large for export. Please use filters to reduce the data size.',
+        recordCount: declinedEntries.length,
+        maxAllowed: 50000,
+        timestamp: new Date().toISOString()
+      });
+    }
+    
+    if (declinedEntries.length > 10000 && global.gc) {
+      console.warn(`Large dataset detected: ${declinedEntries.length} entries.`);
+      global.gc();
+    }
+
+    // Prepare data for Excel export
+    const excelData = [];
+    
+    console.log('Processing declined entries for Excel export...');
+    
+    declinedEntries.forEach((entry, index) => {
+      try {
+        if (!entry || !entry.regId) {
+          console.warn(`Skipping invalid entry at index ${index}`);
+          return;
+        }
+
+        const baseData = {
+          'S.No': index + 1,
+          'Registration ID': entry.regId || 'N/A',
+          'Event Title': entry.eventDetails?.title || entry.eventId?.title || 'N/A',
+          'Event Category': entry.eventDetails?.category || entry.eventId?.category || 'N/A',
+          'Event Department': entry.eventDetails?.department || entry.eventId?.department || 'N/A',
+          'Event Type': entry.eventDetails?.type || entry.eventId?.type || 'N/A',
+          'Event Date': entry.finalEventDate || 'N/A',
+          'Event Time': entry.eventDetails?.time || 'N/A',
+          'Event Location': entry.eventDetails?.location || 'Garden City University',
+          'Student Type': entry.isGardenCityStudent ? 'GCU Student' : 'External Participant',
+          'Team Size': entry.teamMembers ? entry.teamMembers.length + 1 : 1,
+          'Leader Name': entry.leader?.name || 'N/A',
+          'Leader Email': entry.leader?.email || 'N/A',
+          'Leader Phone': entry.leader?.phone || 'N/A',
+          'Decline Reason': entry.reason || 'No reason provided',
+          'Entry Scanned At': entry.scannedAt ? new Date(entry.scannedAt).toLocaleString() : 'N/A',
+          'Entry Logged At': entry.loggedAt ? new Date(entry.loggedAt).toLocaleString() : 'N/A',
+          'Status': entry.status || 'N/A'
+        };
+
+        // Add student-specific fields
+        if (entry.isGardenCityStudent) {
+          baseData['Leader Register Number'] = entry.leader?.registerNumber || 'N/A';
+        } else {
+          baseData['Leader College/School Name'] = entry.leader?.collegeName || 'N/A';
+          baseData['Leader College/School Registration Number'] = entry.leader?.collegeRegisterNumber || 'N/A';
+        }
+
+        // Handle team members
+        if (!entry.teamMembers || entry.teamMembers.length === 0) {
+          if (entry.isGardenCityStudent) {
+            baseData['Team Member Names'] = '';
+            baseData['Team Member Register Numbers'] = '';
+          } else {
+            baseData['Team Member Names'] = '';
+            baseData['Team Member College/School Names'] = '';
+            baseData['Team Member College/School Registration Numbers'] = '';
+          }
+          excelData.push(baseData);
+        } else {
+          const teamMemberNames = entry.teamMembers.map(member => member?.name || 'N/A').join(', ');
+          
+          if (entry.isGardenCityStudent) {
+            const teamMemberRegisterNumbers = entry.teamMembers.map(member => 
+              member?.registerNumber || 'N/A'
+            ).join(', ');
+            
+            baseData['Team Member Names'] = teamMemberNames;
+            baseData['Team Member Register Numbers'] = teamMemberRegisterNumbers;
+          } else {
+            const teamMemberCollegeNames = entry.teamMembers.map(member => 
+              member?.collegeName || 'N/A'
+            ).join(', ');
+            const teamMemberCollegeRegNumbers = entry.teamMembers.map(member => 
+              member?.collegeRegisterNumber || 'N/A'
+            ).join(', ');
+            
+            baseData['Team Member Names'] = teamMemberNames;
+            baseData['Team Member College/School Names'] = teamMemberCollegeNames;
+            baseData['Team Member College/School Registration Numbers'] = teamMemberCollegeRegNumbers;
+          }
+
+          excelData.push(baseData);
+        }
+      } catch (rowError) {
+        console.error(`Error processing entry at index ${index}:`, rowError);
+      }
+    });
+    
+    console.log(`Processed ${excelData.length} rows for Excel export`);
+
+    // Create workbook and worksheet
+    console.log('Creating Excel workbook...');
+    
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    
+    // Set column widths
+    const colWidths = [
+      { wch: 8 },   // S.No
+      { wch: 15 },  // Registration ID
+      { wch: 25 },  // Event Title
+      { wch: 15 },  // Event Category
+      { wch: 15 },  // Event Department
+      { wch: 12 },  // Event Type
+      { wch: 15 },  // Event Date
+      { wch: 12 },  // Event Time
+      { wch: 25 },  // Event Location
+      { wch: 15 },  // Student Type
+      { wch: 10 },  // Team Size
+      { wch: 20 },  // Leader Name
+      { wch: 25 },  // Leader Email
+      { wch: 15 },  // Leader Phone
+      { wch: 30 },  // Decline Reason
+      { wch: 20 },  // Entry Scanned At
+      { wch: 20 },  // Entry Logged At
+      { wch: 10 },  // Status
+      { wch: 20 },  // Leader info (varies by type)
+      { wch: 25 },  // Additional leader info
+      { wch: 30 },  // Team Member Names
+      { wch: 30 },  // Team Member info
+      { wch: 30 }   // Additional team info
+    ];
+    ws['!cols'] = colWidths;
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Declined Entries');
+    
+    console.log('Generating Excel buffer...');
+    
+    const writeOptions = {
+      type: 'buffer',
+      bookType: 'xlsx',
+      compression: true,
+      cellStyles: false,
+      Props: {
+        Title: 'Gardenia 2025 - Declined Entries',
+        Subject: 'Declined Entry Logs Export',
+        Author: 'Gardenia 2025 System',
+        CreatedDate: new Date(),
+        Company: 'Garden City University'
+      }
+    };
+    
+    const excelBuffer = XLSX.write(wb, writeOptions);
+    
+    console.log(`Excel buffer generated successfully. Size: ${excelBuffer.length} bytes`);
+
+    const currentDate = new Date().toISOString().split('T')[0];
+    const filename = `Gardenia2025_Declined_Entries_${currentDate}.xlsx`;
+    
+    console.log(`Sending Excel file: ${filename}`);
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Length', excelBuffer.length);
+    res.setHeader('X-Export-Timestamp', new Date().toISOString());
+    res.setHeader('X-Export-Record-Count', excelData.length.toString());
+    res.setHeader('Accept-Ranges', 'none');
+    
+    res.status(200).end(excelBuffer, 'binary');
+    
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    console.log(`Declined entries export completed in ${duration}ms. Records: ${excelData.length}`);
+
+  } catch (error) {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    
+    console.error('Declined entries export error:', {
+      error: error.message,
+      stack: error.stack,
+      duration: `${duration}ms`,
+      timestamp: new Date().toISOString()
+    });
+    
+    res.status(500).json({
+      success: false,
+      message: 'Unable to export declined entries. Please try again.',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      timestamp: new Date().toISOString(),
+      duration: `${duration}ms`
     });
   }
 });
