@@ -176,12 +176,23 @@ const WelcomeModal = () => {
                 <p className="text-xs sm:text-sm lg:text-base font-bold text-emerald-800 mb-2 sm:mb-3">
                   Gardenia- The Rap Arena – Claim the Crown. Own the Sound.
                 </p>
+                
+                {/* Registration Status Notice */}
+                <div className="bg-gradient-to-r from-orange-100 to-yellow-100 border-2 border-orange-300 rounded-lg p-2 sm:p-3 mb-3 sm:mb-4">
+                  <p className="text-xs sm:text-sm font-bold text-orange-800 mb-1">
+                    ⚠️ Registration Now Open for EXTERNAL STUDENTS ONLY
+                  </p>
+                  <p className="text-xs text-orange-700">
+                    GCU students cannot register at this time
+                  </p>
+                </div>
+                
                 <Link
                   to="/register/68dd4dce04b7580301ca3537"
                   onClick={closeModal}
                   className="inline-block px-3 sm:px-4 lg:px-6 py-2 sm:py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold rounded-full hover:from-emerald-700 hover:to-green-700 transition-all duration-200 hover:scale-105 text-xs sm:text-sm lg:text-base touch-manipulation"
                 >
-                  🎵 Register Now! 🎵
+                  🎵 Register Now (External Students Only) 🎵
                 </Link>
               </div>
             </div>

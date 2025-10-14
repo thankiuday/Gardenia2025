@@ -24,13 +24,21 @@ app.use(helmet());
 // Rate limiting - More permissive in development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === 'production' ? 100 : 1000, // 1000 requests in dev, 100 in production
+  max: process.env.NODE_ENV === 'production' ? 500 : 1000, // Increased to 500 for production (was 100)
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => {
     // Skip rate limiting for health checks
     return req.path === '/api/health';
+  },
+  // Send custom headers to help clients handle rate limiting
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many requests. Please wait a moment and try again.',
+      retryAfter: 60 // seconds
+    });
   }
 });
 

@@ -555,9 +555,10 @@ router.get('/registrations/export', authenticateToken, async (req, res) => {
     res.setHeader('X-Export-Record-Count', excelData.length.toString());
     res.setHeader('X-Export-Student-Type', studentType || 'ALL');
     res.setHeader('X-Export-File-Size', excelBuffer.length.toString());
+    res.setHeader('Accept-Ranges', 'none'); // Disable range requests for exports
     
-    // Send the Excel file
-    res.send(excelBuffer);
+    // Send the Excel file with explicit status and end
+    res.status(200).end(excelBuffer, 'binary');
     
     const endTime = Date.now();
     const duration = endTime - startTime;

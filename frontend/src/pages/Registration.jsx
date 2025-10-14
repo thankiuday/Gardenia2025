@@ -83,6 +83,12 @@ const Registration = () => {
   }, [eventId, navigate]);
 
   const handleStudentTypeSelection = (isGCUStudent) => {
+    // Special handling for Rap Arena - Block GCU students
+    if (event && event.title === 'Gardenia 2K25: The Rap Arena' && isGCUStudent === true) {
+      alert('⚠️ Registration Restricted\n\nRap Arena registration is currently open ONLY for EXTERNAL STUDENTS. Garden City University students cannot register at this time.\n\nPlease check back later for updates or contact the event organizers for more information.');
+      return; // Don't close the modal, let them choose again or navigate away
+    }
+    
     setIsGardenCityStudent(isGCUStudent);
     setShowStudentTypeModal(false);
     // Scroll to top when modal closes
@@ -504,6 +510,23 @@ const Registration = () => {
                   This helps us determine the correct event date and requirements for your registration.
                 </motion.p>
                 
+                {/* Special warning for Rap Arena event */}
+                {event.title === 'Gardenia 2K25: The Rap Arena' && (
+                  <motion.div 
+                    className="bg-gradient-to-r from-orange-100 to-yellow-100 border-2 border-orange-300 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35, duration: 0.4 }}
+                  >
+                    <p className="text-xs sm:text-sm font-bold text-orange-800 mb-2">
+                      ⚠️ IMPORTANT NOTICE
+                    </p>
+                    <p className="text-xs sm:text-sm text-orange-700">
+                      Rap Arena registration is currently <strong>ONLY OPEN FOR EXTERNAL STUDENTS</strong>. GCU students cannot register at this time.
+                    </p>
+                  </motion.div>
+                )}
+                
                 <motion.div 
                   className="space-y-2 sm:space-y-3"
                   initial={{ opacity: 0, y: 20 }}
@@ -549,7 +572,8 @@ const Registration = () => {
                   <p className="text-xs sm:text-sm text-gray-500">
                     {event.title === 'Gardenia 2K25: The Rap Arena' ? (
                       <>
-                        <strong>All Participants:</strong> Event on 16th October 2025
+                        <strong>External Students Only:</strong> Event on 16th October 2025<br />
+                        <span className="text-orange-600 font-medium">GCU students cannot register for this event</span>
                       </>
                     ) : (
                       <>

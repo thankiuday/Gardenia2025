@@ -501,6 +501,19 @@ const Home = () => {
                   <p className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-800 mb-4 sm:mb-6">
                     Gardenia- The Rap Arena – Claim the Crown. Own the Sound.
                   </p>
+                  
+                  {/* Registration Status Notice */}
+                  {rapArenaEvent && rapArenaEvent.registrationOpen === true && (
+                    <div className="bg-gradient-to-r from-orange-100 to-yellow-100 border-2 border-orange-300 rounded-lg sm:rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 max-w-2xl mx-auto">
+                      <p className="text-sm sm:text-base lg:text-lg font-bold text-orange-800 mb-2">
+                        ⚠️ Registration Now Open for EXTERNAL STUDENTS ONLY
+                      </p>
+                      <p className="text-xs sm:text-sm text-orange-700">
+                        Garden City University students cannot register for Rap Arena at this time. Only external participants are eligible.
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                     {rapArenaEvent && rapArenaEvent.registrationOpen === false ? (
                       <div className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-red-100 border-2 border-red-300 text-red-700 font-bold text-base sm:text-lg rounded-lg sm:rounded-xl cursor-not-allowed flex items-center justify-center">
@@ -515,7 +528,7 @@ const Home = () => {
                         className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-600 to-green-600 text-white font-bold text-base sm:text-lg rounded-lg sm:rounded-xl shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 overflow-hidden"
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-green-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-                        <span className="relative z-10">🎵 Register Now! 🎵</span>
+                        <span className="relative z-10">🎵 Register Now (External Students) 🎵</span>
                       </Link>
                     )}
                     

@@ -56,6 +56,14 @@ router.post('/', [
       });
     }
 
+    // Special check for Rap Arena - Allow ONLY external students
+    if (event.title === 'Gardenia 2K25: The Rap Arena' && isGardenCityStudent === true) {
+      return res.status(403).json({
+        success: false,
+        message: 'Registration for Rap Arena is currently open only for external students. GCU students cannot register at this time.'
+      });
+    }
+
     // Validate team size for group events and individual/group events
     if (event.type === 'Group' || event.type === 'Individual/Group') {
       const totalMembers = 1 + teamMembers.length; // leader + team members
