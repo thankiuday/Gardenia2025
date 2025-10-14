@@ -32,13 +32,13 @@ const NetworkError = ({ onRetry, className = "" }) => {
   return (
     <div className={`fixed top-4 left-4 right-4 z-50 ${className}`}>
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 shadow-lg">
-        <div className="flex items-center">
-          <div className="flex-shrink-0">
-            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex-shrink-0 mb-3">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div className="ml-3 flex-1">
+          <div className="w-full">
             <h3 className="text-sm font-medium text-red-800">
               No Internet Connection
             </h3>
@@ -47,10 +47,10 @@ const NetworkError = ({ onRetry, className = "" }) => {
             </p>
           </div>
           {showRetry && onRetry && (
-            <div className="ml-3">
+            <div className="mt-3 w-full flex justify-center">
               <button
                 onClick={onRetry}
-                className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
+                className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors min-h-[44px] touch-manipulation w-full sm:w-auto max-w-xs"
               >
                 Retry
               </button>

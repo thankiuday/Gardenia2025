@@ -65,11 +65,11 @@ const ErrorMessage = ({
 
   return (
     <div className={`rounded-lg border p-4 ${bgColor} ${borderColor} ${className}`}>
-      <div className="flex items-start">
-        <div className={`flex-shrink-0 ${iconColor}`}>
+      <div className="flex flex-col items-center text-center">
+        <div className={`flex-shrink-0 ${iconColor} mb-3`}>
           {icon}
         </div>
-        <div className="ml-3 flex-1">
+        <div className="w-full">
           <h3 className={`text-sm font-medium ${textColor}`}>
             {title}
           </h3>
@@ -79,10 +79,10 @@ const ErrorMessage = ({
             </div>
           )}
           {showRetry && onRetry && (
-            <div className="mt-3">
+            <div className="mt-4 flex justify-center">
               <button
                 onClick={onRetry}
-                className={`text-sm font-medium ${textColor} hover:underline focus:outline-none focus:underline`}
+                className={`text-sm font-medium px-4 py-2 rounded-lg border ${textColor} hover:underline focus:outline-none focus:underline transition-colors min-h-[44px] touch-manipulation`}
               >
                 Try again
               </button>
