@@ -113,7 +113,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use((req, res, next) => {
   // Set timeout for Excel export operations
   if (req.path.includes('/export')) {
-    res.setTimeout(300000); // 5 minutes timeout for export operations
+    res.setTimeout(600000); // 10 minutes timeout for export operations
   } else {
     res.setTimeout(30000); // 30 seconds for other operations
   }

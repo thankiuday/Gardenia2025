@@ -636,9 +636,9 @@ router.get('/registrations/export', authenticateToken, async (req, res) => {
     res.setHeader('X-Export-File-Size', excelBuffer.length.toString());
     res.setHeader('Accept-Ranges', 'none'); // Disable range requests for exports
     
-    // Send the Excel file with explicit status and end
-    res.status(200).end(excelBuffer, 'binary');
-    
+    // Send the Excel file - use send() instead of end() for binary data
+    res.status(200).send(excelBuffer);
+
     const endTime = Date.now();
     const duration = endTime - startTime;
     console.log(`Excel export completed successfully in ${duration}ms. Records: ${excelData.length}`);
@@ -990,8 +990,8 @@ router.get('/entries/allowed/export', authenticateToken, async (req, res) => {
     res.setHeader('X-Export-Record-Count', excelData.length.toString());
     res.setHeader('Accept-Ranges', 'none');
     
-    res.status(200).end(excelBuffer, 'binary');
-    
+    res.status(200).send(excelBuffer);
+
     const endTime = Date.now();
     const duration = endTime - startTime;
     console.log(`Allowed entries export completed in ${duration}ms. Records: ${excelData.length}`);
@@ -1225,8 +1225,8 @@ router.get('/entries/declined/export', authenticateToken, async (req, res) => {
     res.setHeader('X-Export-Record-Count', excelData.length.toString());
     res.setHeader('Accept-Ranges', 'none');
     
-    res.status(200).end(excelBuffer, 'binary');
-    
+    res.status(200).send(excelBuffer);
+
     const endTime = Date.now();
     const duration = endTime - startTime;
     console.log(`Declined entries export completed in ${duration}ms. Records: ${excelData.length}`);
