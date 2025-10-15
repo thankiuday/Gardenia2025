@@ -132,15 +132,76 @@ app.use((req, res, next) => {
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Database connection
-mongoose.connect(config.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  });
+// Database connection with retry logic and improved error handling
+const connectDB = async (retries = 3) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const conn = await mongoose.connect(config.MONGODB_URI, {
+        // Connection options for better reliability after Atlas upgrade
+        maxPoolSize: 10, // Maintain up to 10 socket connections
+        serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+        socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+        family: 4, // Use IPv4, skip trying IPv6
+        // Atlas M10 specific optimizations
+        maxIdleTimeMS: 30000, // Close connections after 30 seconds of inactivity
+        retryWrites: true, // Enable retryable writes
+        retryReads: true, // Enable retryable reads
+      });
+
+      console.log(`Connected to MongoDB: ${conn.connection.host}`);
+
+      // Handle connection events
+      mongoose.connection.on('error', (err) => {
+        console.error('MongoDB connection error:', err);
+      });
+
+      mongoose.connection.on('disconnected', () => {
+        console.warn('MongoDB disconnected. Attempting to reconnect...');
+      });
+
+      mongoose.connection.on('reconnected', () => {
+        console.log('MongoDB reconnected successfully');
+      });
+
+      return conn;
+    } catch (error) {
+      console.error(`MongoDB connection attempt ${i + 1} failed:`, error.message);
+
+      if (i === retries - 1) {
+        console.error('All MongoDB connection attempts failed. Please check:');
+        console.error('1. MongoDB Atlas connection string format');
+        console.error('2. Network access permissions in Atlas dashboard');
+        console.error('3. Database user credentials and authentication method');
+        console.error('4. MongoDB Atlas cluster status and region');
+        console.error('5. If you recently upgraded from M0 to M10, verify the connection string');
+        console.error('\nTroubleshooting steps:');
+        console.error('- Check if your Atlas cluster connection string has changed after upgrade');
+        console.error('- Verify IP whitelist in Atlas includes your VPS IP');
+        console.error('- Test connection string directly: mongodb://username:password@host:port/database');
+        throw error;
+      }
+
+      // Wait before retrying (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+};
+
+// Initialize database connection with retry logic
+connectDB().catch((error) => {
+  console.error('Final MongoDB connection error:', error.message);
+
+  if (error.message.includes('option') && error.message.includes('not supported')) {
+    console.error('\n🚨 DEPRECATED CONNECTION OPTION ERROR');
+    console.error('This error has been fixed in the updated server.js');
+    console.error('Please restart your application to use the corrected connection options.');
+    console.error('\nIf you\'re seeing this after an update, the old server process might still be running.');
+    console.error('Try: pm2 restart gardenia-backend');
+  }
+
+  // Don't exit the process, let it continue running
+  // This allows the app to potentially recover if the database comes back online
+});
 
 // Routes
 app.use('/api/events', eventRoutes);

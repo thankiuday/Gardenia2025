@@ -43,3 +43,8 @@ const reopenRapArenaForExternal = async () => {
 // Run the script
 reopenRapArenaForExternal();
 
+
+
+
+
+

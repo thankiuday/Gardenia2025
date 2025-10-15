@@ -13,7 +13,8 @@
     "create:admin": "node scripts/createAdmin.js",
     "migrate:tickets": "node scripts/migrateTicketsToS3.js",
     "setup:s3": "node scripts/setupS3.js",
-    "test:s3": "node scripts/testS3Connection.js"
+    "test:s3": "node scripts/testS3Connection.js",
+    "test:db": "node test-mongodb-connection.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.893.0",
