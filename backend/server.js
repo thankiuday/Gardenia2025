@@ -220,30 +220,94 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Error handling middleware
-app.use((error, req, res, next) => {
-  if (config.NODE_ENV === 'development') {
-    console.error('Error:', error);
+// Enhanced error logging middleware
+app.use((req, res, next) => {
+  const start = Date.now();
+
+  // Log incoming requests in production (sampled)
+  if (config.NODE_ENV === 'production' && Math.random() < 0.1) {
+    console.log(`📨 ${req.method} ${req.path} - ${req.ip}`);
   }
-  
+
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    const statusCode = res.statusCode;
+
+    // Log slow requests and errors
+    if (duration > 5000 || statusCode >= 400) {
+      console.log(`⏱️ ${req.method} ${req.path} - ${statusCode} - ${duration}ms`);
+    }
+  });
+
+  next();
+});
+
+// Error handling middleware with enhanced logging
+app.use((error, req, res, next) => {
+  const timestamp = new Date().toISOString();
+  const errorId = Math.random().toString(36).substring(7);
+
+  // Enhanced error logging
+  const errorInfo = {
+    id: errorId,
+    timestamp,
+    method: req.method,
+    url: req.url,
+    ip: req.ip,
+    userAgent: req.get('User-Agent'),
+    error: error.message,
+    stack: error.stack,
+    statusCode: error.status || 500
+  };
+
+  console.error(`❌ Error [${errorId}]:`, JSON.stringify(errorInfo, null, 2));
+
+  // In production, don't expose stack traces to clients
+  if (config.NODE_ENV === 'development') {
+    console.error('Full error:', error);
+  }
+
   if (error.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
+      errorId,
       message: 'Please check your information and try again.',
       errors: Object.values(error.errors).map(e => e.message)
     });
   }
-  
+
   if (error.name === 'CastError') {
     return res.status(400).json({
       success: false,
+      errorId,
       message: 'The requested information could not be found. Please check and try again.'
     });
   }
-  
+
+  // Handle MongoDB connection errors
+  if (error.name === 'MongoNetworkError' || error.name === 'MongoTimeoutError') {
+    return res.status(503).json({
+      success: false,
+      errorId,
+      message: 'Database temporarily unavailable. Please try again in a moment.',
+      retryAfter: 30
+    });
+  }
+
+  // Handle file upload errors
+  if (error.code === 'LIMIT_FILE_SIZE') {
+    return res.status(413).json({
+      success: false,
+      errorId,
+      message: 'File too large. Please choose a smaller file.'
+    });
+  }
+
   res.status(error.status || 500).json({
     success: false,
-    message: error.message || 'Internal Server Error'
+    errorId,
+    message: error.message || 'Internal Server Error',
+    ...(config.NODE_ENV === 'development' && { stack: error.stack })
   });
 });
 
@@ -255,11 +319,71 @@ app.use('*', (req, res) => {
   });
 });
 
-// Start server
-const PORT = config.PORT;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${config.NODE_ENV}`);
+// Graceful shutdown handling
+const server = app.listen(config.PORT, () => {
+  console.log(`🚀 Server running on port ${config.PORT}`);
+  console.log(`🌍 Environment: ${config.NODE_ENV}`);
+  console.log(`📊 Process ID: ${process.pid}`);
+  console.log(`🔗 Frontend URL: ${process.env.FRONTEND_URL || 'Not configured'}`);
 });
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Promise Rejection at:', promise, 'reason:', reason);
+  // Don't exit the process, just log it for monitoring
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  // Don't exit immediately, try to log and recover
+  setTimeout(() => {
+    process.exit(1);
+  }, 1000);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('🛑 SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ HTTP server closed');
+    mongoose.connection.close(false, () => {
+      console.log('✅ MongoDB connection closed');
+      process.exit(0);
+    });
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('🛑 SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('✅ HTTP server closed');
+    mongoose.connection.close(false, () => {
+      console.log('✅ MongoDB connection closed');
+      process.exit(0);
+    });
+  });
+});
+
+// Memory usage monitoring
+setInterval(() => {
+  const memUsage = process.memoryUsage();
+  const memUsageMB = {
+    rss: Math.round(memUsage.rss / 1024 / 1024),
+    heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+    heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+    external: Math.round(memUsage.external / 1024 / 1024)
+  };
+
+  if (config.NODE_ENV === 'production') {
+    console.log(`📊 Memory Usage: RSS=${memUsageMB.rss}MB, Heap=${memUsageMB.heapUsed}/${memUsageMB.heapTotal}MB, External=${memUsageMB.external}MB`);
+  }
+
+  // Force garbage collection if memory usage is high and gc is available
+  if (memUsageMB.heapUsed > 1500 && global.gc) {
+    console.log('🧹 Forcing garbage collection due to high memory usage');
+    global.gc();
+  }
+}, 60000); // Check every minute
 
 module.exports = app;
